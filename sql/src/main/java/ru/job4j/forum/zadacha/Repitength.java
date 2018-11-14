@@ -6,23 +6,25 @@ package ru.job4j.forum.zadacha;
  */
 public class Repitength {
 
-    public int sizemass(String stroka) {
-        int position = 0;
+    public int sizemass(int[] stroka) {
         int maxPosition = 0;
         int size = 0;
-        String temp = "";
-        String[] mass = stroka.split("");
-        for (String mas : mass) {
-            if (temp.contains(mas) || temp.length() < 1) {
-                temp = temp + mas;
+        int tempSize = 0;
+        for (int i = 0; i < stroka.length - 1; i++) {
+            if (stroka[i] != stroka[i + 1]) {
+                tempSize = tempSize + 1;
             } else {
-                if (temp.length() > size) {
-                    size = temp.length();
-                    maxPosition = position + 1;
+                if (size < tempSize) {
+                    size = tempSize;
+                tempSize = 0;
+                maxPosition = maxPosition + 1;
                 }
-                position = position + 1;
-                temp = "";
             }
+
+        }
+        if (size < tempSize) {
+            size = tempSize;
+            maxPosition = maxPosition + 1;
         }
         System.out.printf("Самая длинная последовательность: %s , размер последовательности : %s", maxPosition, size);
         return maxPosition;

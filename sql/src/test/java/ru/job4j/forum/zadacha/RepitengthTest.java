@@ -9,7 +9,7 @@ public class RepitengthTest {
     @Test
     public void sizemass() {
         Repitength repitength = new Repitength();
-        String stroka = "11223344555556667789";
-        Assert.assertThat(repitength.sizemass(stroka), Is.is(5));
+        int[] ints = {1, 2, 3, 5, 5, 4, 5, 6, 7, 1, 2, 3};
+        Assert.assertThat(repitength.sizemass(ints), Is.is(2));
     }
 }
