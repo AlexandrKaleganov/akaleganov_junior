@@ -26,14 +26,38 @@ public class Repitength {
             }
 
         }
-        if (size <= tempSize  && tempSize > 1) {
+        if (size <= tempSize && tempSize > 1) {
             size = tempSize;
             maxPosition = maxPosition + 1;
         }
         if (maxPosition > 0) {
-            System.out.println("Самая длинная последовательность: " + maxPosition +" , размер последовательности : " + size);
+            System.out.println("Самая длинная последовательность: " + maxPosition + " , размер последовательности : " + size);
         } else {
             System.out.println("массив не имеет последовательности");
+        }
+        return maxPosition;
+    }
+
+    public int sizemasstwo(int[] stroka) {
+        int maxPosition = 0;
+        int size = 0;
+        int tempPosition = 0;
+        for (int i = 1; i < stroka.length; i++) {
+            for (int j = tempPosition; j < i; j++) {
+                if (stroka[i] == stroka[j] || i == stroka.length -1) {
+
+                    if (maxPosition <= tempPosition && size <= i - tempPosition) {
+                        size = tempPosition == 0 ? i - tempPosition - 1 : i - tempPosition;
+                        maxPosition = tempPosition;
+                    }
+                    tempPosition = i;
+                }
+            }
+        }
+        if (size == 1) {
+            System.out.println("массив не имеет последовательности");
+        } else {
+            System.out.println("Индекс: " + maxPosition + " , размер последовательности : " + size);
         }
         return maxPosition;
     }
