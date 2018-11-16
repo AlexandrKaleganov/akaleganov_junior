@@ -47,7 +47,6 @@ public class TrackerSQL implements ITracker, AutoCloseable {
         try (Statement st = conn.createStatement()) {
             st.executeUpdate(config.getScript("--items"));
             st.executeUpdate(config.getScript("--comments"));
-            st.close();
         } catch (SQLException e) {
             LOG.error(e.getMessage(), e);
         }
