@@ -9,7 +9,13 @@ public class RepitengthTest {
     @Test
     public void sizemass() {
         Repitength repitength = new Repitength();
-        int[] ints = {1, 2, 3, 5, 5, 4, 5, 6, 7, 1, 2, 3};
-        Assert.assertThat(repitength.sizemass(ints), Is.is(2));
+        int[] ints = {5,7,6,6,8,1,2,2,7,4,3};
+        int[] ints1 = {5,7,7,4,3,8,2,2,7,1};
+        int[] ints2 = {1,1,1,1,1,1,1,1,1,1,1,1};
+        int[] ints3 = {1,2,3,1,1,1,1,2,3};
+        repitength.sizemass(ints);
+        repitength.sizemass(ints1);
+        repitength.sizemass(ints2);
+        repitength.sizemass(ints3);
     }
 }
