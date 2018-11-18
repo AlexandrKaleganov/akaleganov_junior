@@ -26,7 +26,7 @@ public class VacancyTest {
         System.out.println(vacancy);
         String str = "сегодня, 16:35";
         ArrayList<Integer> time = new ArrayList<>();
-        Arrays.stream(str.split("[,:]")).filter(e -> !e.contains("сегодня")).map(e -> e.replace(" ", "")).mapToInt(Integer::parseInt).forEach(time::add);
+//        Arrays.stream(str.split("[,:]")).filter(e -> !e.contains("сегодня")).map(e -> e.replace(" ", "")).mapToInt(Integer::parseInt).forEach(time::add);
     }
 
 }
