@@ -19,6 +19,7 @@
         <module>assthread</module>
         <module>sql</module>
         <module>sqlruparser</module>
+        <module>servletjsp</module>
     </modules>
 
     <dependencies>
