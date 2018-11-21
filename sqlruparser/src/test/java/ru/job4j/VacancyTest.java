@@ -22,8 +22,8 @@ public class VacancyTest {
 
     @Test
     public void vacancyTest() throws ParseException {
-        Vacancy vacancy = new Vacancy("url", "вакансия", "саша", LocalDateTime.parse("29 июн 18, 11:14", DateTimeFormatter.ofPattern("dd MMM yy, HH:mm")), "надо работать");
-        System.out.println(vacancy);
+//        Vacancy vacancy = new Vacancy("url", "вакансия", "саша", LocalDateTime.parse("29 июн 18, 11:14", DateTimeFormatter.ofPattern("dd MMM yy, HH:mm")), "надо работать");
+//        System.out.println(vacancy);
         String str = "сегодня, 16:35";
         ArrayList<Integer> time = new ArrayList<>();
 //        Arrays.stream(str.split("[,:]")).filter(e -> !e.contains("сегодня")).map(e -> e.replace(" ", "")).mapToInt(Integer::parseInt).forEach(time::add);
