@@ -23,7 +23,6 @@ public class Repitength {
                     sizeRES = stroka.length - newposition;
                     positionRES = newposition;
                 }
-                ;
             }
         }
 
