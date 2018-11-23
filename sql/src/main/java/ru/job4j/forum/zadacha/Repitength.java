@@ -5,32 +5,33 @@ package ru.job4j.forum.zadacha;
  * вычислить самую длинную не повторяющуюся последовательность
  */
 public class Repitength {
-    public int sizemass(int[] stroka) {
-        int sizeRES = 0;
-        int positionRES = 0;
-        int newposition = 0;
-        for (int i = 0; i < stroka.length; i++) {
-            for (int j = newposition; j < i; j++) {
 
+    public void siseres(int[] stroka) {
+        int resPosition = 0;
+        int tempSize = 0;
+        int resSize = 0;
+        int newPosition = 0;
+        for (int i = 1; i < stroka.length; i++) {
+            tempSize++;
+            for (int j = newPosition; j < i; j++) {
                 if (stroka[j] == stroka[i]) {
-                    if (sizeRES <= stroka.length - newposition) {
-                        sizeRES = i - newposition;
-                        positionRES = newposition;
+                    if (resSize <= tempSize) {
+                        resSize = tempSize;
+                        resPosition = newPosition;
                     }
-                    newposition = i;
-
-                } else if (i == stroka.length - 1 && stroka.length - newposition >= sizeRES) {
-                    sizeRES = stroka.length - newposition;
-                    positionRES = newposition;
+                    tempSize = 0;
+                    newPosition = i;
+                } else if (i == stroka.length - 1 && resSize <= tempSize + 1 && j == i - 1) {
+                    resSize = tempSize + 1;
+                    resPosition = newPosition;
                 }
             }
         }
 
-        if (sizeRES == 1) {
+        if (resSize == 1) {
             System.out.println("Последовательности нету");
         } else {
-            System.out.println("Индекс " + positionRES + " размер " + sizeRES);
+            System.out.println("Индекс " + resPosition + " размер " + resSize);
         }
-        return positionRES;
     }
 }
