@@ -12,21 +12,4 @@
         <servlet-name>EchoServlet</servlet-name>
         <url-pattern>/echo</url-pattern>
     </servlet-mapping>
-
-    <servlet>
-        <servlet-name>MyServlet</servlet-name>
-        <servlet-class>ru.job4j.kniga.MyServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>MyServlet</servlet-name>
-        <url-pattern>/my</url-pattern>
-    </servlet-mapping>
-    <servlet>
-        <servlet-name>Contentservlet</servlet-name>
-        <servlet-class>ru.job4j.kniga.Contentservlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Contentservlet</servlet-name>
-        <url-pattern>/content</url-pattern>
-    </servlet-mapping>
-</web-app>
+   </web-app>
