@@ -10,9 +10,9 @@ public class Users {
     private String login;
 
     //конструктор
-    public Users(String id, LocalDateTime createDate, String name, String login) {
+    public Users(String id, String name, String login) {
         this.id = id;
-        this.createDate = createDate;
+        this.createDate = LocalDateTime.now();
         this.name = name;
         this.login = login;
     }

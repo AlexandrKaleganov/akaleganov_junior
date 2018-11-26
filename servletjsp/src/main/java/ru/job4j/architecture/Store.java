@@ -7,5 +7,5 @@ public interface Store {
     public void update(String id, Users users);
     public void delete(String id);
     public Map findAll();
-    public Users indById(String id);
+    public Users findById(String id);
 }
