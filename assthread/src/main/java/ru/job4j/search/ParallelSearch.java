@@ -69,8 +69,8 @@ public class ParallelSearch {
             }
         };
         Thread search = new Thread() {
-            @Override
-            public void run() {
+                @Override
+                public void run() {
                 System.out.println("Поток  sersh стартанул");
                 //Набор опций при обходк
                 Set<FileVisitOption> opts = Collections.emptySet();
