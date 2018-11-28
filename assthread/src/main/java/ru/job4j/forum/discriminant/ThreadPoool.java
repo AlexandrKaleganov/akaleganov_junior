@@ -1,35 +1,33 @@
 package ru.job4j.forum.discriminant;
 
-import java.util.concurrent.CountDownLatch;
 
 public class ThreadPoool {
 
     //вычисление дискримината
     public static class Discr implements Runnable {
         private Urovnenie ur;
-        private CountDownLatch count;
         Discr(Urovnenie ur) {
             this.ur = ur;
-            this.count = count;
         }
 
         @Override
         public void run() {
+            Thread.currentThread().setName(" Поток вычисляющий Дискриминант ");
+            System.out.println(Thread.currentThread().getName() + Thread.currentThread().isAlive());
             ur.setDesc();
         }
     }
     //вычисление первого корня
     public static class Xone implements Runnable {
         private Urovnenie ur;
-        private CountDownLatch count;
-        Xone(Urovnenie ur, CountDownLatch count) {
+        Xone(Urovnenie ur) {
             this.ur = ur;
-            this.count = count;
-
         }
 
         @Override
         public void run() {
+            Thread.currentThread().setName(" вычсляющий первый корень ");
+            System.out.println(Thread.currentThread().getName() + Thread.currentThread().isAlive());
             ur.xOne();
 
         }
@@ -38,28 +36,29 @@ public class ThreadPoool {
     //вычисление второго корня
     public static class Xtwo implements Runnable {
         private Urovnenie ur;
-        private CountDownLatch count;
         Xtwo(Urovnenie ur) {
             this.ur = ur;
-            this.count = count;
         }
 
         @Override
         public void run() {
+            Thread.currentThread().setName(" вычсляющий второй корень ");
+            System.out.println(Thread.currentThread().getName() + Thread.currentThread().isAlive());
             ur.xTwo();
 
         }
     }
+    //вычисление одного корня при X == 0
     public static class Xnull implements Runnable {
         private Urovnenie ur;
-        private CountDownLatch count;
         Xnull(Urovnenie ur) {
             this.ur = ur;
-            this.count = count;
         }
 
         @Override
         public void run() {
+            Thread.currentThread().setName(" вычсляющий корень при D = 0 ");
+            System.out.println(Thread.currentThread().getName() + Thread.currentThread().isAlive());
             ur.xNull();
         }
     }

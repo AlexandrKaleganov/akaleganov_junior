@@ -1,26 +1,23 @@
 package ru.job4j.forum.discriminant;
 
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-
 public class StartPogramm {
-    private volatile Double disc = null;
-    private double x1;
-    private double x2;
-    private volatile boolean x1Start = false;
-    private volatile boolean x2Start = false;
-    public static void main(String[] args) {
-        Urovnenie urovnenie = new Urovnenie(1, 6, 9);
-        CountDownLatch count = new CountDownLatch(1);
 
-        ThreadPoool.Discr discThread = new ThreadPoool.Discr(urovnenie);
-
-    }
-
-
-        public void reshenie() {
-            //вычисление ервого корня
-
+    public static void main(String[] args) throws InterruptedException {
+        Urovnenie urovnenie = new Urovnenie(5, 7, 10);
+        Thread discThread = new Thread(new ThreadPoool.Discr(urovnenie));
+        Thread xOne = new Thread(new ThreadPoool.Xone(urovnenie));
+        Thread xTwo = new Thread(new ThreadPoool.Xtwo(urovnenie));
+        Thread xNull = new Thread(new ThreadPoool.Xnull(urovnenie));
+        discThread.start();
+        xOne.start();
+        xTwo.start();
+        xNull.start();
+        discThread.join();
+        xOne.join();
+        xTwo.join();
+        xNull.join();
+        if (urovnenie.getDisc() < 0) {
+            System.out.println("уровнение не имеет корней");
+        }
     }
 }

@@ -4,7 +4,11 @@ import javax.jws.soap.SOAPBinding;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * база данных на канкарент хеш мап?,
+ * база данных на канкарент хеш мап, в этом классе никаких проверок вообще нету
+ * голая логика, если напрямую пробывать работать с этим классом
+ * то никаких проверок по изменению в БД не будет метод адд
+ * в наглую сможет изменить объект, который уже есть в бд
+ * а метод findById() может выбросить исключение null pointer exception
  */
 public class MemoryStore implements Store {
     private final ConcurrentHashMap<String, Users> database = new ConcurrentHashMap<>();
@@ -12,10 +16,6 @@ public class MemoryStore implements Store {
 
     public static MemoryStore getInstance() {
         return INSTANCE;
-    }
-
-    public int getSize() {
-        return database.size();
     }
 
     @Override
@@ -41,10 +41,6 @@ public class MemoryStore implements Store {
 
     @Override
     public Users findById(String id) {
-        Users rsl = null;
-        if (this.database.containsKey(id)) {
-                rsl = this.database.get(id);
-        }
-        return rsl;
+        return this.database.get(id);
     }
 }
