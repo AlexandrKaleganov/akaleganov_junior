@@ -100,7 +100,7 @@ public class ValidateService implements Validate {
         if (!name.matches("[a-zA-Z]{1,10}||[а-яА-Я]{1,10}")) {
             throw new DatabaseException("%USERNAME%=" + name + " error");
         }
-        if (!login.matches("[a-zA-Z, 1-9]{1,10}")) {
+        if (!login.matches("[a-zA-Z, 0-9]{1,10}")) {
             throw new DatabaseException("%LOGIN%=" + login + " error");
         }
     }

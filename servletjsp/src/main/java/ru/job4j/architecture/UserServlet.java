@@ -20,7 +20,7 @@ public class UserServlet extends HttpServlet {
         try {
             r = validate.findAll().toString();
         } catch (DatabaseException e) {
-            r = e.getMessage();
+            r = e.toString();
         }
         writer.append(r);
         writer.flush();
@@ -31,7 +31,7 @@ public class UserServlet extends HttpServlet {
         resp.setContentType("text/html");
         String res;
         try {
-            res = this.validate.add(new Users(req.getParameter("id"), req.getParameter("Name"), req.getParameter("Login")));
+            res = this.validate.add(new Users(req.getParameter("id"), req.getParameter("name"), req.getParameter("login")));
         } catch (DatabaseException e) {
             res = e.getMessage();
         }
