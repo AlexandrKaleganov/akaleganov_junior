@@ -20,7 +20,7 @@ public class UserServlet extends HttpServlet {
         try {
             r = validate.findAll().toString();
         } catch (DatabaseException e) {
-            r = e.toString();
+            r = e.getMessage();
         }
         writer.append(r);
         writer.flush();
