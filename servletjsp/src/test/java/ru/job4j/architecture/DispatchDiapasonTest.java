@@ -29,7 +29,6 @@ public class DispatchDiapasonTest {
                 ),
                 is("this user add to database")
         );
-        System.out.println(validate.findAll());
     }
 
 }
