@@ -3,9 +3,13 @@ package ru.job4j.architecture;
 import java.util.Map;
 
 public interface Store {
-    public void add(Users users);
-    public void update(String id, Users users);
-    public void delete(String id);
-    public Map findAll();
-    public Users findById(String id);
+    void add(Users users);
+
+    void update(Users users);
+
+    void delete(Users users);
+
+    Map findAll();
+
+    Users findById(Users users);
 }

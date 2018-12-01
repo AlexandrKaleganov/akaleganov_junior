@@ -24,14 +24,13 @@ public class MemoryStore implements Store {
     }
 
     @Override
-    public void update(String id, Users users) {
-        users.setId(id);
-        this.database.put(id, users);
+    public void update(Users users) {
+        this.database.put(users.getId(), users);
     }
 
     @Override
-    public void delete(String id) {
-        this.database.remove(id);
+    public void delete(Users users) {
+        this.database.remove(users.getId());
     }
 
     @Override
@@ -40,7 +39,7 @@ public class MemoryStore implements Store {
     }
 
     @Override
-    public Users findById(String id) {
-        return this.database.get(id);
+    public Users findById(Users users) {
+        return this.database.get(users.getId());
     }
 }

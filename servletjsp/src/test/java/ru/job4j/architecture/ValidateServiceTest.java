@@ -53,9 +53,9 @@ public class ValidateServiceTest {
     public void finbyid() throws DatabaseException {
         Users user1 = new Users("12", "Vasia", "vasilisk");
         Validate validate = new ValidateService();
-        Assert.assertThat(validate.add(user1), Is.is("Пользователь добавлен в БАЗУ"));
-        Assert.assertThat(validate.findById(user1.getId()), Is.is(user1));
-        validate.findById("15");
+        Assert.assertThat(validate.add(user1), Is.is("this user add to database"));
+        Assert.assertThat(validate.findById(user1), Is.is(user1));
+        validate.findById(new Users("15", "Vasia", "vasilisk"));
     }
 
     /**
@@ -69,7 +69,7 @@ public class ValidateServiceTest {
         Users user1 = new Users("12", "Vasia", "vasilisk");
         Users userDubl = new Users("12", "Nrrrrrrrr", "vasilisk");
         Validate validate = new ValidateService();
-        Assert.assertThat(validate.add(user1), Is.is("Пользователь добавлен в БАЗУ"));
+        Assert.assertThat(validate.add(user1), Is.is("this user add to database"));
         validate.add(userDubl);
     }
 
@@ -87,9 +87,9 @@ public class ValidateServiceTest {
         validate.add(user1);
         validate.add(users2);
         Assert.assertThat(validate.findAll().size(), Is.is(2));
-        Assert.assertThat(validate.delete("12"), Is.is("Пользователь с id = 12 удалён"));
+        Assert.assertThat(validate.delete(new Users("12", "Vasia", "vasilisk")), Is.is("user id = 12 deleted"));
         Assert.assertThat(validate.findAll().size(), Is.is(1));
-        validate.delete("12");
+        validate.delete(new Users("12", "Vasia", "vasilisk"));
     }
 
     /**
@@ -101,13 +101,13 @@ public class ValidateServiceTest {
     public void update() throws DatabaseException {
         Users user1 = new Users("12", "Vasia", "vasilisk");
         Users users2 = new Users("1", "Alex", "alexmur07");
-        Users users3 = new Users("55", "Nikita", "alexmur07");
+        Users users3 = new Users("1", "Nikita", "alexmur07");
         Validate validate = new ValidateService();
         validate.add(user1);
         validate.add(users2);
-        Assert.assertThat(validate.update("1", users3), Is.is("Данные пользователя с id = 1 обновлены"));
-        Assert.assertThat(validate.findById("1").getName(), Is.is("Nikita"));
-        validate.update("55", users2);
+        Assert.assertThat(validate.update(users3), Is.is("user id = 1 updated"));
+        Assert.assertThat(validate.findById(users2).getName(), Is.is("Nikita"));
+        validate.update(new Users("55", "Nikita", "alexmur07"));
     }
 
     //тест метода findAll если в бд есть данные
@@ -118,7 +118,7 @@ public class ValidateServiceTest {
         Validate validate = new ValidateService();
         validate.add(user1);
         Assert.assertThat(validate.findAll().size(), Is.is(1));
-        validate.delete("12");
+        validate.delete(new Users("12", "Vasia", "vasilisk"));
         validate.findAll();
     }
 }

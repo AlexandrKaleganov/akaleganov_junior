@@ -11,6 +11,8 @@ import java.io.PrintWriter;
 
 public class UserServlet extends HttpServlet {
     private final Validate validate = ValidateService.getInstance();
+    private final DispatchDiapason dispatsh = new DispatchDiapason().init();
+
 
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
@@ -29,12 +31,12 @@ public class UserServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html");
-        String res;
-        try {
-            res = this.validate.add(new Users(req.getParameter("id"), req.getParameter("name"), req.getParameter("login")));
-        } catch (DatabaseException e) {
-            res = e.getMessage();
-        }
+        String res = " ";
+        res = this.dispatsh.access(validate, req.getParameter("action"),
+                new Users(req.getParameter("id"), req.getParameter("name"), req.getParameter("login")));
+        PrintWriter writer = new PrintWriter(resp.getOutputStream());
+        writer.append(res + "\n");
+        writer.flush();
         doGet(req, resp);
     }
 }
