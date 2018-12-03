@@ -59,6 +59,7 @@ public class ValidateService implements Validate {
 
     /**
      * при удалении поля имени и логина могут быть пустыми
+     *
      * @param users
      * @return
      * @throws DatabaseException
@@ -69,19 +70,15 @@ public class ValidateService implements Validate {
         this.containsUsertoData(users.getId(), (k) ->
                 !this.logic.findAll().containsKey(k), " is not found");
         this.validNameandLogin(users.getName(), users.getLogin(),
-                (n) -> n.matches("[a-zA-Z]{0,10}||[а-яА-Я]{0,10}"),
-                (l) -> l.matches("[a-zA-Z, 0-9]{0,10}"));
+                (n) -> n==null || n.matches("[a-zA-Z]{0,10}||[а-яА-Я]{0,10}"),
+                (l) -> l==null || l.matches("[a-zA-Z, 0-9]{0,10}"));
         this.logic.delete(users);
         return "user id = " + users.getId() + " deleted";
     }
 
     @Override
-    public Map findAll() throws DatabaseException {
-        if (logic.findAll().size() < 1) {
-            throw new DatabaseException("this database is empty");
-        } else {
-            return this.logic.findAll();
-        }
+    public Map<String, Users> findAll() {
+        return this.logic.findAll();
     }
 
     //я не знал как этот момент проверить, сделал просто проверку что это должны быть символы цифры

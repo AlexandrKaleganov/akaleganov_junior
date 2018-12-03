@@ -18,7 +18,7 @@ public interface Validate {
 
     String delete(Users users) throws DatabaseException;
 
-    Map findAll() throws DatabaseException;
+    Map<String, Users> findAll();
 
     Users findById(Users users) throws DatabaseException;
 }

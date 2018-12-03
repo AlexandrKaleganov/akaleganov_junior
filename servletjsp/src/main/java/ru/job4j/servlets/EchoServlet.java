@@ -23,7 +23,7 @@ public class EchoServlet extends HttpServlet {
                 + "    <th><b>орол<b></th>\n"
                 + "    <th>NAME</th>\n"
                 + "   </tr>");
-        this.name.forEach((k, n) -> bilder.append("<tr><td>" + k + "</td>" + "<td>" + n + "</td></tr>"));
+        this.name.forEach((k, n) -> bilder.append("<tr><td><b>" + k + "</b></td>" + "<td><b>" + n + "</b></td></tr>"));
         bilder.append("</table>");
         writer.append("<!DOCTYPE html>\n"
                 + "<html lang='en'>\n"
@@ -33,7 +33,6 @@ public class EchoServlet extends HttpServlet {
                 + "</head>\n"
                 + "<body>\n"
                 + "<form action='" + req.getContextPath() + "/echo' method='post'>"
-                + "<input type='hidden' name='id' value='<%=id%>'/>"
                 + "key : <input type='text' name='key'/>"
                 + "Name : <input type='text' name='login'/>"
                 + "<input type='submit'>"

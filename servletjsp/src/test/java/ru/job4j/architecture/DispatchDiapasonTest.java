@@ -20,13 +20,12 @@ public class DispatchDiapasonTest {
      */
     @Test
     public void whenBetween14and18ThenLimited() throws DatabaseException {
-        Validate validate = new ValidateService();
         String key = "add";
         Users users = new Users("12", "user", "user123");
         assertThat(
                 new DispatchDiapason().init().access(
-                        validate, key, users
-                ),
+                        key, users
+                ).get(),
                 is("this user add to database")
         );
     }
