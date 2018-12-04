@@ -15,7 +15,7 @@ public class TrackerSQLTest {
     private final Config config = new Config();
     private Connection connection;
     private final static Logger LOG = (Logger) LoggerFactory.getLogger(TrackerSQLTest.class);
-/*
+
     private Connection connectToData() {
         try {
             this.connection = DriverManager.getConnection(config.getProperties("db.host"), config.getProperties("db.login"), config.getProperties("db.password"));
@@ -159,5 +159,4 @@ public class TrackerSQLTest {
         }
         assertThat(result.get(0).getName(), is("Нужна помощь"));
     }
-    */
 }

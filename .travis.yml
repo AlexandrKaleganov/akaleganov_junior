@@ -15,3 +15,8 @@ notifications:
       - alexmur07@mail.ru
     on_success: never # default: change
     on_failure: always # default: always
+# Start PostgreSQL
+services:
+- postgresql
+before_script:
+- psql -c "CREATE DATABASE trackdata;" -U postgres

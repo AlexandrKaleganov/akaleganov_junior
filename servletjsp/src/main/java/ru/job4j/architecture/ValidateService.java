@@ -6,6 +6,9 @@ import java.util.Map;
 import java.util.function.Predicate;
 
 /**
+ * @author Alexander Kaleganov
+ * @version 4
+ * @since 04/12/2018
  * этот класс прослойка между сервлетами и логикой программы
  * методы этого класса будут проверять: можно ли добавить этот объект,
  * в каждом методе будем проверять что id у нас соответствует формату
@@ -49,8 +52,8 @@ public class ValidateService implements Validate {
     public String update(Users users) throws DatabaseException {
         this.validID(users.getId());
         this.validNameandLogin(users.getName(), users.getLogin(),
-                (n) -> n.matches("[a-zA-Z]{0,10}||[а-яА-Я]{0,10}"),
-                (l) -> l.matches("[a-zA-Z, 0-9]{0,10}"));
+                (n) -> n.matches("[a-zA-Z]{0,20}||[а-яА-Я]{0,20}"),
+                (l) -> l.matches("[a-zA-Z, 0-9]{0,20}"));
         this.containsUsertoData(users.getId(), (k) ->
                 !this.logic.findAll().containsKey(k), " is not found");
         this.logic.update(users);
@@ -70,8 +73,8 @@ public class ValidateService implements Validate {
         this.containsUsertoData(users.getId(), (k) ->
                 !this.logic.findAll().containsKey(k), " is not found");
         this.validNameandLogin(users.getName(), users.getLogin(),
-                (n) -> n==null || n.matches("[a-zA-Z]{0,10}||[а-яА-Я]{0,10}"),
-                (l) -> l==null || l.matches("[a-zA-Z, 0-9]{0,10}"));
+                (n) -> n == null || n.matches("[a-zA-Z]{0,20}||[а-яА-Я]{0,20}"),
+                (l) -> l == null || l.matches("[a-zA-Z, 0-9]{0,20}"));
         this.logic.delete(users);
         return "user id = " + users.getId() + " deleted";
     }

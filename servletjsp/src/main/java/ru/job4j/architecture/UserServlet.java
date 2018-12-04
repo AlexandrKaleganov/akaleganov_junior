@@ -1,9 +1,9 @@
 package ru.job4j.architecture;
 /**
- * @autor Alexander KAleganov
- * @version 1.0
- * @since 01-11-2018
- * сервлет допост выводит все данные из бд
+ * @author Alexander Kaleganov (alexmur07@mail.ru)
+ * @version 8.0
+ * @since 04-11-2018
+ * сервлет метод doPost выводит все данные из бд
  * doGet выводит нашу бд и добавляет форму кнопок удаляения, добавления объектов
  * обращаю внимание на то, форма edit перекинет нас на новый сервлет который отвечает за редактирование формы
  * метод dopost удаляе элемент и обновляет страницу
@@ -27,6 +27,7 @@ public class UserServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
         res.setContentType("text/html; charset=utf-8");
+        req.setCharacterEncoding("utf-8");
         PrintWriter writer = res.getWriter();
         StringBuilder table = new StringBuilder("<table border='1'>");
         table.append("<caption>список</caption>");
@@ -48,14 +49,14 @@ public class UserServlet extends HttpServlet {
                         + "<td>"
                         + "<form action='" + req.getContextPath() + "/edit?=method='get '>\n"
                         + "<input type='hidden' name='id' value='" + k + "'/>"
-                        + "<input type='submit'>"
+                        + "<input type='submit' value='изменить'>"
                         + "</form>"
                         + "</td>"
                         + "<td>"
                         + "<form action='" + req.getContextPath() + "/list' method='post'>\n"
                         + "<input type='hidden' name='action' value='delete'/>"
                         + "<input type='hidden' name='id' value='" + k + "'/>"
-                        + "<input type='submit'>"
+                        + "<input type='submit' value='удалить'>"
                         + "</form>"
                         + "</td>"
                         + "</tr>"));
@@ -77,6 +78,7 @@ public class UserServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("text/html;charset=utf-8");
+        req.setCharacterEncoding("utf-8");
         PrintWriter writer = resp.getWriter();
         StringBuilder res = new StringBuilder();
         res.append(this.dispatsh.access(req.getParameter("action"),

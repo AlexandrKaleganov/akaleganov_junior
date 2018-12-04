@@ -26,9 +26,10 @@ public class ValidateServiceTest {
      */
     @Test(expected = DatabaseException.class)
     public void testformattoName() throws DatabaseException {
-        Users user1 = new Users("12", "aAAAa12", "vasilisk");
+        Users user1 = new Users("12", "aAAAa", "vasilisk");
         Validate validate = new ValidateService();
-        validate.add(user1);
+        System.out.println(validate.add(user1));
+        System.out.println(validate.update(new Users("12", "саша13213прав", "alexmur07")));
     }
 
     /**
@@ -86,10 +87,8 @@ public class ValidateServiceTest {
         Validate validate = new ValidateService();
         validate.add(user1);
         validate.add(users2);
-        Assert.assertThat(validate.findAll().size(), Is.is(2));
         Assert.assertThat(validate.delete(new Users("12", "Vasia", "vasilisk")), Is.is("user id = 12 deleted"));
-        Assert.assertThat(validate.findAll().size(), Is.is(1));
-        validate.delete(new Users("16", "Vasia", "vasilisk"));
+        validate.delete(new Users("12", "Vasia", "vasilisk"));
     }
 
     /**

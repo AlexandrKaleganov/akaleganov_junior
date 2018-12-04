@@ -4,7 +4,10 @@ import org.hamcrest.core.Is;
 import org.junit.Assert;
 import org.junit.Test;
 
-
+/**
+ *
+ * тест класса MemoryStore
+ */
 public class MemoryStoreTest {
 
 

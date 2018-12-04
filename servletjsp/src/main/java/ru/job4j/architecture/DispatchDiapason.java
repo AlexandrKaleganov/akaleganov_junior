@@ -10,16 +10,11 @@ package ru.job4j.architecture;
  */
 
 import ru.job4j.architecture.err.DatabaseException;
-import sun.plugin2.message.Message;
 
-import javax.xml.bind.ValidationEvent;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 public class DispatchDiapason {
     /**
