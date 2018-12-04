@@ -22,7 +22,7 @@ public class DispatchDiapasonTest {
     @Test
     public void whenBetween14and18ThenLimited() throws DatabaseException {
         Users users = new Users("12", "user", "user123");
-        DispatchDiapason dispatchDiapason = DispatchDiapason.getInstance();
+        DispatchDiapason dispatchDiapason = new  DispatchDiapason().init();
         assertThat(
                 dispatchDiapason.access(
                         "add", users
