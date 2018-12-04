@@ -12,6 +12,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 public class TrackerSQLTest {
+    /*
     private final Config config = new Config();
     private Connection connection;
     private final static Logger LOG = (Logger) LoggerFactory.getLogger(TrackerSQLTest.class);
@@ -158,5 +159,5 @@ public class TrackerSQLTest {
             e.printStackTrace();
         }
         assertThat(result.get(0).getName(), is("Нужна помощь"));
-    }
+    }*/
 }
