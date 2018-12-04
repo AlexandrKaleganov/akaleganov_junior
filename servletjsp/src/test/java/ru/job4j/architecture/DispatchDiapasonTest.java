@@ -29,7 +29,6 @@ public class DispatchDiapasonTest {
                 ).get(),
                 is("this user add to database")
         );
-
         assertThat(
                 dispatchDiapason.access(
                         "update", new Users("12", "саша", "user123")
