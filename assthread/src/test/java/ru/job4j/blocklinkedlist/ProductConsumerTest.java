@@ -15,7 +15,6 @@ public class ProductConsumerTest {
     @Test
     public void whennqueueProductandConsummer() throws InterruptedException {
 
-        for (int i = 0; i < 100; i++) {
 
             final CopyOnWriteArrayList<Integer> buffer = new CopyOnWriteArrayList<>();
             final SimpleBlockingQueue<Integer> queue = new SimpleBlockingQueue<>();
@@ -43,6 +42,5 @@ public class ProductConsumerTest {
             consumer.interrupt();
             consumer.join();
             assertThat(buffer, is(Arrays.asList(0, 1, 2, 3, 4)));
-        }
     }
 }

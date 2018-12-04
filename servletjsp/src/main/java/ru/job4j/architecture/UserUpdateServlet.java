@@ -31,7 +31,7 @@ public class UserUpdateServlet extends HttpServlet {
 
             form.append("<tr><td><form action='" + req.getContextPath() + "/list' method='post'>\n"
                     + "<input type='hidden' name='action' value='update'/>"
-                    + "ID : <input type='text' readonly='readonly' name='id' value='" + id + "'/>"
+                    + "ID__________: <input type='text' readonly='readonly' name='id' value='" + id + "'/>"
                     + "<br/>"
                     + "CREATE_DATE : <input type='text' readonly='readonly' name='CREATE_DATE' value='" + users1.getCreateDate() + "'/>"
                     + "<br/>"
