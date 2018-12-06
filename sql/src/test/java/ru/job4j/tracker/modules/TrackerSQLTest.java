@@ -63,6 +63,9 @@ public class TrackerSQLTest {
     @Test
     public void testirovanieTrackerSQLReplace() { //проверка метода изменения заявки
         Items items3 = new Items("Я твой дом труба шатал", "zzz");
+        Items items4 = new Items("11111111", "zzz");
+
+
         Config config = new Config();
         Connection connection = null;
         try {
@@ -70,7 +73,7 @@ public class TrackerSQLTest {
 
             try (TrackerSQL TrackerSQL = new TrackerSQL(config)) {
 
-                TrackerSQL.replace(1, items3);
+                TrackerSQL.replace(2, items3);
                 try (Statement st = connection.createStatement();
                      ResultSet rs = st.executeQuery("SELECT i.name, i.descc FROM items as i where i.id = 1 ")) {
                     rs.next();
