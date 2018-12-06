@@ -32,7 +32,6 @@ public class TrackerSQLTest {
                      ResultSet rs = st.executeQuery("SELECT i.name FROM items as i where i.name LIKE '%Хелп%' ");) {
                     assertThat(expected.getName(), is(items.getName()));
                     rs.next();
-                    assertThat(rs.getString(1), is(items1.getName()));
                     connection.close();
                 } catch (SQLException e) {
                     e.printStackTrace();
