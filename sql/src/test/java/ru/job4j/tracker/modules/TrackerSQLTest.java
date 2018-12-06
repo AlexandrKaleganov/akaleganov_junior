@@ -113,7 +113,7 @@ public class TrackerSQLTest {
                 TrackerSQL.delete(expected);
                 try (ResultSet rs1 = st.executeQuery("SELECT COUNT(id) FROM items")) {
                     rs1.next();
-                    int actual = rs1.getInt(1);
+                    int actual = rs1.getInt(0);
                     assertThat(actual, is(expected));
                 } catch (SQLException e) {
                     e.printStackTrace();
