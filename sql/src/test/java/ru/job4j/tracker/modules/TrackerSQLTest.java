@@ -50,7 +50,9 @@ public class TrackerSQLTest {
 
     @Test
     public void addCommentsTest() { //проверка метода добавления коментариев
+        Items items = new Items("Нужна помощь", "Ничего не работает, компьютер не запускается");
         try (TrackerSQL TrackerSQL = new TrackerSQL(new Config())) {
+            TrackerSQL.add(items);
             TrackerSQL.addComment(1, "вот комментарий");
             Assert.assertThat(TrackerSQL.findById(1).getComments().get(0), is("вот комментарий"));
         } catch (Exception e) {
