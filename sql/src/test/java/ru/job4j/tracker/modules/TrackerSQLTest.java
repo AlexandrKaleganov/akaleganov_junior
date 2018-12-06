@@ -60,38 +60,6 @@ public class TrackerSQLTest {
     }
 
     @Test
-    public void testirovanieTrackerSQLReplace() { //проверка метода изменения заявки
-        Items items3 = new Items("Я твой дом труба шатал", "zzz");
-        Items items4 = new Items("11111111", "zzz");
-
-
-        Config config = new Config();
-        Connection connection = null;
-        try {
-            connection = DriverManager.getConnection(config.getProperties("db.host"), config.getProperties("db.login"), config.getProperties("db.password"));
-
-            try (TrackerSQL TrackerSQL = new TrackerSQL(config)) {
-
-                TrackerSQL.replace(2, items3);
-                try (Statement st = connection.createStatement();
-                     ResultSet rs = st.executeQuery("SELECT i.name, i.descc FROM items as i where i.id = 1 ")) {
-                    rs.next();
-                    assertThat(rs.getString(1), is(items3.getName()));
-                    assertThat(rs.getString(2), is(items3.getDesc()));
-                    connection.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    @Test
     public void testirovanieTrackerSQLdelete() { //проверка метода удаления заявки
         Config config = new Config();
         Connection connection = null;
