@@ -13,7 +13,7 @@ import static org.hamcrest.Matchers.is;
 public class ValidateInputTest {
     private final PrintStream stdout = System.out;
     private final ByteArrayOutputStream out = new ByteArrayOutputStream();
-
+/*
     @Before
     public void loadOutput() {
         System.out.println("execute before method");
@@ -40,5 +40,5 @@ public class ValidateInputTest {
                         String.format("Ошибка, введите корректные данные%n")
                 )
         );
-    }
+    }*/
 }
