@@ -93,14 +93,17 @@ public class TrackerSQLTest {
     public void testirovanieTrackerSQLdelete() { //проверка метода удаления заявки
         Config config = new Config();
         Connection connection = null;
+        Items items3 = new Items("Я твой дом труба шатал", "zzz");
+
         try {
             connection = DriverManager.getConnection(config.getProperties("db.host"), config.getProperties("db.login"), config.getProperties("db.password"));
 
-            try (TrackerSQL TrackerSQL = new TrackerSQL(config);
-                 Statement st = connection.createStatement();
-                 ResultSet rs = st.executeQuery("SELECT COUNT(id) FROM items")) {
+            try (TrackerSQL TrackerSQL = new TrackerSQL(config)) {
+                TrackerSQL.add(items3);
+                try (Statement st = connection.createStatement();
+                     ResultSet rs = st.executeQuery("SELECT COUNT(id) FROM items")) {
+                    rs.next();
 
-                rs.next();
                 //запоминаем сколько у нас колонок было, и отнимаем 1
                 int expected = rs.getInt(1) - 1;
                 //удаяляем последнюю заявку в базе
@@ -114,6 +117,9 @@ public class TrackerSQLTest {
                 }
             } catch (SQLException e) {
                 LOG.error(e.getMessage(), e);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             } catch (Exception e) {
                 e.printStackTrace();
             }
