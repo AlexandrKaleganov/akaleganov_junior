@@ -114,10 +114,10 @@ public class ValidateService implements Validate {
     //лщгин должен состоять только из символов латинского алфавита и содержать цифры от 1 до 9
     private void validNameandLogin(String name, String login, Predicate<String> fancname, Predicate<String> fanclogin) throws DatabaseException {
         if (!fancname.test(name)) {
-            throw new DatabaseException("%USERNAME%=" + name + " error");
+            throw new DatabaseException("USERNAME_" + name + " error");
         }
         if (!fanclogin.test(login)) {
-            throw new DatabaseException("%LOGIN%=" + login + " error");
+            throw new DatabaseException("LOGIN_" + login + " error");
         }
     }
 
