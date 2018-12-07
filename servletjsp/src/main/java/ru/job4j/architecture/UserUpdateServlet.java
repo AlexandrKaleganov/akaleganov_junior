@@ -70,12 +70,8 @@ public class UserUpdateServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html;charset=utf-8");
-        PrintWriter writer = resp.getWriter();
-        StringBuilder res = new StringBuilder(this.dispatsh.access(req.getParameter("action"),
-                new Users(req.getParameter("id"), req.getParameter("name"), req.getParameter("login"))).get().toString());
-        writer.print(res);
-        doGet(req, resp);
+        req.setCharacterEncoding("utf-8");
+        resp.sendRedirect(String.format("%s/list", req.getContextPath(), this.dispatsh.access(req.getParameter("action"),
+                new Users(req.getParameter("id"), req.getParameter("name"), req.getParameter("login"))).get()));
     }
-
-
 }

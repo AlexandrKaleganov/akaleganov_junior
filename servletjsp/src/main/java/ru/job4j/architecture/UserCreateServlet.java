@@ -41,11 +41,7 @@ public class UserCreateServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html;charset=utf-8");
         req.setCharacterEncoding("utf-8");
-        PrintWriter writer = resp.getWriter();
-        StringBuilder res = new StringBuilder();
-        res.append(this.dispatsh.access(req.getParameter("action"),
-                new Users(req.getParameter("id"), req.getParameter("name"), req.getParameter("login"))).get());
-        writer.print(res);
-        doGet(req, resp);
+        resp.sendRedirect(String.format("%s/list", req.getContextPath(), this.dispatsh.access(req.getParameter("action"),
+                new Users(req.getParameter("id"), req.getParameter("name"), req.getParameter("login"))).get()));
     }
 }

@@ -10,8 +10,9 @@ package ru.job4j.architecture;
  * <p>
  * PrintWriter writer = new PrintWriter(res.getOutputStream()); пришлось заменить на
  * PrintWriter writer = res.getWriter();  иначе не работала кодировка либо на сайте либо в среде , а так всё работает
- * d
+ * в методе пост у меня происходит редикрект с параметрами на страницу лист и там вся информация обрабатывается
  */
+
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -29,6 +30,14 @@ public class UserServlet extends HttpServlet {
         res.setContentType("text/html; charset=utf-8");
         req.setCharacterEncoding("utf-8");
         PrintWriter writer = res.getWriter();
+        String send = req.getParameter("send");
+        StringBuilder console = new StringBuilder(
+                "<table border='1'>"
+                        + "<tr><th>ConsoleOutsend</th></tr>");
+        if (send != null) {
+            console.append("<tr> <td>" + send + "</td></tr>");
+        }
+        console.append("</table>");
         StringBuilder table = new StringBuilder("<table border='1'>");
         table.append("<caption>список</caption>");
         table.append("<tr>\n"
@@ -73,6 +82,8 @@ public class UserServlet extends HttpServlet {
                 + "<input type='submit' value='ДОБАВИТЬ'>"
                 + "</form>"
                 + "<br/>"
+                + console
+                + "<br/>"
                 + table
                 + "</body>\n"
                 + "</html>");
@@ -83,11 +94,8 @@ public class UserServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("text/html;charset=utf-8");
         req.setCharacterEncoding("utf-8");
-        PrintWriter writer = resp.getWriter();
-        StringBuilder res = new StringBuilder();
-        res.append(this.dispatsh.access(req.getParameter("action"),
-                new Users(req.getParameter("id"), req.getParameter("name"), req.getParameter("login"))).get());
-        writer.print(res);
+        resp.sendRedirect(String.format("%s/list?send=%s", req.getContextPath(), this.dispatsh.access(req.getParameter("action"),
+                new Users(req.getParameter("id"), req.getParameter("name"), req.getParameter("login"))).get()));
         doGet(req, resp);
     }
 }
