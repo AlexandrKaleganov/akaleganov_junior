@@ -27,6 +27,14 @@ public class VacancyTest {
         String str = "сегодня, 16:35";
         ArrayList<Integer> time = new ArrayList<>();
 //        Arrays.stream(str.split("[,:]")).filter(e -> !e.contains("сегодня")).map(e -> e.replace(" ", "")).mapToInt(Integer::parseInt).forEach(time::add);
+        String x = "вася";
+        String y = "gtnz";
+
+        if (x.contains(y.substring(0, 1))) {
+            System.out.println("ну да содержит");
+        }
+
     }
+
 
 }

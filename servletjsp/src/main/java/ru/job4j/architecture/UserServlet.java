@@ -30,7 +30,7 @@ public class UserServlet extends HttpServlet {
         res.setContentType("text/html; charset=utf-8");
         req.setCharacterEncoding("utf-8");
         PrintWriter writer = res.getWriter();
-        String send = req.getParameter("send");
+        String send = req.getParameter("system_message");
         StringBuilder console = new StringBuilder(
                 "<table border='1'>"
                         + "<tr><th>ConsoleOutsend</th></tr>");
@@ -56,7 +56,7 @@ public class UserServlet extends HttpServlet {
                         + "<td>" + u.getLogin() + "</td>"
                         + "<td>" + u.getCreateDate() + "</td>"
                         + "<td>"
-                        + "<form action='" + req.getContextPath() + "/edit?=method='get '>\n"
+                        + "<form action='" + req.getContextPath() + "/edit?=method='get'>\n"
                         + "<input type='hidden' name='id' value='" + k + "'/>"
                         + "<input type='submit' value='изменить'>"
                         + "</form>"
@@ -94,7 +94,7 @@ public class UserServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("text/html;charset=utf-8");
         req.setCharacterEncoding("utf-8");
-        resp.sendRedirect(String.format("%s/list?send=%s", req.getContextPath(), this.dispatsh.access(req.getParameter("action"),
+        resp.sendRedirect(String.format("%s/?system_message=%s", req.getContextPath(), this.dispatsh.access(req.getParameter("action"),
                 new Users(req.getParameter("id"), req.getParameter("name"), req.getParameter("login"))).get()));
         doGet(req, resp);
     }

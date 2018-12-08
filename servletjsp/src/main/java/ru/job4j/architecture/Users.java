@@ -16,7 +16,11 @@ public class Users {
         this.name = name;
         this.login = login;
     }
-
+    public Users(String name, String login) {
+        this.createDate = LocalDateTime.now();
+        this.name = name;
+        this.login = login;
+    }
     Users() {
 
     }
