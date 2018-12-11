@@ -54,6 +54,7 @@ public class Month {
                     .map(e -> e.replace(" ", ""))
                     .mapToInt(Integer::parseInt).forEach(time::add);
             dateTime = LocalDate.now().atTime(time.get(0), time.get(1));
+
             if (date.contains("вчера")) {
                 dateTime = dateTime.minusDays(1);
             }

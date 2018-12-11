@@ -20,4 +20,14 @@ public class RepitengthTest {
         repitength.siseres(ints3);
         repitength.siseres(ints4);
     }
+
+    @Test
+    public void minim() {
+        int[] ints = {5, 7, 6, 6, 8, 1, 2, 2, 7, 4, 3};
+        int[] ints1 = {5, 7, 7, 4, 3, 8, 2, 2, 7, 1};
+        Repitength repitengt = new Repitength();
+        Assert.assertThat(repitengt.interMinim(ints), Is.is(3));
+        Assert.assertThat(repitengt.interMinim(ints1), Is.is(3));
+
+    }
 }

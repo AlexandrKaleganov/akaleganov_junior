@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -30,6 +31,12 @@ public class StoreTest {
         Info expected = new Info(2, 1, 1);
         assertThat(new Store().diff(previoues, current), Is.is(expected));
         System.out.println(new Store().diff(previoues, current));
+        previoues.sort(new Comparator<Store.User>() {
+            @Override
+            public int compare(Store.User o1, Store.User o2) {
+                return 0;
+            }
+        });
 
     }
 }

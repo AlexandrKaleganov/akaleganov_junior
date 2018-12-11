@@ -5,7 +5,7 @@ package ru.job4j.architecture;
 
 import java.util.Map;
 
-public interface Store {
+public interface Store<Users>{
     void add(Users users);
 
     void update(Users users);

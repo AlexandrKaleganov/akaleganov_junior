@@ -90,7 +90,7 @@ public class ValidateService implements Validate {
         this.validID(users.getId());
         this.containsUsertoData(users.getId(), (k) ->
                 !this.logic.findAll().containsKey(k), " is not found");
-        return this.logic.findById(users);
+        return (Users) this.logic.findById(users);
     }
 
     //методы генерирующие исключения
