@@ -9,7 +9,8 @@ package ru.job4j.architecture;
 
 import ru.job4j.architecture.err.DatabaseException;
 
-import java.util.Map;
+import java.util.List;
+
 
 public interface Validate {
     String add(Users users) throws DatabaseException;
@@ -18,7 +19,7 @@ public interface Validate {
 
     String delete(Users users) throws DatabaseException;
 
-    Map<String, Users> findAll();
+    List<Users> findAll();
 
     Users findById(Users users) throws DatabaseException;
 }

@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Map;
+import java.util.List;
 
 public class UserServlet extends HttpServlet {
     private final DispatchDiapason dispatsh = DispatchDiapason.getInstance();
@@ -48,23 +48,23 @@ public class UserServlet extends HttpServlet {
                 + "    <th>EDIT</th>\n"
                 + "    <th>DELETE</th>\n"
                 + "   </tr>");
-        Map<String, Users> map = (Map<String, Users>) this.dispatsh.access("findall", new Users()).get();
-        map.forEach((k, u) ->
+        List<Users> list = (List<Users>) this.dispatsh.access("findall", new Users()).get();
+        list.forEach(u ->
                 table.append("<tr>"
-                        + "<td>" + k + "</td>"
+                        + "<td>" + u.getId() + "</td>"
                         + "<td>" + u.getName() + "</td>"
                         + "<td>" + u.getLogin() + "</td>"
                         + "<td>" + u.getCreateDate() + "</td>"
                         + "<td>"
                         + "<form action='" + req.getContextPath() + "/edit?=method='get'>\n"
-                        + "<input type='hidden' name='id' value='" + k + "'/>"
+                        + "<input type='hidden' name='id' value='" + u.getId() + "'/>"
                         + "<input type='submit' value='изменить'>"
                         + "</form>"
                         + "</td>"
                         + "<td>"
                         + "<form action='" + req.getContextPath() + "/list' method='post'>\n"
                         + "<input type='hidden' name='action' value='delete'/>"
-                        + "<input type='hidden' name='id' value='" + k + "'/>"
+                        + "<input type='hidden' name='id' value='" + u.getId() + "'/>"
                         + "<input type='submit' value='удалить'>"
                         + "</form>"
                         + "</td>"

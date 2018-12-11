@@ -1,6 +1,7 @@
 <%@ page import="ru.job4j.architecture.DispatchDiapason" %>
 <%@ page import="java.util.Map" %>
-<%@ page import="ru.job4j.architecture.Users" %><%--
+<%@ page import="ru.job4j.architecture.Users" %>
+<%@ page import="java.util.List" %><%--
   Created by IntelliJ IDEA.
   User: Kaleganov Alxandr
   Date: 07 дек 18
@@ -44,15 +45,13 @@
         <th>DELETE</th>
     </tr>
     <%
-        Map<String, Users> map = (Map<String, Users>) DispatchDiapason
+        List<Users> list = (List<Users>) DispatchDiapason
                 .getInstance()
                 .access("findall", new Users("", "", "")).get();
-        for (Map.Entry<String, Users> entry : map.entrySet()) {
-            String k = entry.getKey();
-            Users u = entry.getValue();
+        for (Users u : list) {
     %>
     <tr>
-        <td><%=k%>
+        <td><%=u.getId()%>
         </td>
         <td><%=u.getName()%>
         </td>
@@ -62,14 +61,14 @@
         </td>
         <td>
             <form action="<%=request.getContextPath()%>/edit.jsp?=" method="get">
-                <input type="hidden" name="id" value="<%=k%>">
+                <input type="hidden" name="id" value="<%=u.getId()%>">
                 <input type="submit" value="EDIT">
             </form>
         </td>
         <td>
             <form action="<%=request.getContextPath()%>/list" method="post">
                 <input type="hidden" name="action" value="delete">
-                <input type="hidden" name="id" value="<%=k%>">
+                <input type="hidden" name="id" value="<%=u.getId()%>">
                 <input type="submit" value="DELETE">
             </form>
         </td>

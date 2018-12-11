@@ -17,7 +17,7 @@
         <input type="hidden" name="action" value="add">
         <tr>
             <td> ID :</td>
-            <td><input type="text" name="id" value=""></td>
+            <td><input type='text' readonly="readonly" name="id" value="0"></td>
         </tr>
         <tr>
             <td> Name :</td>

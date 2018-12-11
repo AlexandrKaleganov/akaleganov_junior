@@ -2,7 +2,9 @@ package ru.job4j.architecture;
 
 import ru.job4j.architecture.err.DatabaseException;
 
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Predicate;
 
 /**
@@ -26,7 +28,7 @@ public class ValidateService implements Validate {
      * в методе если не выпали исключения то в базу будет добавлен пользователь
      * первый метод может выбросить сообщение неверный формат id
      * второй выбросит исключение если имя или логин неверного формата или пустые
-     * третий выбросит исключение если пользователь уже есть в БД
+     * третий выбросит исключение если пользователь уже есть в БД или если ЛОГИН ЕСТЬ В БД
      */
     @Override
     public String add(Users users) throws DatabaseException {
@@ -34,8 +36,18 @@ public class ValidateService implements Validate {
         this.validNameandLogin(users.getName(), users.getLogin(),
                 (n) -> n.matches("[a-zA-Z]{1,10}||[а-яА-Я]{1,10}"),
                 (l) -> l.matches("[a-zA-Z, 0-9]{1,10}"));
-        this.containsUsertoData(users.getId(), (k) ->
-                this.logic.findAll().containsKey(k), " already exists");
+        this.containsUsertoData(users, (k) -> {
+            CopyOnWriteArrayList<Users> list = (CopyOnWriteArrayList<Users>) this.logic.findAll();
+            boolean rsl = false;
+            rsl = this.logic.findAll().contains(k);
+            for (int i = 0; i < list.size(); i++) {
+                if (list.get(i).getLogin().contains(k.getLogin())) {
+                    rsl = true;
+                    break;
+                }
+            }
+            return rsl;
+        }, " already exists");
         this.logic.add(users);
         return "this user add to database";
     }
@@ -54,8 +66,8 @@ public class ValidateService implements Validate {
         this.validNameandLogin(users.getName(), users.getLogin(),
                 (n) -> n.matches("[a-zA-Z]{0,20}||[а-яА-Я]{0,20}"),
                 (l) -> l.matches("[a-zA-Z, 0-9]{0,20}"));
-        this.containsUsertoData(users.getId(), (k) ->
-                !this.logic.findAll().containsKey(k), " is not found");
+        this.containsUsertoData(users, (k) ->
+                this.logic.findAll().size() > Integer.valueOf(k.getId()) && Integer.valueOf(k.getId()) >= 0, " is not found");
         this.logic.update(users);
         return "user id = " + users.getId() + " updated";
     }
@@ -70,8 +82,8 @@ public class ValidateService implements Validate {
     @Override
     public String delete(Users users) throws DatabaseException {
         this.validID(users.getId());
-        this.containsUsertoData(users.getId(), (k) ->
-                !this.logic.findAll().containsKey(k), " is not found");
+        this.containsUsertoData(users, (k) ->
+                this.logic.findAll().size() > Integer.valueOf(k.getId()) && Integer.valueOf(k.getId()) >= 0, " is not found");
         this.validNameandLogin(users.getName(), users.getLogin(),
                 (n) -> n == null || n.matches("[a-zA-Z]{0,20}||[а-яА-Я]{0,20}"),
                 (l) -> l == null || l.matches("[a-zA-Z, 0-9]{0,20}"));
@@ -80,16 +92,22 @@ public class ValidateService implements Validate {
     }
 
     @Override
-    public Map<String, Users> findAll() {
+    public List<Users> findAll() {
         return this.logic.findAll();
     }
 
-    //я не знал как этот момент проверить, сделал просто проверку что это должны быть символы цифры
+    /**
+     * если k == null то будет исключение
+     *
+     * @param users
+     * @return
+     * @throws DatabaseException
+     */
     @Override
     public Users findById(Users users) throws DatabaseException {
         this.validID(users.getId());
-        this.containsUsertoData(users.getId(), (k) ->
-                !this.logic.findAll().containsKey(k), " is not found");
+        this.containsUsertoData(users, (k) ->
+                this.logic.findAll().size() > Integer.valueOf(k.getId()) && Integer.valueOf(k.getId()) >= 0, " is not found");
         return (Users) this.logic.findById(users);
     }
 
@@ -103,9 +121,9 @@ public class ValidateService implements Validate {
 
 
     //выбрасывает исключение если пользоавтель с таким id уже есть или не найден
-    private void containsUsertoData(String id, Predicate<String> isID, String error) throws DatabaseException {
-        if (isID.test(id)) {
-            throw new DatabaseException("user id = " + id + error);
+    private void containsUsertoData(Users users, Predicate<Users> isID, String error) throws DatabaseException {
+        if (isID.test(users)) {
+            throw new DatabaseException("user id = " + users.getId() + error);
         }
     }
 

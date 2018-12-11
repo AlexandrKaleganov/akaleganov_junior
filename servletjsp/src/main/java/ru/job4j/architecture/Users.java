@@ -58,28 +58,22 @@ public class Users {
     }
 
     @Override
+    public String toString() {
+        return "Users{" + "createDate=" + createDate + ", name='" + name + '\''
+                + ", login='" + login + '\'' + '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         Users users = (Users) o;
-        return id == users.id
-                && Objects.equals(createDate, users.createDate)
-                && Objects.equals(name, users.name)
-                && Objects.equals(login, users.login);
+        return  Objects.equals(name, users.name) &&
+                Objects.equals(login, users.login);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, createDate, name, login);
-    }
-
-    @Override
-    public String toString() {
-        return "Users{" + "createDate=" + createDate + ", name='" + name + '\''
-                + ", login='" + login + '\'' + '}';
+        return Objects.hash(name, login);
     }
 }

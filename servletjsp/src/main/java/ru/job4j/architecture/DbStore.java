@@ -2,11 +2,12 @@ package ru.job4j.architecture;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 
+import java.util.List;
 import java.util.Map;
 
 public class DbStore implements Store<Users> {
     private static final BasicDataSource SOURCE = new BasicDataSource();
-    private static DbStore INSTANCE = new DbStore();
+    private static final DbStore INSTANCE = new DbStore();
 
     public DbStore() {
         SOURCE.setUrl("...");
@@ -20,9 +21,10 @@ public class DbStore implements Store<Users> {
     public static DbStore getInstance() {
         return INSTANCE;
     }
-    @Override
-    public void add(Users users) {
 
+    @Override
+    public Users add(Users users) {
+        return null;
     }
 
     @Override
@@ -36,7 +38,7 @@ public class DbStore implements Store<Users> {
     }
 
     @Override
-    public Map findAll() {
+    public List<Users> findAll() {
         return null;
     }
 

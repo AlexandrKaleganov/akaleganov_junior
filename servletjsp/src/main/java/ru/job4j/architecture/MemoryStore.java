@@ -1,17 +1,12 @@
 package ru.job4j.architecture;
 
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- * база данных на канкарент хеш мап, в этом классе никаких проверок вообще нету
- * голая логика, если напрямую пробывать работать с этим классом
- * то никаких проверок по изменению в БД не будет метод адд
- * в наглую сможет изменить объект, который уже есть в бд
- * а метод findById() может выбросить исключение null pointer exception
- * метод update  будет изменять поля юзеров
+ * методы переделаны на copyonwritearraylist
  */
-public class MemoryStore implements Store {
-    private final ConcurrentHashMap<String, Users> database = new ConcurrentHashMap<>();
+public class MemoryStore implements Store<Users> {
+    private final CopyOnWriteArrayList<Users> database = new CopyOnWriteArrayList<>();
     private static final MemoryStore INSTANCE = new MemoryStore();
 
     public static MemoryStore getInstance() {
@@ -19,33 +14,34 @@ public class MemoryStore implements Store {
     }
 
     @Override
-    public void add(Users users) {
-        this.database.put(users.getId(), users);
+    public Users add(Users users) {
+        this.database.add(users);
+        this.database.get(this.database.size() - 1).setId("" + (this.database.size() - 1));
+        return this.database.get(this.database.size() - 1);
     }
 
     @Override
     public void update(Users users) {
-        Users users1 = this.database.get(users.getId());
         if (users.getName().length() > 0) {
-            users1.setName(users.getName());
+            this.database.get(Integer.valueOf(users.getId())).setName(users.getName());
         }
         if (users.getLogin().length() > 0) {
-            users1.setLogin(users.getLogin());
+            this.database.get(Integer.valueOf(users.getId())).setLogin(users.getLogin());
         }
     }
 
     @Override
     public void delete(Users users) {
-        this.database.remove(users.getId());
+        this.database.remove(Integer.valueOf(users.getId()));
     }
 
     @Override
-    public ConcurrentHashMap<String, Users> findAll() {
+    public CopyOnWriteArrayList<Users> findAll() {
         return this.database;
     }
 
     @Override
     public Users findById(Users users) {
-        return this.database.get(users.getId());
+        return this.database.get(Integer.valueOf(users.getId()));
     }
 }
