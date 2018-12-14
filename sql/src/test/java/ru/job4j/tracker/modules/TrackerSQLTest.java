@@ -1,56 +1,53 @@
 package ru.job4j.tracker.modules;
 
+import org.hamcrest.core.Is;
 import org.junit.Assert;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import java.io.InputStream;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Properties;
 
 import static org.hamcrest.CoreMatchers.is;
+
 import static org.junit.Assert.*;
 
 public class TrackerSQLTest {
 
-    private final static Logger LOG = (Logger) LoggerFactory.getLogger(TrackerSQLTest.class);
 
+    public Connection init() {
+        try (InputStream in = TrackerSQL.class.getClassLoader().getResourceAsStream("config.properties")) {
+            Properties config = new Properties();
+            config.load(in);
+            Class.forName(config.getProperty("db.driver"));
+            return DriverManager.getConnection(
+                    config.getProperty("db.host"),
+                    config.getProperty("db.login"),
+                    config.getProperty("db.password")
+            );
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
+    }
 
     @Test
     public void testirovanieTrackerSQLADD() { //проверка метода add
-        Config config = new Config();
-        Connection connection = null;
-        try {
-            connection = DriverManager.getConnection(config.getProperties("db.host"), config.getProperties("db.login"), config.getProperties("db.password"));
-
-            Items items = new Items("Нужна помощь", "Ничего не работает, компьютер не запускается");
-            Items items1 = new Items("Хелп", "От поддержки никакого толка");
-            Items expected = null;
-            try (TrackerSQL TrackerSQL = new TrackerSQL(config)) {
-                expected = TrackerSQL.add(items);
-                try (Statement st = connection.createStatement();
-                     ResultSet rs = st.executeQuery("SELECT i.name FROM items as i where i.name LIKE '%Хелп%' ");) {
-                    assertThat(expected.getName(), is(items.getName()));
-                    rs.next();
-                    connection.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            } catch (SQLException e) {
-                LOG.error(e.getMessage(), e);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } catch (SQLException e) {
+        Items items = new Items("1231231313", "Ничего не работает, компьютер не запускается");
+        Items expected = null;
+        try (TrackerSQL TrackerSQL = new TrackerSQL(ConnectionRollback.create(this.init()))) {
+            expected = TrackerSQL.add(items);
+            Assert.assertThat(expected, Is.is(items));
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     @Test
     public void addCommentsTest() { //проверка метода добавления коментариев
-        Items items = new Items("Нужна помощь", "Ничего не работает, компьютер не запускается");
-        try (TrackerSQL TrackerSQL = new TrackerSQL(new Config())) {
+        Items items = new Items("dddddddd", "Ничего не работает, компьютер не запускается");
+        try (TrackerSQL TrackerSQL = new TrackerSQL(ConnectionRollback.create(this.init()))) {
             TrackerSQL.add(items);
             TrackerSQL.addComment(1, "вот комментарий");
             Assert.assertThat(TrackerSQL.findById(1).getComments().get(0), is("вот комментарий"));
@@ -61,118 +58,63 @@ public class TrackerSQLTest {
 
     @Test
     public void testirovanieTrackerSQLdelete() { //проверка метода удаления заявки
-        Config config = new Config();
-        Connection connection = null;
         Items items3 = new Items("Я твой дом труба шатал", "zzz");
-
-        try {
-            connection = DriverManager.getConnection(config.getProperties("db.host"), config.getProperties("db.login"), config.getProperties("db.password"));
-
-            try (TrackerSQL TrackerSQL = new TrackerSQL(config)) {
-                TrackerSQL.add(items3);
-                try (Statement st = connection.createStatement();
-                     ResultSet rs = st.executeQuery("SELECT COUNT(id) FROM items")) {
-                    rs.next();
-
-                //запоминаем сколько у нас колонок было, и отнимаем 1
-                int expected = rs.getInt(1) - 1;
-                //удаяляем последнюю заявку в базе
-                TrackerSQL.delete(expected);
-                try (ResultSet rs1 = st.executeQuery("SELECT COUNT(id) FROM items")) {
-                    rs1.next();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            } catch (SQLException e) {
-                LOG.error(e.getMessage(), e);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } catch (SQLException e) {
+        try (TrackerSQL TrackerSQL = new TrackerSQL(ConnectionRollback.create(this.init()))) {
+            TrackerSQL.add(items3);
+            TrackerSQL.delete(1);
+            Assert.assertThat(TrackerSQL.findById(1), Is.is((Items) null));
+        } catch (Exception e) {
             e.printStackTrace();
         }
+
+
     }
 
 
     @Test
     public void testirovanieTrackerSQLfindAll() { //проверка метода показать все заявки
-        Config config = new Config();
-        Connection connection = null;
-        try {
-            connection = DriverManager.getConnection(config.getProperties("db.host"), config.getProperties("db.login"), config.getProperties("db.password"));
+        Items items = new Items(1, "Пом", "Ничего не работает, компьютер не запускается");
+        Items items1 = new Items(2, "Пом3", "От поддержки никакого толка");
+        try (TrackerSQL TrackerSQL = new TrackerSQL(ConnectionRollback.create(this.init()))) {
 
-
-            try (TrackerSQL TrackerSQL = new TrackerSQL(config);
-                 TrackerSQL TrackerSQL1 = new TrackerSQL(config)) {
-                Items items = new Items("Нужна помощь", "Ничего не работает, компьютер не запускается");
-                Items items1 = new Items("Хелп", "От поддержки никакого толка");
-                TrackerSQL.add(items);
-                TrackerSQL.add(items1);
-                ArrayList<Items> ekepted = TrackerSQL.findAll();
-                for (Items i : ekepted) {
-                    TrackerSQL1.add(i);
-                }
-                assertThat(TrackerSQL.findAll(), is(TrackerSQL1.findAll()));
-
-            } catch (SQLException e) {
-                LOG.error(e.getMessage(), e);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } catch (SQLException e) {
+            TrackerSQL.add(items);
+            TrackerSQL.add(items1);
+            ArrayList<Items> actual = TrackerSQL.findAll();
+            ArrayList<Items> expected = new ArrayList<>(Arrays.asList(items, items1));
+            assertThat(actual.get(0), is(expected.get(0)));
+            assertThat(actual.get(1), is(expected.get(1)));
+        } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
+    /**
+     * сделал
+     *
+     * @throws Exception
+     */
     @Test
     public void testirovanieTrackerSQLById() throws Exception {   // поверка метода поиск заявки по id и получение всех заявок
-        Config config = new Config();
-        Connection connection = null;
-        try {
-            connection = DriverManager.getConnection(config.getProperties("db.host"), config.getProperties("db.login"), config.getProperties("db.password"));
-
-
-            Boolean rsl = null;
-            try (TrackerSQL TrackerSQL = new TrackerSQL(config)) {
-                int actual = TrackerSQL.findById(1).getId();
-                rsl = false;
-                ArrayList<Items> temp = TrackerSQL.findAll();
-                for (int i = 0; i < temp.size(); i++) {
-                    if (temp.get(i).getId() == actual) {
-                        rsl = true;
-                        break;
-                    }
-                }
-                assertThat(rsl, is(true));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } catch (SQLException e) {
+        Items items = new Items(1, "Нужна помощь", "Ничего не работает, компьютер не запускается");
+        try (TrackerSQL TrackerSQL = new TrackerSQL(ConnectionRollback.create(this.init()))) {
+            TrackerSQL.add(items);
+            assertThat(TrackerSQL.findById(1), is(items));
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
 
     @Test
-    public void testirovanieTrackerSQLByName() { // проверка метода поиска заявок  по имени(похожие заявки)
-        Config config = new Config();
-        Connection connection = null;
-        try {
-            connection = DriverManager.getConnection(config.getProperties("db.host"), config.getProperties("db.login"), config.getProperties("db.password"));
-
+    public void testirovanieTrackerSQLByName() throws Exception { // проверка метода поиска заявок  по имени(похожие заявки)
+        Items items = new Items(1, "eeeeeeeeeee", "Ничего не работает, компьютер не запускается");
+        try (TrackerSQL TrackerSQL = new TrackerSQL(ConnectionRollback.create(this.init()))) {
+            TrackerSQL.add(items);
             ArrayList<Items> result = null;
-            try (TrackerSQL TrackerSQL = new TrackerSQL(config)) {
-                result = TrackerSQL.findByName("Нужна");
-            } catch (SQLException e) {
-                LOG.error(e.getMessage(), e);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            result = TrackerSQL.findByName("Нужна");
             assertThat(result.get(0).getName(), is("Нужна помощь"));
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

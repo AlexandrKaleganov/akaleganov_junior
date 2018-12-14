@@ -17,7 +17,8 @@ public class StartUI {
         this.input = input;
         this.tracker = tracker;
     }
-
+/**
+ * закомментил чтобы тесты шли
     public static void main(String[] args) {
         try (TrackerSQL tracker = new TrackerSQL(new Config())) {
             new StartUI(new ValidateInput(new ConsoleInput()), tracker).init();
@@ -25,7 +26,7 @@ public class StartUI {
             e.printStackTrace();
         }
     }
-
+*/
 
     public void init() {
         boolean exit = false;

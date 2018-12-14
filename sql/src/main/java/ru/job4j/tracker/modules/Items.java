@@ -33,7 +33,12 @@ public class Items implements Comparable<Items> {
         this.desc = desc;
         this.created = millisreturn();
     }
-
+    public Items(int id, String name, String desc) {
+        this.id = id;
+        this.name = name;
+        this.desc = desc;
+        this.created = millisreturn();
+    }
     public Items(int id, String name, String desc, long created) {
         this.id = id;
         this.name = name;

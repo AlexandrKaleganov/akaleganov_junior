@@ -27,6 +27,17 @@ public class TrackerSQL implements ITracker, AutoCloseable {
     }
 
     /**
+     * сделал отдельный конструктор для тестов
+     *
+     * @param conn
+     */
+    public TrackerSQL(Connection conn) {
+        this.conn = conn;
+        this.config = new Config();
+        this.addTable();
+    }
+
+    /**
      * метод подключения к базе
      */
     private void connectToData() {
@@ -167,11 +178,15 @@ public class TrackerSQL implements ITracker, AutoCloseable {
         try (PreparedStatement st = conn.prepareStatement("select i.id, i.name, i.descc, i.created, c.comment FROM items as i left  OUTER JOIN comments as c on c.id_items =  i.id where i.id = ?")) {
             st.setInt(1, id);
             try (ResultSet rs = st.executeQuery()) {
-                rs.next();
-                rsl = new Items(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getTimestamp(4).getTime());
-                rsl.addComment(rs.getString(5));
-                while (rs.next()) {
-                    rsl.addComment(rs.getString(5));
+                if (rs.next()) {
+                    rsl = new Items(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getTimestamp(4).getTime());
+                    if (rs.getString(5) != null) {
+                        rsl.addComment(rs.getString(5));
+                    }
+
+                    while (rs.next()) {
+                        rsl.addComment(rs.getString(5));
+                    }
                 }
             } catch (SQLException e) {
                 LOG.error(e.getMessage(), e);
