@@ -18,13 +18,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
 
 public class UserServlet extends HttpServlet {
     private final DispatchDiapason dispatsh = DispatchDiapason.getInstance();
 
-
+/**
+ * закомментил за ненадобностью, т.к. за интерфейс теперь отвечает jsp
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
         res.setContentType("text/html; charset=utf-8");
@@ -58,6 +57,9 @@ public class UserServlet extends HttpServlet {
                         + "<td>"
                         + "<form action='" + req.getContextPath() + "/edit?=method='get'>\n"
                         + "<input type='hidden' name='id' value='" + u.getId() + "'/>"
+                        + "<input type='hidden' name='name' value='" + u.getName() + "'/>"
+                        + "<input type='hidden' name='login' value='" + u.getLogin() + "'/>"
+
                         + "<input type='submit' value='изменить'>"
                         + "</form>"
                         + "</td>"
@@ -89,13 +91,12 @@ public class UserServlet extends HttpServlet {
                 + "</html>");
         writer.print(result);
     }
-
+*/
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("text/html;charset=utf-8");
         req.setCharacterEncoding("utf-8");
         resp.sendRedirect(String.format("%s/?system_message=%s", req.getContextPath(), this.dispatsh.access(req.getParameter("action"),
                 new Users(req.getParameter("id"), req.getParameter("name"), req.getParameter("login"))).get()));
-        doGet(req, resp);
     }
 }

@@ -3,6 +3,7 @@ package ru.job4j.architecture;
 import org.junit.Test;
 import ru.job4j.architecture.err.DatabaseException;
 
+import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.core.Is.is;
@@ -21,7 +22,7 @@ public class DispatchDiapasonTest {
      */
     @Test
     public void whenBetween14and18ThenLimited() throws DatabaseException {
-        Users users = new Users("12", "user", "user123");
+        Users users = new Users("0", "user", "user123");
         DispatchDiapason dispatchDiapason = new  DispatchDiapason().init();
         assertThat(
                 dispatchDiapason.access(
@@ -31,23 +32,23 @@ public class DispatchDiapasonTest {
         );
         assertThat(
                 dispatchDiapason.access(
-                        "update", new Users("12", "саша", "user123")
+                        "update", new Users("0", "саша", "user123")
                 ).get(),
-                is("user id = 12 updated")
+                is("user id = 0 updated")
         );
         assertThat(
                 dispatchDiapason.access(
-                        "findbyid", new Users("12", "саша", "user123")
+                        "findbyid", new Users("0", "саша", "user123")
                 ).get(),
                 is(users)
         );
-        Map<String, Users> map = (Map<String, Users>) dispatchDiapason.access("findall", new Users()).get();
-        assertThat(map.get("12"), is(users));
+        List<Users> map = (List<Users>) dispatchDiapason.access("findall", new Users()).get();
+        assertThat(map.get(0), is(users));
         assertThat(
                 dispatchDiapason.access(
                         "delete", users
                 ).get(),
-                is("user id = 12 deleted")
+                is("user id = 0 deleted")
         );
 
     }

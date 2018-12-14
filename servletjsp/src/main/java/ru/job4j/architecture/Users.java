@@ -59,17 +59,20 @@ public class Users {
 
     @Override
     public String toString() {
-        return "Users{" + "createDate=" + createDate + ", name='" + name + '\''
+        return "Users{" + "id=" + this.id + " createDate=" + createDate + ", name='" + name + '\''
                 + ", login='" + login + '\'' + '}';
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Users users = (Users) o;
-        return  Objects.equals(name, users.name) &&
-                Objects.equals(login, users.login);
+        return  Objects.equals(name, users.name) && Objects.equals(login, users.login);
     }
 
     @Override

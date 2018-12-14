@@ -16,37 +16,23 @@
 <table border="1">
 
     <caption>Изменение данных пользователя, если поле будет стёрто, то данные поля не будут обновлены</caption>
-    <%
-        Optional user = DispatchDiapason.getInstance().access("findbyid", new Users(request.getParameter("id"), "", ""));
-        if (user.get().getClass().toString().contains("Users")) {
-            Users u = (Users) user.get();
-    %>
     <form action="<%=request.getContextPath()%>/list" method="post">
         <tr>
             <td> ID :</td>
-            <td><input readonly="readonly" name="id" value="<%=u.getId()%>"></td>
+            <td><input readonly="readonly" name="id" value="<%=request.getParameter("id")%>"></td>
         </tr>
         <br>
         <tr>
-            <td> CREATE_DATE :</td>
-            <td><input readonly="readonly" name="CREATE_DATE" value="<%=u.getCreateDate()%>"></td>
-        </tr>
-
-        <tr>
             <td> Name :</td>
-            <td><input type="text" name="name" value="<%=u.getName()%>"></td>
+            <td><input type="text" name="name" value="<%=request.getParameter("name")%>"></td>
         </tr>
         <tr>
             <td> Login :</td>
-            <td><input type="text" name="login" value="<%=u.getLogin()%>"></td>
+            <td><input type="text" name="login" value="<%=request.getParameter("login")%>"></td>
         </tr>
-
         <input type="hidden" name="action" value="update">
         <input type="submit" value="ИЗМЕНИТЬ">
-
     </form>
-
-    <%}%>
 </table>
 </body>
 </html>

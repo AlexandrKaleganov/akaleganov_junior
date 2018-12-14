@@ -2,7 +2,6 @@ package ru.job4j.architecture;
 
 import ru.job4j.architecture.err.DatabaseException;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Predicate;
@@ -32,22 +31,9 @@ public class ValidateService implements Validate {
      */
     @Override
     public String add(Users users) throws DatabaseException {
-        this.validID(users.getId());
-        this.validNameandLogin(users.getName(), users.getLogin(),
-                (n) -> n.matches("[a-zA-Z]{1,10}||[а-яА-Я]{1,10}"),
-                (l) -> l.matches("[a-zA-Z, 0-9]{1,10}"));
-        this.containsUsertoData(users, (k) -> {
-            CopyOnWriteArrayList<Users> list = (CopyOnWriteArrayList<Users>) this.logic.findAll();
-            boolean rsl = false;
-            rsl = this.logic.findAll().contains(k);
-            for (int i = 0; i < list.size(); i++) {
-                if (list.get(i).getLogin().contains(k.getLogin())) {
-                    rsl = true;
-                    break;
-                }
-            }
-            return rsl;
-        }, " already exists");
+        this.isIdFORMAT(users);
+        this.isNameLoginFORMAT(users);
+        this.isContainsUsers(users);
         this.logic.add(users);
         return "this user add to database";
     }
@@ -62,12 +48,8 @@ public class ValidateService implements Validate {
      */
     @Override
     public String update(Users users) throws DatabaseException {
-        this.validID(users.getId());
-        this.validNameandLogin(users.getName(), users.getLogin(),
-                (n) -> n.matches("[a-zA-Z]{0,20}||[а-яА-Я]{0,20}"),
-                (l) -> l.matches("[a-zA-Z, 0-9]{0,20}"));
-        this.containsUsertoData(users, (k) ->
-                this.logic.findAll().size() > Integer.valueOf(k.getId()) && Integer.valueOf(k.getId()) >= 0, " is not found");
+        this.isIdFORMAT(users);
+        this.isNameLoginFORMAT(users);
         this.logic.update(users);
         return "user id = " + users.getId() + " updated";
     }
@@ -81,12 +63,7 @@ public class ValidateService implements Validate {
      */
     @Override
     public String delete(Users users) throws DatabaseException {
-        this.validID(users.getId());
-        this.containsUsertoData(users, (k) ->
-                this.logic.findAll().size() > Integer.valueOf(k.getId()) && Integer.valueOf(k.getId()) >= 0, " is not found");
-        this.validNameandLogin(users.getName(), users.getLogin(),
-                (n) -> n == null || n.matches("[a-zA-Z]{0,20}||[а-яА-Я]{0,20}"),
-                (l) -> l == null || l.matches("[a-zA-Z, 0-9]{0,20}"));
+        this.isIdFORMAT(users);
         this.logic.delete(users);
         return "user id = " + users.getId() + " deleted";
     }
@@ -105,38 +82,66 @@ public class ValidateService implements Validate {
      */
     @Override
     public Users findById(Users users) throws DatabaseException {
-        this.validID(users.getId());
-        this.containsUsertoData(users, (k) ->
-                this.logic.findAll().size() > Integer.valueOf(k.getId()) && Integer.valueOf(k.getId()) >= 0, " is not found");
+        this.isIdFORMAT(users);
         return (Users) this.logic.findById(users);
     }
 
-    //методы генерирующие исключения
-    //id должен содержать только цифры от 0 до 10 размер не более 10 символов
-    private void validID(String id) throws DatabaseException {
-        if (!id.matches("[0-9]{1,10}")) {
-            throw new DatabaseException("id format error");
+    /**
+     * функциональный метод на нём будут основаны наши проверки
+     *
+     * @param u
+     * @param isValid
+     * @param error
+     * @throws DatabaseException
+     */
+    private void validation(Users u, Predicate<Users> isValid, String error) throws DatabaseException {
+        if (isValid.test(u)) {
+            throw new DatabaseException(String.format("error = %s", error));
         }
     }
 
-
-    //выбрасывает исключение если пользоавтель с таким id уже есть или не найден
-    private void containsUsertoData(Users users, Predicate<Users> isID, String error) throws DatabaseException {
-        if (isID.test(users)) {
-            throw new DatabaseException("user id = " + users.getId() + error);
-        }
+    /**
+     * если объект уже есть в базе, или если объект с таким логином уже есть в базе то выкинет исключение
+     *
+     * @param users
+     * @throws DatabaseException
+     */
+    private void isContainsUsers(Users users) throws DatabaseException {
+        this.validation(users, (k) -> {
+            CopyOnWriteArrayList<Users> list = (CopyOnWriteArrayList<Users>) this.logic.findAll();
+            boolean rsl = false;
+            rsl = this.logic.findAll().contains(k);
+            if (!rsl) {
+                for (int i = 0; i < list.size(); i++) {
+                    if (list.get(i).getLogin().contains(k.getLogin())) {
+                        rsl = true;
+                        break;
+                    }
+                }
+            }
+            return rsl;
+        }, " already exists");
     }
 
-    //выбрасывает исключение если имя или логин пользователя введены не корректно
-    //(имя должно состоять только из символов латинского алфавита или только из символов кирилицы)
-    //лщгин должен состоять только из символов латинского алфавита и содержать цифры от 1 до 9
-    private void validNameandLogin(String name, String login, Predicate<String> fancname, Predicate<String> fanclogin) throws DatabaseException {
-        if (!fancname.test(name)) {
-            throw new DatabaseException("USERNAME_" + name + " error");
-        }
-        if (!fanclogin.test(login)) {
-            throw new DatabaseException("LOGIN_" + login + " error");
-        }
+    /**
+     * проверяет формат id
+     *
+     * @param users
+     * @throws DatabaseException
+     */
+    private void isIdFORMAT(Users users) throws DatabaseException {
+        this.validation(users, (u) -> !u.getId().matches("[0-9]{1,10}"), "id_format");
+    }
+
+    /**
+     * проверяет формат имени и логина
+     *
+     * @param users
+     * @throws DatabaseException
+     */
+    private void isNameLoginFORMAT(Users users) throws DatabaseException {
+        this.validation(users, (u) -> !u.getName().matches("[a-zA-Z]{0,20}||[а-яА-Я]{0,20}"), "USERNAME");
+        this.validation(users, (u) -> !u.getLogin().matches("[a-zA-Z, 0-9]{0,20}"), "LOGIN");
     }
 
 }

@@ -32,7 +32,8 @@ public class MemoryStore implements Store<Users> {
 
     @Override
     public void delete(Users users) {
-        this.database.remove(Integer.valueOf(users.getId()));
+        int i = Integer.valueOf(users.getId());
+        this.database.remove(i);
     }
 
     @Override

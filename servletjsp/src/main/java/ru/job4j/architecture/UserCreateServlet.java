@@ -10,6 +10,13 @@ import java.io.PrintWriter;
 public class UserCreateServlet extends HttpServlet {
     private final DispatchDiapason dispatsh = DispatchDiapason.getInstance();
 
+    /**
+     * закомментировал за ненадобностью интерфейс исполняет у нас jsp
+     * @param req
+     * @param resp
+     * @throws ServletException
+     * @throws IOException
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html; charset=utf-8");
@@ -36,5 +43,5 @@ public class UserCreateServlet extends HttpServlet {
                 + "</html>");
         print.print(result);
     }
-
+     */
 }

@@ -16,6 +16,8 @@ import java.util.Optional;
 public class UserUpdateServlet extends HttpServlet {
     private final DispatchDiapason dispatsh = DispatchDiapason.getInstance();
 
+    /**
+     * закомментил за ненадобностью всё перенесено в jsp
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html;charset=utf-8");
@@ -66,4 +68,5 @@ public class UserUpdateServlet extends HttpServlet {
                 + "</html>");
         writer.print(htmledit);
     }
+     */
 }

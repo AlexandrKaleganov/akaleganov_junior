@@ -62,6 +62,8 @@
         <td>
             <form action="<%=request.getContextPath()%>/edit.jsp?=" method="get">
                 <input type="hidden" name="id" value="<%=u.getId()%>">
+                <input type="hidden" name="name" value="<%=u.getName()%>">
+                <input type="hidden" name="login" value="<%=u.getLogin()%>">
                 <input type="submit" value="EDIT">
             </form>
         </td>

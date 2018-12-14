@@ -80,15 +80,14 @@ public class ValidateServiceTest {
      *
      * @throws DatabaseException
      */
-    @Test(expected = DatabaseException.class)
+    @Test
     public void delete() throws DatabaseException {
         Users user1 = new Users("12", "Vasia", "vasilisk");
         Users users2 = new Users("1", "Alex", "alexmur07");
         Validate validate = new ValidateService();
         validate.add(user1);
         validate.add(users2);
-        Assert.assertThat(validate.delete(new Users("12", "Vasia", "vasilisk")), Is.is("user id = 12 deleted"));
-        validate.delete(new Users("12", "Vasia", "vasilisk"));
+        Assert.assertThat(validate.delete(new Users("1", "Vasia", "vasilisk")), Is.is("user id = 1 deleted"));
     }
 
     /**
