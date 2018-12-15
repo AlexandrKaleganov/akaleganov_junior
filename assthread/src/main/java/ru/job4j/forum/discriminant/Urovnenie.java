@@ -35,11 +35,6 @@ public class Urovnenie {
     public void setDesc() {
         disc = Math.pow(b, 2) - (4 * a * c);
         System.out.println("Дискриминант = " + disc);
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         count.countDown();
     }
 
