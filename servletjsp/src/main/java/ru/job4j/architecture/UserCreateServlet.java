@@ -31,7 +31,7 @@ public class UserCreateServlet extends HttpServlet {
                 + "</head>\n"
                 + "<body>\n"
                 + "<br/>"
-                + "<form action='" + req.getContextPath() + "/list' method='post'>\n"
+                + "<form action='" + req.getContextPath() + "/data' method='post'>\n"
                 + "<input type='hidden' name='action' value='add'/>"
                 + "ID : <input type='text' readonly='readonly'  name='id' value='0'/>"
                 + "Name : <input type='text' name='name' value=''/>"

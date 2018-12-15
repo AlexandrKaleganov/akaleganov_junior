@@ -16,7 +16,7 @@
 <table border="1">
 
     <caption>Изменение данных пользователя, если поле будет стёрто, то данные поля не будут обновлены</caption>
-    <form action="<%=request.getContextPath()%>/list" method="post">
+    <form action="<%=request.getContextPath()%>/data" method="post">
         <tr>
             <td> ID :</td>
             <td><input readonly="readonly" name="id" value="<%=request.getParameter("id")%>"></td>

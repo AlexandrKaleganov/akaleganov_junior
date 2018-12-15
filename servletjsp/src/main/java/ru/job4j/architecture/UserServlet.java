@@ -3,10 +3,7 @@ package ru.job4j.architecture;
  * @author Alexander Kaleganov (alexmur07@mail.ru)
  * @version 8.0
  * @since 04-11-2018
- * сервлет метод doPost выводит все данные из бд
- * doGet выводит нашу бд и добавляет форму кнопок удаляения, добавления объектов
- * обращаю внимание на то, форма edit перекинет нас на новый сервлет который отвечает за редактирование формы
- * метод dopost удаляе элемент и обновляет страницу
+ * метод dopost  отвечает только за добавление, изменение, обновление пользователей, за получение списка отвечает сервлет list
  * <p>
  * PrintWriter writer = new PrintWriter(res.getOutputStream()); пришлось заменить на
  * PrintWriter writer = res.getWriter();  иначе не работала кодировка либо на сайте либо в среде , а так всё работает
@@ -14,10 +11,14 @@ package ru.job4j.architecture;
  */
 
 
+import com.sun.javafx.binding.StringFormatter;
+
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 public class UserServlet extends HttpServlet {
     private final DispatchDiapason dispatsh = DispatchDiapason.getInstance();
@@ -64,7 +65,7 @@ public class UserServlet extends HttpServlet {
                         + "</form>"
                         + "</td>"
                         + "<td>"
-                        + "<form action='" + req.getContextPath() + "/list' method='post'>\n"
+                        + "<form action='" + req.getContextPath() + "/data' method='post'>\n"
                         + "<input type='hidden' name='action' value='delete'/>"
                         + "<input type='hidden' name='id' value='" + u.getId() + "'/>"
                         + "<input type='submit' value='удалить'>"
@@ -93,10 +94,11 @@ public class UserServlet extends HttpServlet {
     }
 */
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         resp.setContentType("text/html;charset=utf-8");
         req.setCharacterEncoding("utf-8");
-        resp.sendRedirect(String.format("%s/?system_message=%s", req.getContextPath(), this.dispatsh.access(req.getParameter("action"),
-                new Users(req.getParameter("id"), req.getParameter("name"), req.getParameter("login"))).get()));
+        req.setAttribute("message", this.dispatsh.access(req.getParameter("action"),
+                new Users(req.getParameter("id"), req.getParameter("name"), req.getParameter("login"))).get());
+        req.getRequestDispatcher("/").forward(req, resp);
     }
 }

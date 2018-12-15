@@ -13,7 +13,7 @@
 <body>
 <br>
 <table border="1">
-    <form action="<%=request.getContextPath()%>/list" method="post">
+    <form action="<%=request.getContextPath()%>/data" method="post">
         <input type="hidden" name="action" value="add">
         <tr>
             <td> ID :</td>

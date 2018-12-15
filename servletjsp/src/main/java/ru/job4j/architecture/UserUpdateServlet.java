@@ -31,7 +31,7 @@ public class UserUpdateServlet extends HttpServlet {
             form.append("<table border='1'>"
                     + "<tr><th>Редактирование пользователя, если поля очистить, то они останутся без изменения</th></tr> \n");
 
-            form.append("<tr><td><form action='" + req.getContextPath() + "/list' method='post'>\n"
+            form.append("<tr><td><form action='" + req.getContextPath() + "/data' method='post'>\n"
                     + "<input type='hidden' name='action' value='update'/>"
                     + "USER______ID : <input type='text' readonly='readonly' name='id' value='" + id + "'/>"
                     + "<br/>"
@@ -48,7 +48,7 @@ public class UserUpdateServlet extends HttpServlet {
                     + "<tr>\n"
                     + "<td>" + users.get().toString() + "</td>"
                     + "<td>"
-                    + "<form action='" + req.getContextPath() + "/list' method='get'>\n"
+                    + "<form action='" + req.getContextPath() + "/data' method='get'>\n"
                     + "<input type='submit' value='на главную'>"
                     + "</td>"
                     + "</tr>"
