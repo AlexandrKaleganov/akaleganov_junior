@@ -112,8 +112,8 @@ public class TrackerSQLTest {
         try (TrackerSQL TrackerSQL = new TrackerSQL(ConnectionRollback.create(this.init()))) {
             TrackerSQL.add(items);
             ArrayList<Items> result = null;
-            result = TrackerSQL.findByName("Нужна");
-            assertThat(result.get(0).getName(), is("Нужна помощь"));
+            result = TrackerSQL.findByName("eeeeeeeeeee");
+            assertThat(result.get(0).getName(), is("eeeeeeeeeee"));
         } catch (Exception e) {
             e.printStackTrace();
         }
