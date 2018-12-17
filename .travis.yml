@@ -2,8 +2,7 @@
 language: java
 # используем режим обычного пользователя для сборки проекта.
 sudo: false
-jdk:
-  - openjdk11
+
 services:
 - postgresql
 
