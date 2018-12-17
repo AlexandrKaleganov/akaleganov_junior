@@ -1,5 +1,6 @@
 package ru.job4j.architecture;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -16,12 +17,22 @@ public class Users {
         this.name = name;
         this.login = login;
     }
+    public Users(String id, String name, String login, LocalDateTime date) {
+        this.id = id;
+        this.createDate = date;
+        this.name = name;
+        this.login = login;
+    }
     public Users(String name, String login) {
         this.createDate = LocalDateTime.now();
         this.name = name;
         this.login = login;
     }
-    Users() {
+    Users(String s) {
+
+    }
+
+    public Users() {
 
     }
 
@@ -79,4 +90,6 @@ public class Users {
     public int hashCode() {
         return Objects.hash(name, login);
     }
+
+
 }

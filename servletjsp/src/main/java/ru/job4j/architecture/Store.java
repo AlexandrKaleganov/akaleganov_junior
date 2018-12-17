@@ -8,12 +8,12 @@ import java.util.List;
 
 
 
-public interface Store<Users> {
-    Users add(Users users);
+public interface Store<T> {
+    T add(T users);
 
-    void update(Users users);
+    void update(T users);
 
-    void delete(Users users);
+    void delete(T users);
 
     ru.job4j.architecture.Users add(ru.job4j.architecture.Users users);
 
@@ -21,9 +21,9 @@ public interface Store<Users> {
 
     void delete(ru.job4j.architecture.Users users);
 
-    List<Users> findAll();
+    List<T> findAll();
 
-    Users findById(Users users);
+    Users findById(T users);
 
     ru.job4j.architecture.Users findById(ru.job4j.architecture.Users users);
 }
