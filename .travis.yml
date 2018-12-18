@@ -5,7 +5,8 @@ sudo: false
 
 services:
 - postgresql
-
+jdk:
+  - openjdk11
 before_install:
 - psql -c 'create database trackdata;' -U postgres
 - psql -c 'create database users;' -U postgres
