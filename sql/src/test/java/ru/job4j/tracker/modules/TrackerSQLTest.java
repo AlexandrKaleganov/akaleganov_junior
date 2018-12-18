@@ -57,7 +57,7 @@ public class TrackerSQLTest {
             e.printStackTrace();
         }
     }
-//
+
 //    @Test
 //    public void addCommentsTest() { //проверка метода добавления коментариев
 //        Items items = new Items("dddddddd", "Ничего не работает, компьютер не запускается");
