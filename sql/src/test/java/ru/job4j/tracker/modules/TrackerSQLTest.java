@@ -34,10 +34,10 @@ public class TrackerSQLTest {
     public void testirovanieTrackerSQLADD() { //проверка метода add
         Items items = new Items("1231231313", "Ничего не работает, компьютер не запускается");
         Items expected = null;
-        try (TrackerSQL TrackerSQL = new TrackerSQL(this.init())) {
+        try (TrackerSQL TrackerSQL = new TrackerSQL(ConnectionRollback.create(this.init()))) {
             expected = TrackerSQL.add(items);
+            System.out.println(expected.getId());
             Assert.assertThat(expected.getName(), Is.is(items.getName()));
-            TrackerSQL.deleteAll();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -46,11 +46,10 @@ public class TrackerSQLTest {
     public void addCommentsTest() { //проверка метода добавления коментариев
         Items items = new Items("dddddddd", "Ничего не работает, компьютер не запускается");
         Items expected;
-        try (TrackerSQL TrackerSQL = new TrackerSQL(this.init())) {
+        try (TrackerSQL TrackerSQL = new TrackerSQL(ConnectionRollback.create(this.init()))) {
             expected = TrackerSQL.add(items);
             TrackerSQL.addComment(expected.getId(), "вот комментарий");
             Assert.assertThat(TrackerSQL.findById(expected.getId()).getComments().get(0), is("вот комментарий"));
-            TrackerSQL.deleteAll();
         } catch (Exception e) {
             e.printStackTrace();
         }
