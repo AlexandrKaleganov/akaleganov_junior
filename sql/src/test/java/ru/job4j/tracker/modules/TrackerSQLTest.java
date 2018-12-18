@@ -12,8 +12,6 @@ import java.util.Properties;
 
 import static org.hamcrest.CoreMatchers.is;
 
-import static org.hamcrest.CoreMatchers.theInstance;
-import static org.junit.Assert.*;
 
 public class TrackerSQLTest {
 
@@ -26,7 +24,7 @@ public class TrackerSQLTest {
             return DriverManager.getConnection(
                     config.getProperty("db.host"),
                     config.getProperty("db.login"),
-                    config.getProperty("")
+                    config.getProperty("db.password")
             );
         } catch (Exception e) {
             throw new IllegalStateException(e);
