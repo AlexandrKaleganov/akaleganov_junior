@@ -6,8 +6,6 @@ import org.junit.Test;
 
 import java.io.InputStream;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Properties;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -30,67 +28,51 @@ public class TrackerSQLTest {
             throw new IllegalStateException(e);
         }
     }
-    @Test
-    public void testirovanieTrackerSQLADD() { //проверка метода add
-        Items items = new Items("1231231313", "Ничего не работает, компьютер не запускается");
-        Items expected = null;
+
+    /**
+     * рефактор тастов удаление  корявого трайкетч
+     *
+     * @param fank
+     */
+    public void alltestfunc(BiConEx<TrackerSQL, Items> fank) {
+        Items items = new Items("item", "Ничего не работает, компьютер не запускается");
         try (TrackerSQL TrackerSQL = new TrackerSQL(ConnectionRollback.create(this.init()))) {
-            expected = TrackerSQL.add(items);
-            System.out.println(expected.getId());
-            Assert.assertThat(expected.getName(), Is.is(items.getName()));
+            Items expected = TrackerSQL.add(items);
+            fank.submit(TrackerSQL, expected);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    /**
+     * тест добавления item
+     */
     @Test
-    public void addCommentsTest() { //проверка метода добавления коментариев
-        Items items = new Items("dddddddd", "Ничего не работает, компьютер не запускается");
-        Items expected;
-        try (TrackerSQL TrackerSQL = new TrackerSQL(ConnectionRollback.create(this.init()))) {
-            expected = TrackerSQL.add(items);
-            TrackerSQL.addComment(expected.getId(), "вот комментарий");
-            Assert.assertThat(TrackerSQL.findById(expected.getId()).getComments().get(0), is("вот комментарий"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void testirovanieTrackerSQLADD() {
+        this.alltestfunc((trek, item) -> {
+            Assert.assertThat(trek.findById(item.getId()).getName(), Is.is("item"));
+        });
     }
-//    @Test
-//    public void testirovanieTrackerSQLADD() { //проверка метода add
-//        Items items = new Items("1231231313", "Ничего не работает, компьютер не запускается");
-//        Items expected = null;
-//        try (TrackerSQL TrackerSQL = new TrackerSQL(ConnectionRollback.create(this.init()))) {
-//            expected = TrackerSQL.add(items);
-//            Assert.assertThat(expected, Is.is(items));
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    @Test
-//    public void addCommentsTest() { //проверка метода добавления коментариев
-//        Items items = new Items("dddddddd", "Ничего не работает, компьютер не запускается");
-//        try (TrackerSQL TrackerSQL = new TrackerSQL(ConnectionRollback.create(this.init()))) {
-//            TrackerSQL.add(items);
-//            TrackerSQL.addComment(1, "вот комментарий");
-//            Assert.assertThat(TrackerSQL.findById(1).getComments().get(0), is("вот комментарий"));
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    @Test
-//    public void testirovanieTrackerSQLdelete() { //проверка метода удаления заявки
-//        Items items3 = new Items("Я твой дом труба шатал", "zzz");
-//        try (TrackerSQL TrackerSQL = new TrackerSQL(ConnectionRollback.create(this.init()))) {
-//            TrackerSQL.add(items3);
-//            TrackerSQL.delete(1);
-//            Assert.assertThat(TrackerSQL.findById(1), Is.is((Items) null));
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//
-//    }
+
+    /**
+     * тест добавления коментария
+     */
+    @Test
+    public void addCommentsTest() {
+        this.alltestfunc((trek, item) -> {
+            trek.addComment(item.getId(), "comment");
+            Assert.assertThat(trek.findById(item.getId()).getComments().get(0), Is.is("comment"));
+        });
+    }
+
+    @Test
+    public void testirovanieTrackerSQLdelete() { //проверка метода удаления заявки
+        this.alltestfunc((trek, item) -> {
+            Assert.assertThat(trek.findById(item.getId()), Is.is(item));
+            trek.delete(item.getId());
+            Assert.assertThat(trek.findById(item.getId()), is((Items) null));
+        });
+    }
 //
 //
 //    @Test
