@@ -31,7 +31,19 @@ public class TrackerSQLTest {
             throw new IllegalStateException(e);
         }
     }
-
+    @Test
+    public void testirovanieTrackerSQLADD() { //проверка метода add
+        Items items = new Items("1231231313", "Ничего не работает, компьютер не запускается");
+        Items expected = null;
+        try (TrackerSQL TrackerSQL = new TrackerSQL(this.init())) {
+            expected = TrackerSQL.add(items);
+            Assert.assertThat(expected.getName(), Is.is(items.getName()));
+            TrackerSQL.deleteAll();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+/*
     @Test
     public void testirovanieTrackerSQLADD() { //проверка метода add
         Items items = new Items("1231231313", "Ничего не работает, компьютер не запускается");
@@ -112,5 +124,6 @@ public class TrackerSQLTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
+
 }

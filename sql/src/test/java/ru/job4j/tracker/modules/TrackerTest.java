@@ -8,7 +8,7 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
 public class TrackerTest {
-/*
+
     @Test
     public void testirovanieTrackerADD() { //проверка метода add
         Tracker tracker = new Tracker();
@@ -85,5 +85,5 @@ public class TrackerTest {
         Items expected = items;
         ArrayList<Items> result = tracker.findByName("Нужна");
         assertThat(result.get(0), is(expected));
-    }*/
+    }
 }
