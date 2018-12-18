@@ -49,8 +49,7 @@ public class TrackerSQLTest {
     public void testirovanieTrackerSQLADD() { //проверка метода add
         Items items = new Items("1231231313", "Ничего не работает, компьютер не запускается");
         Items expected = null;
-        try (Connection connection = ConnectionRollback.create(this.init());
-                TrackerSQL TrackerSQL = new TrackerSQL(connection)) {
+        try (TrackerSQL TrackerSQL = new TrackerSQL(ConnectionRollback.create(this.init()))) {
             expected = TrackerSQL.add(items);
             Assert.assertThat(expected, Is.is(items));
         } catch (Exception e) {
