@@ -5,6 +5,9 @@ import ru.job4j.architecture.err.BiConEx;
 import ru.job4j.architecture.err.FunEx;
 import ru.job4j.architecture.err.TriplexConEx;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.sql.*;
 import java.util.*;
 
@@ -25,16 +28,34 @@ public class DbStore implements Store<Users> {
         source.setMaxOpenPreparedStatements(100);
         this.dispat.put(Integer.class, (index, ps, value) -> ps.setInt(index, (Integer) value));
         this.dispat.put(String.class, (index, ps, value) -> ps.setString(index, (String) value));
+        this.addTable();
     }
 
     public DbStore(BasicDataSource source) {
         this.source = source;
         this.dispat.put(Integer.class, (index, ps, value) -> ps.setInt(index, (Integer) value));
         this.dispat.put(String.class, (index, ps, value) -> ps.setString(index, (String) value));
+        this.addTable();
     }
 
     public static DbStore getInstance() {
         return INSTANCE;
+    }
+
+    /**
+     * добавление таблицы
+     */
+    private void addTable() {
+        try {
+            Properties settings = new Properties();
+            try (InputStream in = new FileInputStream(new File("src//main//resources//gradle.properties"))) {
+                settings.load(in);
+            }
+            settings.getProperty("add.table");
+            db(settings.getProperty("add.table"), new ArrayList<>(), pr -> pr.executeUpdate());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -134,8 +155,8 @@ public class DbStore implements Store<Users> {
         return rsl;
     }
 
-    /**метод очистки бд
-     *
+    /**
+     * метод очистки бд
      */
     public void deletaALL() {
         this.db("delete from users;", new ArrayList<>(), PreparedStatement::executeUpdate);

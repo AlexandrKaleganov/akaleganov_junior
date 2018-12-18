@@ -24,6 +24,8 @@ public class DbStoreTest {
             try (InputStream in = new FileInputStream(new File("src//main//resources//gradle.properties"))) {
                 settings.load(in);
             }
+            System.out.println(settings.getProperty("db.driver"));
+            System.out.println(settings.getProperty("db.host"));
             source.setDriverClassName(settings.getProperty("db.driver"));
             source.setUrl(settings.getProperty("db.host"));
             source.setUsername(settings.getProperty("db.login"));
@@ -43,8 +45,8 @@ public class DbStoreTest {
         }
     }
 
-/* не сработала задумка по поводу роллбак
-класс полностью не смог оттестировать,  добавил метод удаления данных из бд - почему то этот метод откатывается
+//не сработала задумка по поводу роллбак
+//класс полностью не смог оттестировать,  добавил метод удаления данных из бд - почему то этот метод откатывается
 
     @Test
     public void addDD() throws SQLException {
@@ -54,22 +56,8 @@ public class DbStoreTest {
             Assert.assertThat(dbStore.add(users).getId(), Is.is("1"));
         });
     }
-*/
 
-    /**
-     * сделал тесты на основе удаления данных
-     * @throws SQLException
-     */
-    @Test
-    public void addDDtwo() throws SQLException {
-        Users users = new Users("12", "sacha", "alexmur07");
-        this.init(new BasicDataSource(), source -> {
-            DbStore dbStore = new DbStore(source);
-            dbStore.add(users);
-            System.out.println(dbStore.findAll().size());
-            Assert.assertThat(dbStore.findAll().get(0).getName().trim(), Is.is("sacha"));
-            dbStore.deletaALL();
-        });
-    }
+
+
 
 }
