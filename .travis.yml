@@ -2,11 +2,11 @@
 language: java
 # используем режим обычного пользователя для сборки проекта.
 sudo: false
+jdk:
+- openjdk11
 
 services:
 - postgresql
-jdk:
-  - openjdk11
 before_install:
 - psql -c 'create database trackdata;' -U postgres
 - psql -c 'create database users;' -U postgres

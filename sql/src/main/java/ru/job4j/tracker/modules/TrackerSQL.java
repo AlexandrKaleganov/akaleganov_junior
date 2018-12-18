@@ -213,6 +213,17 @@ public class TrackerSQL implements ITracker, AutoCloseable {
 
     }
 
+    public void deleteAll() {
+        try (PreparedStatement st = conn.prepareStatement("delete from comments ");
+             PreparedStatement sttwo = conn.prepareStatement("DELETE from items ")) {
+            updateExecut(st);
+            updateExecut(sttwo);
+        } catch (SQLException e) {
+            LOG.error(e.getMessage(), e);
+        }
+
+    }
+
     /**
      * планирую сделать так: привыборе в меню цифры 6, у нас вызовется бьект класса
      * Exitprogramm , и его метод  public void execute(Input input, Tracker tracker)
