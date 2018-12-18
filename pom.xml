@@ -156,7 +156,7 @@
             <properties>
                 <db.url>jdbc:postgresql://localhost/trackdata</db.url>
                 <db.username>postgres</db.username>
-                <db.password>444444</db.password>
+                <db.password></db.password>
                 <db.driver>org.postgresql.Driver</db.driver>
             </properties>
         </profile>
