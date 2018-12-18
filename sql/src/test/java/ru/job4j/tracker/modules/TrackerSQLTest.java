@@ -25,7 +25,7 @@ public class TrackerSQLTest {
             return DriverManager.getConnection(
                     config.getProperty("db.host"),
                     config.getProperty("db.login"),
-                    config.getProperty("db.password")
+                    config.getProperty("")
             );
         } catch (Exception e) {
             throw new IllegalStateException(e);
@@ -43,18 +43,18 @@ public class TrackerSQLTest {
             e.printStackTrace();
         }
     }
-/*
-    @Test
-    public void testirovanieTrackerSQLADD() { //проверка метода add
-        Items items = new Items("1231231313", "Ничего не работает, компьютер не запускается");
-        Items expected = null;
-        try (TrackerSQL TrackerSQL = new TrackerSQL(ConnectionRollback.create(this.init()))) {
-            expected = TrackerSQL.add(items);
-            Assert.assertThat(expected, Is.is(items));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+
+//    @Test
+//    public void testirovanieTrackerSQLADD() { //проверка метода add
+//        Items items = new Items("1231231313", "Ничего не работает, компьютер не запускается");
+//        Items expected = null;
+//        try (TrackerSQL TrackerSQL = new TrackerSQL(ConnectionRollback.create(this.init()))) {
+//            expected = TrackerSQL.add(items);
+//            Assert.assertThat(expected, Is.is(items));
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     @Test
     public void addCommentsTest() { //проверка метода добавления коментариев
@@ -124,6 +124,6 @@ public class TrackerSQLTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }*/
+    }
 
 }
