@@ -16,7 +16,7 @@ import static org.junit.Assert.*;
 
 public class TrackerSQLTest {
 
-/*
+
     public Connection init() {
         try (InputStream in = TrackerSQL.class.getClassLoader().getResourceAsStream("config.properties")) {
             Properties config = new Properties();
@@ -112,5 +112,5 @@ public class TrackerSQLTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }*/
+    }
 }
