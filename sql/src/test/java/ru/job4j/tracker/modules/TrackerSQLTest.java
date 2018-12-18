@@ -12,6 +12,7 @@ import java.util.Properties;
 
 import static org.hamcrest.CoreMatchers.is;
 
+import static org.hamcrest.CoreMatchers.theInstance;
 import static org.junit.Assert.*;
 
 public class TrackerSQLTest {
@@ -31,30 +32,31 @@ public class TrackerSQLTest {
             throw new IllegalStateException(e);
         }
     }
-    @Test
-    public void testirovanieTrackerSQLADD() { //проверка метода add
-        Items items = new Items("1231231313", "Ничего не работает, компьютер не запускается");
-        Items expected = null;
-        try (TrackerSQL TrackerSQL = new TrackerSQL(this.init())) {
-            expected = TrackerSQL.add(items);
-            Assert.assertThat(expected.getName(), Is.is(items.getName()));
-            TrackerSQL.deleteAll();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-//
 //    @Test
 //    public void testirovanieTrackerSQLADD() { //проверка метода add
 //        Items items = new Items("1231231313", "Ничего не работает, компьютер не запускается");
 //        Items expected = null;
-//        try (TrackerSQL TrackerSQL = new TrackerSQL(ConnectionRollback.create(this.init()))) {
+//        try (TrackerSQL TrackerSQL = new TrackerSQL(this.init())) {
 //            expected = TrackerSQL.add(items);
-//            Assert.assertThat(expected, Is.is(items));
+//            Assert.assertThat(expected.getName(), Is.is(items.getName()));
+//            TrackerSQL.deleteAll();
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
 //    }
+
+    @Test
+    public void testirovanieTrackerSQLADD() { //проверка метода add
+        Items items = new Items("1231231313", "Ничего не работает, компьютер не запускается");
+        Items expected = null;
+        try (Connection connection = ConnectionRollback.create(this.init());
+                TrackerSQL TrackerSQL = new TrackerSQL(connection)) {
+            expected = TrackerSQL.add(items);
+            Assert.assertThat(expected, Is.is(items));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 //
 //    @Test
 //    public void addCommentsTest() { //проверка метода добавления коментариев

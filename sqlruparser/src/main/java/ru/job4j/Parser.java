@@ -46,6 +46,17 @@ public class Parser implements AutoCloseable {
     }
 
 
+    Parser(Connection connection) throws SQLException, IOException {
+        this.config = new Config();                    //конфиг
+        this.month = new Month();                //объект для парсинга даты
+        this.init();                             //динамическая подгрузка драйверов
+        this.conn = connection;                   //коннектимся к базе
+        this.conn.setAutoCommit(false);          //отрубаем автокоммит
+        this.createTable();                      //добавляем таблицы в случае их отсутствия
+        this.maxSize = this.maxSize();           //будет хранить максимальное количество страниц
+        this.dateActual = newDateactual();       //будет хранить самую свежую дату из базы
+    }
+
     private void init() {
         try {
             Class.forName(config.getDataconfig("jdbc.driver"));
