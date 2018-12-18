@@ -16,7 +16,7 @@ import static org.junit.Assert.*;
 
 public class TrackerSQLTest {
 
-
+/*
     public Connection init() {
         try (InputStream in = TrackerSQL.class.getClassLoader().getResourceAsStream("config.properties")) {
             Properties config = new Properties();
@@ -89,11 +89,6 @@ public class TrackerSQLTest {
 
     }
 
-    /**
-     * сделал
-     *
-     * @throws Exception
-     */
     @Test
     public void testirovanieTrackerSQLById() throws Exception {   // поверка метода поиск заявки по id и получение всех заявок
         Items items = new Items(1, "Нужна помощь", "Ничего не работает, компьютер не запускается");
@@ -117,5 +112,5 @@ public class TrackerSQLTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
 }
