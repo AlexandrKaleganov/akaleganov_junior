@@ -60,7 +60,6 @@
             <artifactId>postgresql</artifactId>
             <version>42.2.2</version>
         </dependency>
-
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
@@ -200,7 +199,7 @@
             <properties>
                 <db.url>jdbc:postgresql://127.0.0.1:5432/users</db.url>
                 <db.username>postgres</db.username>
-                <db.password>444444</db.password>
+                <db.password/>
                 <db.driver>org.postgresql.Driver</db.driver>
             </properties>
         </profile>

@@ -4,6 +4,7 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import ru.job4j.architecture.err.BiConEx;
 import ru.job4j.architecture.err.FunEx;
 import ru.job4j.architecture.err.TriplexConEx;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,6 +17,7 @@ public class DbStore implements Store<Users> {
     private final BasicDataSource source;
     private static final DbStore INSTANCE = new DbStore();
     private final Map<Class<?>, TriplexConEx<Integer, PreparedStatement, Object>> dispat = new HashMap<>();
+    private static final Logger LOGGER = Logger.getLogger(DbStore.class);
 
     public DbStore() {
         source = new BasicDataSource();
@@ -88,7 +90,7 @@ public class DbStore implements Store<Users> {
             this.forIdex(param, (index, value) -> dispat.get(value.getClass()).accept(index + 1, pr, value));
             rsl.of(fun.apply(pr));
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         }
         return rsl;
     }
@@ -103,6 +105,8 @@ public class DbStore implements Store<Users> {
                         if (generatedKeys.next()) {
                             user.setId(String.valueOf(generatedKeys.getInt(1)));
                         }
+                    } catch (SQLException e) {
+                        LOGGER.error(e.getMessage(), e);
                     }
                     return user;
                 }
@@ -147,7 +151,7 @@ public class DbStore implements Store<Users> {
                                     rs.getTimestamp("create_date").toLocalDateTime()));
                         }
                     } catch (SQLException e) {
-                        e.printStackTrace();
+                        LOGGER.error(e.getMessage(), e);
                     }
                     return rsl;
                 }
@@ -174,7 +178,7 @@ public class DbStore implements Store<Users> {
                             users.setCreateDate(rs.getTimestamp("creata_date").toLocalDateTime());
                         }
                     } catch (SQLException e) {
-                        e.printStackTrace();
+                        LOGGER.error(e.getMessage(), e);
                     }
                     return users;
                 }
