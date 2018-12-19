@@ -29,7 +29,7 @@ public class DbStoreTest {
             source.setDriverClassName(settings.getProperty("db.driver"));
             source.setUrl(settings.getProperty("db.host"));
             source.setUsername(settings.getProperty("db.login"));
-            source.setPassword(settings.getProperty("db.passowrd"));
+            source.setPassword(settings.getProperty("db.password"));
             source.setMinIdle(5);
             source.setMaxIdle(10);
             source.setMaxOpenPreparedStatements(100);
@@ -45,13 +45,16 @@ public class DbStoreTest {
         }
     }
 
-//не сработала задумка по поводу роллбак
-//класс полностью не смог оттестировать,  добавил метод удаления данных из бд - почему то этот метод откатывается
-
+    /**
+     * отключил роллбак, в метод передаю класс без роллбака, new BasicDataSource()
+     * и во первых куча ошибкок основная не понятная что я коннект не могу получить
+     * и не в одно базе не создаётся таблица users
+     * @throws SQLException
+     */
     @Test
     public void addDD() throws SQLException {
         Users users = new Users("12", "sacha", "alexmur07");
-        this.init(new PoolRollback(), source -> {
+        this.init(new BasicDataSource(), source -> {
             DbStore dbStore = new DbStore(source);
             Assert.assertThat(dbStore.add(users).getId(), Is.is("1"));
         });
