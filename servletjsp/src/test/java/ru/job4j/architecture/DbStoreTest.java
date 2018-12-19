@@ -24,12 +24,14 @@ public class DbStoreTest {
             try (InputStream in = new FileInputStream(new File("src//main//resources//gradle.properties"))) {
                 settings.load(in);
             }
-            System.out.println(settings.getProperty("db.driver"));
-            System.out.println(settings.getProperty("db.host"));
-            source.setDriverClassName(settings.getProperty("db.driver"));
-            source.setUrl(settings.getProperty("db.host"));
-            source.setUsername(settings.getProperty("db.login"));
-            source.setPassword(settings.getProperty("db.password"));
+            source.setDriverClassName("org.postgresql.Driver");
+            source.setUrl("jdbc:postgresql://localhost:5432/trackdata");
+            source.setUsername("postgres");
+            source.setPassword("444444");
+//            source.setDriverClassName(settings.getProperty("db.driver"));
+//            source.setUrl(settings.getProperty("db.host"));
+//            source.setUsername(settings.getProperty("db.login"));
+//            source.setPassword(settings.getProperty("db.password"));
             source.setMinIdle(5);
             source.setMaxIdle(10);
             source.setMaxOpenPreparedStatements(100);
