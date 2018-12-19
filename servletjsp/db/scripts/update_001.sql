@@ -1,5 +1,3 @@
---users
---create database users;
 create table  if not exists  users(
 id serial primary key,
 name character(200),

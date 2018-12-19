@@ -24,15 +24,10 @@ public class DbStoreTest {
             try (InputStream in = new FileInputStream(new File("src//main//resources//gradle.properties"))) {
                 settings.load(in);
             }
-            source.setDriverClassName("org.postgresql.Driver");
-            source.setUrl("jdbc:postgresql://localhost:5432/trackdata");
-            source.setUsername("postgres");
-            source.setPassword("444444");
-
-//            source.setDriverClassName(settings.getProperty("db.driver"));
-//            source.setUrl(settings.getProperty("db.host"));
-//            source.setUsername(settings.getProperty("db.login"));
-//            source.setPassword(settings.getProperty("db.password"));
+            source.setDriverClassName(settings.getProperty("db.driver"));
+            source.setUrl(settings.getProperty("db.host"));
+            source.setUsername(settings.getProperty("db.login"));
+            source.setPassword(settings.getProperty(""));
             source.setMinIdle(5);
             source.setMaxIdle(10);
             source.setMaxOpenPreparedStatements(100);
@@ -57,13 +52,10 @@ public class DbStoreTest {
     @Test
     public void addDD() throws SQLException {
         Users users = new Users("12", "sacha", "alexmur07");
-        this.init(new BasicDataSource(), source -> {
+        this.init(new PoolRollback(), source -> {
             DbStore dbStore = new DbStore(source);
-            Assert.assertThat(dbStore.add(users).getId(), Is.is("1"));
+            Users users1 = dbStore.add(users);
+            Assert.assertThat(users1.getId(), Is.is("1"));
         });
     }
-
-
-
-
 }

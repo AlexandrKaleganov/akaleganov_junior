@@ -20,17 +20,33 @@ public class DbStore implements Store<Users> {
     private static final Logger LOGGER = Logger.getLogger(DbStore.class);
 
     public DbStore() {
-        source = new BasicDataSource();
-        this.source.setDriverClassName("org.postgresql.Driver");
-        source.setUrl("jdbc:postgresql://localhost:5432/users");
-        source.setUsername("postgresql");
-        source.setPassword("444444");
-        source.setMinIdle(5);
-        source.setMaxIdle(10);
-        source.setMaxOpenPreparedStatements(100);
+        this.source = new BasicDataSource();
+        this.init();
         this.dispat.put(Integer.class, (index, ps, value) -> ps.setInt(index, (Integer) value));
         this.dispat.put(String.class, (index, ps, value) -> ps.setString(index, (String) value));
         this.addTable();
+    }
+
+    /**
+     * метод инициализации объекта
+     */
+    private void init() {
+        try {
+            Properties settings = new Properties();
+            try (InputStream in = new FileInputStream(new File("src//main//resources//gradle.properties"))) {
+                settings.load(in);
+            }
+            this.source.setDriverClassName(settings.getProperty("db.driver"));
+            this.source.setUrl(settings.getProperty("db.host"));
+            this.source.setUsername(settings.getProperty("db.login"));
+            this.source.setPassword(settings.getProperty(""));
+            this.source.setMinIdle(5);
+            this.source.setMaxIdle(10);
+            this.source.setMaxOpenPreparedStatements(100);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     public DbStore(BasicDataSource source) {
@@ -47,13 +63,12 @@ public class DbStore implements Store<Users> {
     /**
      * добавление таблицы
      */
-    private void addTable() {
+    public void addTable() {
         try {
             Properties settings = new Properties();
             try (InputStream in = new FileInputStream(new File("src//main//resources//gradle.properties"))) {
                 settings.load(in);
             }
-            settings.getProperty("add.table");
             db(settings.getProperty("add.table"), new ArrayList<>(), pr -> pr.executeUpdate());
         } catch (Exception e) {
             e.printStackTrace();
@@ -103,6 +118,7 @@ public class DbStore implements Store<Users> {
                     ps.executeUpdate();
                     try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
                         if (generatedKeys.next()) {
+                            System.out.println(generatedKeys.getInt(1));
                             user.setId(String.valueOf(generatedKeys.getInt(1)));
                         }
                     } catch (SQLException e) {
