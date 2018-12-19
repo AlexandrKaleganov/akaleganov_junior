@@ -28,6 +28,7 @@ public class DbStoreTest {
             source.setUrl("jdbc:postgresql://localhost:5432/trackdata");
             source.setUsername("postgres");
             source.setPassword("444444");
+
 //            source.setDriverClassName(settings.getProperty("db.driver"));
 //            source.setUrl(settings.getProperty("db.host"));
 //            source.setUsername(settings.getProperty("db.login"));
