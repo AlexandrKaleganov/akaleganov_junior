@@ -44,16 +44,37 @@ public class DbStoreTest {
     }
 
     /**
-     *
      * @throws SQLException
      */
     @Test
     public void addDD() throws SQLException {
         Users users = new Users("12", "sacha", "alexmur07");
-        this.init(new PoolRollback(), source -> {
-            DbStore dbStore = new DbStore(source);
-            Users users1 = dbStore.add(users);
-            Assert.assertThat(users1.getId(), Is.is("1"));
-        });
+        BasicDataSource cor = new PoolRollback();
+        this.init(cor, source -> {
+                    DbStore dbStore = new DbStore(source);
+                    Users users1 = dbStore.add(users);
+                    System.out.println(users1.getId());
+                    Assert.assertThat(dbStore.findById(users1).getName(), Is.is(users.getName()));
+                }
+
+        );
+        System.out.println(cor.isClosed());
+    }
+
+    /**
+     * @throws SQLException
+     */
+    @Test
+    public void findaaalTest() throws SQLException {
+        Users users = new Users("12", "sacha", "alexmur07");
+        BasicDataSource cor = new PoolRollback();
+        this.init(cor, source -> {
+                    DbStore dbStore = new DbStore(source);
+                    dbStore.add(users);
+                    System.out.println(dbStore.findAll());
+                }
+
+        );
+        System.out.println(cor.isClosed());
     }
 }

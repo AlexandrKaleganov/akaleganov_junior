@@ -100,8 +100,8 @@ public class DbStore implements Store<Users> {
      */
     private <R> Optional<R> db(String sql, List<Object> param, FunEx<PreparedStatement, R> fun) {
         Optional<R> rsl = Optional.empty();
-        try (Connection conn = source.getConnection();
-             PreparedStatement pr = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (var conn = source.getConnection();
+             var pr = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             this.forIdex(param, (index, value) -> dispat.get(value.getClass()).accept(index + 1, pr, value));
             rsl.of(fun.apply(pr));
         } catch (Exception e) {
@@ -118,7 +118,6 @@ public class DbStore implements Store<Users> {
                     ps.executeUpdate();
                     try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
                         if (generatedKeys.next()) {
-                            System.out.println(generatedKeys.getInt(1));
                             user.setId(String.valueOf(generatedKeys.getInt(1)));
                         }
                     } catch (SQLException e) {
