@@ -72,7 +72,7 @@ public class DbStoreTest {
         this.init(cor, source -> {
                     DbStore dbStore = new DbStore(source);
                     Users expected = dbStore.add(users);
-            Assert.assertThat(expected, Is.is(dbStore.findAll().get(0)));
+                    Assert.assertThat(expected, Is.is(dbStore.findAll().get(0)));
                 }
 
         );
