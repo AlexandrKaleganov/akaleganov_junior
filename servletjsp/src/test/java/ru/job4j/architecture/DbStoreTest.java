@@ -54,6 +54,7 @@ public class DbStoreTest {
                     DbStore dbStore = new DbStore(source);
                     Users users1 = dbStore.add(users);
                     System.out.println(users1.getId());
+
                     Assert.assertThat(dbStore.findById(users1).getName(), Is.is(users.getName()));
                 }
 
@@ -70,8 +71,8 @@ public class DbStoreTest {
         BasicDataSource cor = new PoolRollback();
         this.init(cor, source -> {
                     DbStore dbStore = new DbStore(source);
-                    dbStore.add(users);
-                    System.out.println(dbStore.findAll());
+                    Users expected = dbStore.add(users);
+            Assert.assertThat(expected, Is.is(dbStore.findAll().get(0)));
                 }
 
         );
