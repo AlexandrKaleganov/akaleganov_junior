@@ -4,6 +4,7 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import org.hamcrest.core.Is;
 import org.junit.Assert;
 import org.junit.Test;
+import ru.job4j.architecture.err.BiConEx;
 import ru.job4j.architecture.err.ConEx;
 
 import java.io.File;
@@ -27,7 +28,7 @@ public class DbStoreTest {
             source.setDriverClassName(settings.getProperty("db.driver"));
             source.setUrl(settings.getProperty("db.host"));
             source.setUsername(settings.getProperty("db.login"));
-            source.setPassword(settings.getProperty(""));
+            source.setPassword(settings.getProperty("db.password"));
             source.setMinIdle(5);
             source.setMaxIdle(10);
             source.setMaxOpenPreparedStatements(100);
@@ -43,39 +44,37 @@ public class DbStoreTest {
         }
     }
 
+    private void alltestfunc(BiConEx<DbStore, Users> fank) {
+        Users users = new Users("12", "sacha", "alexmur07");
+        this.init(new BasicDataSource(), source -> {
+                    DbStore dbStore = new DbStore(source);
+                    Users expected = dbStore.add(users);
+                    try {
+                        fank.accept(dbStore, expected);
+                    } finally {
+                        dbStore.deletaALL();
+                    }
+                }
+        );
+    }
+
     /**
-     * @throws SQLException
      */
     @Test
-    public void addDD() throws SQLException {
-        Users users = new Users("12", "sacha", "alexmur07");
-        BasicDataSource cor = new PoolRollback();
-        this.init(cor, source -> {
-                    DbStore dbStore = new DbStore(source);
-                    Users users1 = dbStore.add(users);
-                    System.out.println(users1.getId());
-
-                    Assert.assertThat(dbStore.findById(users1).getName(), Is.is(users.getName()));
-                }
-
-        );
-        System.out.println(cor.isClosed());
+    public void addDD() {
+        this.alltestfunc((bd, exp) -> {
+            Assert.assertThat(bd.findById(exp), Is.is(exp));
+        });
     }
 
     /**
      * @throws SQLException
      */
     @Test
-    public void findaaalTest() throws SQLException {
-        Users users = new Users("12", "sacha", "alexmur07");
-        BasicDataSource cor = new PoolRollback();
-        this.init(cor, source -> {
-                    DbStore dbStore = new DbStore(source);
-                    Users expected = dbStore.add(users);
-                    Assert.assertThat(expected, Is.is(dbStore.findAll().get(0)));
-                }
-
-        );
-        System.out.println(cor.isClosed());
+    public void findaaalTest() {
+        this.alltestfunc((bd, exp) -> {
+            System.out.println(bd.findAll().get(0));
+            Assert.assertThat(bd.findAll().get(0), Is.is(exp));
+        });
     }
 }

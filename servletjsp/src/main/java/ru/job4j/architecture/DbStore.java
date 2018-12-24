@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class DbStore implements Store<Users> {
@@ -158,12 +159,25 @@ public class DbStore implements Store<Users> {
         this.db(
                 "select * from users", new ArrayList<>(),
                 ps -> {
+
                     try (ResultSet rs = ps.executeQuery()) {
                         while (rs.next()) {
-                            rsl.add(new Users(String.valueOf(rs.getInt("id")),
-                                    rs.getString("name"),
-                                    rs.getString("login"),
-                                    rs.getTimestamp("create_date").toLocalDateTime()));
+                            System.out.println(rs.getString("login"));
+                            Users temp = new Users();
+                            Users users = new Users();
+                            users.setId("12");
+                            users.setName("name");
+                            users.setLogin("login");
+
+                            users.setCreateDate(LocalDateTime.now());
+                            temp.setId(String.valueOf(rs.getInt("id")));
+                            temp.setName(rs.getString("name"));
+                            String login = rs.getString("login");
+                            temp.setLogin(login);
+                            temp.setCreateDate(rs.getTimestamp("create_date").toLocalDateTime());
+                            System.out.println(temp);
+                            rsl.add(temp);
+
                         }
                     } catch (SQLException e) {
                         LOGGER.error(e.getMessage(), e);
@@ -178,7 +192,7 @@ public class DbStore implements Store<Users> {
      * метод очистки бд
      */
     public void deletaALL() {
-        this.db("delete from users;", new ArrayList<>(), PreparedStatement::executeUpdate);
+        this.db("delete from users;", new ArrayList<>(), pr->pr.executeUpdate());
     }
 
     @Override
@@ -190,7 +204,7 @@ public class DbStore implements Store<Users> {
                         if (rs.next()) {
                             users.setName(rs.getString("name"));
                             users.setLogin(rs.getString("login"));
-                            users.setCreateDate(rs.getTimestamp("creata_date").toLocalDateTime());
+                            users.setCreateDate(rs.getTimestamp("create_date").toLocalDateTime());
                         }
                     } catch (SQLException e) {
                         LOGGER.error(e.getMessage(), e);

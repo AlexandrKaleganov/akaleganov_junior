@@ -1,6 +1,5 @@
 package ru.job4j.architecture;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -70,9 +69,17 @@ public class Users {
 
     @Override
     public String toString() {
-        return "Users{" + "id=" + this.id + " createDate=" + createDate + ", name='" + name + '\''
-                + ", login='" + login + '\'' + '}';
+        return "Users{" +
+                "id='" + id + '\'' +
+                ", createDate=" + createDate +
+                ", name='" + name + '\'' +
+                ", login='" + login + '\'' +
+                '}';
     }
+//    @Override
+//    public String toString() {
+//        return "Users{" + "id=" + this.id + " createDate=" + createDate + ", name=" + name + " , login=" + login + "}";
+//    }
 
     @Override
     public boolean equals(Object o) {
