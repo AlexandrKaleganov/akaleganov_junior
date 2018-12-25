@@ -104,7 +104,7 @@ public class DbStore implements Store<Users> {
         try (var conn = source.getConnection();
              var pr = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             this.forIdex(param, (index, value) -> dispat.get(value.getClass()).accept(index + 1, pr, value));
-            rsl.of(fun.apply(pr));
+            Optional.of(fun.apply(pr));
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
         }
@@ -132,7 +132,6 @@ public class DbStore implements Store<Users> {
 
     @Override
     public void update(Users users) {
-
         this.db(
                 "UPDATE users SET NAME = ?, login = ? where users.id = ? ", Arrays.asList(users.getName(), users.getLogin(), Integer.valueOf(users.getId())),
                 ps -> {
@@ -145,7 +144,7 @@ public class DbStore implements Store<Users> {
     @Override
     public void delete(Users users) {
         this.db(
-                "delete users where users.id = ? ", Arrays.asList(Integer.valueOf(users.getId())),
+                "delete from users where users.id = ? ", Arrays.asList(Integer.valueOf(users.getId())),
                 ps -> {
                     ps.executeUpdate();
                     return users;
@@ -155,63 +154,48 @@ public class DbStore implements Store<Users> {
 
     @Override
     public List<Users> findAll() {
-        ArrayList<Users> rsl = new ArrayList<>();
-        this.db(
+        return this.db(
                 "select * from users", new ArrayList<>(),
                 ps -> {
-
+                    ArrayList<Users> rsl = new ArrayList<>();
                     try (ResultSet rs = ps.executeQuery()) {
                         while (rs.next()) {
-                            System.out.println(rs.getString("login"));
-                            Users temp = new Users();
-                            Users users = new Users();
-                            users.setId("12");
-                            users.setName("name");
-                            users.setLogin("login");
-
-                            users.setCreateDate(LocalDateTime.now());
-                            temp.setId(String.valueOf(rs.getInt("id")));
-                            temp.setName(rs.getString("name"));
-                            String login = rs.getString("login");
-                            temp.setLogin(login);
-                            temp.setCreateDate(rs.getTimestamp("create_date").toLocalDateTime());
-                            System.out.println(temp);
-                            rsl.add(temp);
-
+                            rsl.add(new Users(String.valueOf(rs.getInt("id")), rs.getString("name"),
+                                    rs.getString("login"), rs.getTimestamp("create_date").toLocalDateTime()));
                         }
                     } catch (SQLException e) {
                         LOGGER.error(e.getMessage(), e);
                     }
                     return rsl;
                 }
-        );
-        return rsl;
+        ).get();
     }
 
     /**
      * метод очистки бд
      */
     public void deletaALL() {
-        this.db("delete from users;", new ArrayList<>(), pr->pr.executeUpdate());
+        this.db("delete from users;", new ArrayList<>(), pr -> pr.executeUpdate());
     }
 
     @Override
     public Users findById(Users users) {
-        this.db(
+        return this.db(
                 "select * from users where id = ?", Arrays.asList(Integer.valueOf(users.getId())),
                 ps -> {
+                    Users rsl = null;
                     try (ResultSet rs = ps.executeQuery()) {
                         if (rs.next()) {
-                            users.setName(rs.getString("name"));
-                            users.setLogin(rs.getString("login"));
-                            users.setCreateDate(rs.getTimestamp("create_date").toLocalDateTime());
+
+                            rsl = new Users(String.valueOf(rs.getInt("id")), rs.getString("name"),
+                                    rs.getString("login"), rs.getTimestamp("create_date").toLocalDateTime());
                         }
                     } catch (SQLException e) {
                         LOGGER.error(e.getMessage(), e);
                     }
-                    return users;
+                    return rsl;
                 }
-        );
-        return users;
+        ).get();
+
     }
 }

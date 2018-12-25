@@ -15,9 +15,11 @@ import java.util.Properties;
 
 
 public class DbStoreTest {
-    //попробуем реализовать ласс для тестов
-
-
+    /**
+     * метод будет инициализировать нашь коннект
+     * @param s
+     * @param con
+     */
     private void init(BasicDataSource s, ConEx<BasicDataSource> con) {
         BasicDataSource source = s;
         try {
@@ -44,6 +46,14 @@ public class DbStoreTest {
         }
     }
 
+    /**
+     * метод рефакторинг в любом случае при тестировании мне надо будет подключиться к базе,
+     * добавиитть туда объект , произвести тест метода, и очистить базу
+     * с роллбаком фикгня получалась, т.к. у меня в каждом методе коннект закрывался
+     * суть работы - функциональный метод получает готовую бд, и оъект который мы получили при добавлении,
+     * чтобы по id  мы могли его обновить, удалить, и т.д...
+     * @param fank
+     */
     private void alltestfunc(BiConEx<DbStore, Users> fank) {
         Users users = new Users("12", "sacha", "alexmur07");
         this.init(new BasicDataSource(), source -> {
@@ -59,6 +69,7 @@ public class DbStoreTest {
     }
 
     /**
+     * тестируем метод добавления в бд
      */
     @Test
     public void addDD() {
@@ -66,15 +77,29 @@ public class DbStoreTest {
             Assert.assertThat(bd.findById(exp), Is.is(exp));
         });
     }
-
-    /**
-     * @throws SQLException
-     */
-    @Test
-    public void findaaalTest() {
-        this.alltestfunc((bd, exp) -> {
-            System.out.println(bd.findAll().get(0));
-            Assert.assertThat(bd.findAll().get(0), Is.is(exp));
-        });
-    }
+//
+//    /**
+//     * тестируем метод получения всех щаявок по id
+//     * @throws SQLException
+//     */
+//    @Test
+//    public void findaaalTest() {
+//        this.alltestfunc((bd, exp) -> {
+//            Assert.assertThat(bd.findAll().get(0), Is.is(exp));
+//        });
+//    }
+//    @Test
+//    public void updateTest() {
+//        this.alltestfunc((bd, exp)->{
+//            bd.update(new Users(exp.getId(), "lex", "lex07"));
+//            Assert.assertThat(bd.findById(exp).getName(), Is.is("lex"));
+//        });
+//    }
+//    @Test
+//    public void deleteTest() {
+//        this.alltestfunc((db, exp)->{
+//            db.delete(exp);
+//            Assert.assertThat(db.findById(exp), Is.is((Users)null));
+//        });
+//    }
 }
