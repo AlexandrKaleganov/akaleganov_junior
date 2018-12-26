@@ -104,7 +104,9 @@ public class DbStore implements Store<Users> {
         try (var conn = source.getConnection();
              var pr = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             this.forIdex(param, (index, value) -> dispat.get(value.getClass()).accept(index + 1, pr, value));
+
             rsl.of(fun.apply(pr));
+            System.out.println(fun.apply(pr));
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
         }
@@ -160,6 +162,7 @@ public class DbStore implements Store<Users> {
                     ArrayList<Users> rsl = new ArrayList<>();
                     try (ResultSet rs = ps.executeQuery()) {
                         while (rs.next()) {
+                            System.out.println(String.valueOf(rs.getInt("id")));
                             rsl.add(new Users(String.valueOf(rs.getInt("id")), rs.getString("name"),
                                     rs.getString("login"), rs.getTimestamp("create_date").toLocalDateTime()));
                         }
@@ -183,17 +186,16 @@ public class DbStore implements Store<Users> {
         return this.db(
                 "select * from users where id = ?", Arrays.asList(Integer.valueOf(users.getId())),
                 ps -> {
-                    Users rsl = null;
+                    Users res = null;
                     try (ResultSet rs = ps.executeQuery()) {
                         if (rs.next()) {
-                            rsl = new Users(String.valueOf(rs.getInt("id")), rs.getString("name"),
+                            res = new Users(String.valueOf(rs.getInt("id")), rs.getString("name"),
                                     rs.getString("login"), rs.getTimestamp("create_date").toLocalDateTime());
-                            System.out.println(rsl);
-                        }
+                            }
                     } catch (SQLException e) {
                         LOGGER.error(e.getMessage(), e);
                     }
-                    return rsl;
+                    return res;
                 }
         ).orElse(new Users());
 

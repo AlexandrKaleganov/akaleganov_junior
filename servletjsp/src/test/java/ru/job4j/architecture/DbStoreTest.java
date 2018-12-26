@@ -74,7 +74,7 @@ public class DbStoreTest {
     @Test
     public void addDD() {
         this.alltestfunc((bd, exp) -> {
-            System.out.println(bd.findById(exp));
+            System.out.println("id");
             Assert.assertThat(bd.findById(exp), Is.is(exp));
         });
     }
