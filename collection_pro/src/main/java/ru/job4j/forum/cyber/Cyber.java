@@ -4,7 +4,7 @@ import java.time.Month;
 import java.util.Scanner;
 import java.util.function.BiPredicate;
 
-public class cyber {
+public class Cyber {
     private static Scanner sc = new Scanner(System.in);
 
     /**
@@ -72,7 +72,7 @@ public class cyber {
      * @param args
      */
     public static void main(String[] args) {
-        cyber cyber = new cyber();
+        Cyber cyber = new Cyber();
         System.out.println(cyber.readMonth());
     }
 }

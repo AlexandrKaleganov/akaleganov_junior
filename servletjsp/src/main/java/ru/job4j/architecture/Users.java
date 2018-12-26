@@ -16,17 +16,20 @@ public class Users {
         this.name = name;
         this.login = login;
     }
+
     public Users(String id, String name, String login, LocalDateTime date) {
         this.id = id;
         this.createDate = date;
         this.name = name;
         this.login = login;
     }
+
     public Users(String name, String login) {
         this.createDate = LocalDateTime.now();
         this.name = name;
         this.login = login;
     }
+
     Users(String s) {
 
     }
@@ -67,19 +70,15 @@ public class Users {
         this.login = login;
     }
 
-    @Override
-    public String toString() {
-        return "Users{" +
-                "id='" + id + '\'' +
-                ", createDate=" + createDate +
-                ", name='" + name + '\'' +
-                ", login='" + login + '\'' +
-                '}';
-    }
 //    @Override
 //    public String toString() {
-//        return "Users{" + "id=" + this.id + " createDate=" + createDate + ", name=" + name + " , login=" + login + "}";
+//        return "Users{" + "id='" + id + '\'' + ", createDate=" + createDate + ", name='" + name + '\''
+//                + ", login='" + login + '\'' + '}';
 //    }
+    @Override
+    public String toString() {
+        return "Users{" + "id=" + this.id + " createDate=" + createDate + ", name=" + name + " , login=" + login + "}";
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -90,7 +89,7 @@ public class Users {
             return false;
         }
         Users users = (Users) o;
-        return  Objects.equals(name, users.name) && Objects.equals(login, users.login);
+        return Objects.equals(name, users.name) && Objects.equals(login, users.login);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package ru.job4j.architecture;
 
+import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -43,6 +44,8 @@ public class MemoryStore implements Store<Users> {
 
     @Override
     public Users findById(Users users) {
-        return this.database.get(Integer.valueOf(users.getId()));
+        Optional<Users> rsl = Optional.empty();
+        rsl.of(this.database.get(Integer.valueOf(users.getId())));
+        return rsl.orElse(new Users());
     }
 }
