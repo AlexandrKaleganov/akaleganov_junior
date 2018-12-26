@@ -104,7 +104,7 @@ public class DbStore implements Store<Users> {
         try (var conn = source.getConnection();
              var pr = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             this.forIdex(param, (index, value) -> dispat.get(value.getClass()).accept(index + 1, pr, value));
-            rsl.of(fun.apply(pr));
+            rsl = Optional.of(fun.apply(pr));
             System.out.println(fun.apply(pr));
             System.out.println(rsl.get());
         } catch (Exception e) {
