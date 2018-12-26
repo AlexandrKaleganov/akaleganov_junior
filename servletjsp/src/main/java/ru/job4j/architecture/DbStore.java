@@ -99,14 +99,14 @@ public class DbStore implements Store<Users> {
      * @param fun
      * @return
      */
-    public  <R> Optional<R> db(String sql, List<Object> param, FunEx<PreparedStatement, R> fun) {
+    public <R> Optional<R> db(String sql, List<Object> param, FunEx<PreparedStatement, R> fun) {
         Optional<R> rsl = Optional.empty();
         try (var conn = source.getConnection();
              var pr = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             this.forIdex(param, (index, value) -> dispat.get(value.getClass()).accept(index + 1, pr, value));
-
             rsl.of(fun.apply(pr));
             System.out.println(fun.apply(pr));
+            System.out.println(rsl.get());
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
         }
@@ -186,15 +186,15 @@ public class DbStore implements Store<Users> {
         return this.db(
                 "select * from users where id = ?", Arrays.asList(Integer.valueOf(users.getId())),
                 ps -> {
-                    Users res = null;
-                    try (ResultSet rs = ps.executeQuery()) {
-                        if (rs.next()) {
-                            res = new Users(String.valueOf(rs.getInt("id")), rs.getString("name"),
-                                    rs.getString("login"), rs.getTimestamp("create_date").toLocalDateTime());
-                            }
-                    } catch (SQLException e) {
-                        LOGGER.error(e.getMessage(), e);
-                    }
+                    Users res = new Users("`name", "login");
+//                    try (ResultSet rs = ps.executeQuery()) {
+//                        if (rs.next()) {
+//                            res = new Users(String.valueOf(rs.getInt("id")), rs.getString("name"),
+//                                    rs.getString("login"), rs.getTimestamp("create_date").toLocalDateTime());
+//                        }
+//                    } catch (SQLException e) {
+//                        LOGGER.error(e.getMessage(), e);
+//                    }
                     return res;
                 }
         ).orElse(new Users());
