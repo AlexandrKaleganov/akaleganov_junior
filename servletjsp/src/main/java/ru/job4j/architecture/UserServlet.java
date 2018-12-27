@@ -99,7 +99,7 @@ public class UserServlet extends HttpServlet {
         req.setCharacterEncoding("utf-8");
         try {
             req.setAttribute("message", this.dispatsh.access(req.getParameter("action"),
-                    new Users(req.getParameter("id"), req.getParameter("name"), req.getParameter("login"))).get());
+                    new Users(req.getParameter("id"), req.getParameter("name"), req.getParameter("login"))));
         } catch (Exception e) {
            req.setAttribute("message", e.getMessage());
         }

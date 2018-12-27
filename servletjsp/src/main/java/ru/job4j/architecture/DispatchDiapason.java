@@ -9,6 +9,7 @@ package ru.job4j.architecture;
  * метод access получает доступ к нужной функции на входи идёт валидатор, ключ и созданный пользователь
  */
 
+import org.apache.log4j.Logger;
 import ru.job4j.architecture.err.FunEx;
 
 import java.util.HashMap;
@@ -23,6 +24,7 @@ public class DispatchDiapason {
     private final Map<String, FunEx<Users, Optional>> dispatch = new HashMap<String, FunEx<Users, Optional>>();
     private final Validate validate = ValidateService.getInstance();
     private final static DispatchDiapason INSTANCE = new DispatchDiapason().init();
+    private static final Logger LOGGER = Logger.getLogger(DispatchDiapason.class);
 
     public static DispatchDiapason getInstance() {
         return INSTANCE;
@@ -61,11 +63,18 @@ public class DispatchDiapason {
      *
      * @return true if access are allowed
      */
-    public Optional access(String key, Users users) throws Exception {
-        return this.dispatch.get(key).apply(users);
+    public <R> R access(String key, Users users) {
+        Optional rsl = Optional.empty();
+        try {
+            rsl = this.dispatch.get(key).apply(users);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+            rsl = Optional.of(e.getMessage());
+        }
+        return (R) rsl.get();
     }
 
-    public Optional access(String key) throws Exception {
+    public <R> R access(String key) {
         return this.access(key, new Users());
     }
 }

@@ -20,7 +20,7 @@ public class UserListServlet extends HttpServlet {
         req.setCharacterEncoding("utf-8");
         try {
             req.setAttribute("list", DispatchDiapason.getInstance().access(req.getParameter("action"),
-                    new Users(req.getParameter("id"), req.getParameter("name"), req.getParameter("login"))).get());
+                    new Users(req.getParameter("id"), req.getParameter("name"), req.getParameter("login"))));
         } catch (Exception e) {
             e.printStackTrace();
         }

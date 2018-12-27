@@ -23,28 +23,21 @@ public class DispatchDiapasonTest {
 
 
     private void fulltest(BiConsumer<DispatchDiapason, Users> fanc) {
-        Users users = new Users("0", "user", "user123");
-        DispatchDiapason disp = new DispatchDiapason().init();
+        var users = new Users("1", "user", "user123");
+        var disp = new DispatchDiapason().init();
+        var exp = (Users) disp.access("add", users);
         try {
-            Users exp = (Users) disp.access("add", users).get();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
-            fanc.accept(disp, new Users());
+            fanc.accept(disp, exp);
         } finally {
-            try {
-                disp.access("deleteAll");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            disp.access("deleteAll");
+
         }
     }
 
     @Test
     public void testAdd() {
         this.fulltest((disp, exp) -> {
-            System.out.println("");
+            Assert.assertThat(disp.access("findbyid", exp), is(exp));
         });
     }
 //    /**
