@@ -1,5 +1,6 @@
 package ru.job4j.architecture;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -45,7 +46,17 @@ public class MemoryStore implements Store<Users> {
     @Override
     public Users findById(Users users) {
         Optional<Users> rsl = Optional.empty();
-        rsl.of(this.database.get(Integer.valueOf(users.getId())));
+        rsl = Optional.of(this.database.get(Integer.valueOf(users.getId())));
         return rsl.orElse(new Users());
+    }
+
+    /**
+     * метод очистки бд был создан для тестов
+     * @return
+     */
+    @Override
+    public List<Users> deleteALL() {
+        this.database.clear();
+        return this.findAll();
     }
 }

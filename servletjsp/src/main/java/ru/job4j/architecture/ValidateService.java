@@ -2,6 +2,7 @@ package ru.job4j.architecture;
 
 import ru.job4j.architecture.err.DatabaseException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Predicate;
@@ -15,8 +16,8 @@ import java.util.function.Predicate;
  * в каждом методе будем проверять что id у нас соответствует формату
  * поля пользователя тоже должны соответствовать формату
  */
-public class ValidateService implements Validate {
-    private final Store logic = MemoryStore.getInstance();
+public class ValidateService implements Validate<Users> {
+    private final Store<Users> logic = DbStore.getInstance();
     private static final ValidateService INSTANCE = new ValidateService();
 
     public static ValidateService getInstance() {
@@ -30,12 +31,11 @@ public class ValidateService implements Validate {
      * третий выбросит исключение если пользователь уже есть в БД или если ЛОГИН ЕСТЬ В БД
      */
     @Override
-    public String add(Users users) throws DatabaseException {
+    public Users add(Users users) throws DatabaseException {
         this.isIdFORMAT(users);
         this.isNameLoginFORMAT(users);
-        this.isContainsUsers(users);
-        this.logic.add(users);
-        return "this user add to database";
+
+        return this.logic.add(users);
     }
 
     /**
@@ -83,7 +83,12 @@ public class ValidateService implements Validate {
     @Override
     public Users findById(Users users) throws DatabaseException {
         this.isIdFORMAT(users);
-        return (Users) this.logic.findById(users);
+        return this.logic.findById(users);
+    }
+
+    @Override
+    public List<Users> deleteALL() {
+        return this.logic.deleteALL();
     }
 
     /**
@@ -100,28 +105,28 @@ public class ValidateService implements Validate {
         }
     }
 
-    /**
-     * если объект уже есть в базе, или если объект с таким логином уже есть в базе то выкинет исключение
-     *
-     * @param users
-     * @throws DatabaseException
-     */
-    private void isContainsUsers(Users users) throws DatabaseException {
-        this.validation(users, (k) -> {
-            CopyOnWriteArrayList<Users> list = (CopyOnWriteArrayList<Users>) this.logic.findAll();
-            boolean rsl = false;
-            rsl = this.logic.findAll().contains(k);
-            if (!rsl) {
-                for (int i = 0; i < list.size(); i++) {
-                    if (list.get(i).getLogin().contains(k.getLogin())) {
-                        rsl = true;
-                        break;
-                    }
-                }
-            }
-            return rsl;
-        }, " already exists");
-    }
+//    /**
+//     * если объект уже есть в базе, или если объект с таким логином уже есть в базе то выкинет исключение
+//     *
+//     * @param users
+//     * @throws DatabaseException
+//     */
+//    private void isContainsUsers(Users users) throws DatabaseException {
+//        this.validation(users, (k) -> {
+//            ArrayList<Users> list = (ArrayList<Users>) this.logic.findAll();
+//            boolean rsl = false;
+//            rsl = this.logic.findAll().contains(k);
+//            if (!rsl) {
+//                for (int i = 0; i < list.size(); i++) {
+//                    if (list.get(i).getLogin().contains(k.getLogin())) {
+//                        rsl = true;
+//                        break;
+//                    }
+//                }
+//            }
+//            return rsl;
+//        }, " already exists");
+//    }
 
     /**
      * проверяет формат id

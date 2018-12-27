@@ -9,19 +9,18 @@ package ru.job4j.architecture;
  * метод access получает доступ к нужной функции на входи идёт валидатор, ключ и созданный пользователь
  */
 
-import ru.job4j.architecture.err.DatabaseException;
+import ru.job4j.architecture.err.FunEx;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
 
 public class DispatchDiapason {
     /**
      * Dispatch.
      */
 
-    private final Map<String, Function<Users, Optional>> dispatch = new HashMap<String, Function<Users, Optional>>();
+    private final Map<String, FunEx<Users, Optional>> dispatch = new HashMap<String, FunEx<Users, Optional>>();
     private final Validate validate = ValidateService.getInstance();
     private final static DispatchDiapason INSTANCE = new DispatchDiapason().init();
 
@@ -35,39 +34,24 @@ public class DispatchDiapason {
      * @return current object.
      */
     public DispatchDiapason init() {
-        this.dispatch.put("add", (users) -> {
-                    try {
-                        return Optional.of(this.validate.add(users));
-                    } catch (DatabaseException e) {
-                        return Optional.of(e.getMessage());
-                    }
-                }
+        this.dispatch.put("add", (users) ->
+                Optional.of(this.validate.add(users))
         );
-        this.dispatch.put("update", (users) -> {
-            try {
-                return Optional.of(this.validate.update(users).toString());
-            } catch (DatabaseException e) {
-                return Optional.of(e.getMessage());
-            }
-        });
-        this.dispatch.put("delete", (users) -> {
-                    try {
-                        return Optional.of(this.validate.delete(users));
-                    } catch (DatabaseException e) {
-                        return Optional.of(e.getMessage());
-                    }
-                }
+        this.dispatch.put("update", (users) ->
+                Optional.of(this.validate.update(users))
+        );
+        this.dispatch.put("delete", (users) ->
+                Optional.of(this.validate.delete(users))
         );
         this.dispatch.put("findall", (users) ->
                 Optional.of(this.validate.findAll())
         );
-        this.dispatch.put("findbyid", (users) -> {
-                    try {
-                        return Optional.of(this.validate.findById(users));
-                    } catch (DatabaseException e) {
-                        return Optional.of(e.getMessage());
-                    }
-                }
+        this.dispatch.put("findbyid", (users) ->
+                Optional.of(this.validate.findById(users))
+
+        );
+        this.dispatch.put("deleteAll", (users) ->
+                Optional.of(this.validate.deleteALL())
         );
         return this;
     }
@@ -77,7 +61,11 @@ public class DispatchDiapason {
      *
      * @return true if access are allowed
      */
-    public Optional access(String key, Users users) {
+    public Optional access(String key, Users users) throws Exception {
         return this.dispatch.get(key).apply(users);
+    }
+
+    public Optional access(String key) throws Exception {
+        return this.access(key, new Users());
     }
 }

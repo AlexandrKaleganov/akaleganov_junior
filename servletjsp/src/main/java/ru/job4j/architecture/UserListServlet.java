@@ -18,8 +18,12 @@ public class UserListServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html;charset=utf-8");
         req.setCharacterEncoding("utf-8");
-        req.setAttribute("list", DispatchDiapason.getInstance().access(req.getParameter("action"),
-                new Users(req.getParameter("id"), req.getParameter("name"), req.getParameter("login"))).get());
+        try {
+            req.setAttribute("list", DispatchDiapason.getInstance().access(req.getParameter("action"),
+                    new Users(req.getParameter("id"), req.getParameter("name"), req.getParameter("login"))).get());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         req.getRequestDispatcher("/list.jsp").forward(req, resp);
     }
 }

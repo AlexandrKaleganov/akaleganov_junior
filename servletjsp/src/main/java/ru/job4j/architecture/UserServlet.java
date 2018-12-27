@@ -97,8 +97,12 @@ public class UserServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         resp.setContentType("text/html;charset=utf-8");
         req.setCharacterEncoding("utf-8");
-        req.setAttribute("message", this.dispatsh.access(req.getParameter("action"),
-                new Users(req.getParameter("id"), req.getParameter("name"), req.getParameter("login"))).get());
+        try {
+            req.setAttribute("message", this.dispatsh.access(req.getParameter("action"),
+                    new Users(req.getParameter("id"), req.getParameter("name"), req.getParameter("login"))).get());
+        } catch (Exception e) {
+           req.setAttribute("message", e.getMessage());
+        }
         req.getRequestDispatcher("/").forward(req, resp);
     }
 }

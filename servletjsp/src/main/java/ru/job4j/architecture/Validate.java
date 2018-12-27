@@ -12,14 +12,16 @@ import ru.job4j.architecture.err.DatabaseException;
 import java.util.List;
 
 
-public interface Validate {
-    String add(Users users) throws DatabaseException;
+public interface Validate<E> {
+    E add(E users) throws DatabaseException;
 
-    String update(Users users) throws DatabaseException;
+    String update(E users) throws DatabaseException;
 
-    String delete(Users users) throws DatabaseException;
+    String delete(E users) throws DatabaseException;
 
-    List<Users> findAll();
+    List<E> findAll();
 
-    Users findById(Users users) throws DatabaseException;
+    E findById(E users) throws DatabaseException;
+
+    List<E> deleteALL();
 }
