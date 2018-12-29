@@ -71,6 +71,8 @@ public class DispatchDiapason {
     }
 
     public List<Users> access(String key) throws Exception {
-        return (List<Users>) this.access(key, new Users());
+        Optional<List<Users>> rsl = Optional.empty();
+        rsl = this.dispatch.get(key).apply(new Users());
+        return rsl.get();
     }
 }

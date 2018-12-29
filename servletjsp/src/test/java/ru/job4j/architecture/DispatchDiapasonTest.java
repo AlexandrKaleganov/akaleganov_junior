@@ -52,7 +52,6 @@ public class DispatchDiapasonTest {
 
     /**
      * тест получения всех пользователей
-     *
      */
     @Test
     public void findall() {
@@ -60,46 +59,24 @@ public class DispatchDiapasonTest {
             Assert.assertThat(disp.access("findall").get(0), Is.is(exp));
         });
     }
+
+    /**
+     * обновление пользователя
+     */
+    @Test
+    public void update() {
+        this.fulltest((disp, exp) -> {
+            disp.access("update", new Users(exp.getId(), "вася", "vasia2"));
+            Assert.assertThat(disp.access("findbyid", exp).getName(), is("вася"));
+        });
+    }
+
     @Test
     public void delete() {
-this.fulltest((disp, exp)->{
-    disp.access("update", new Users(exp.getId(), "вася", "vasia2"));
-    Assert.assertThat(disp.access("findbyid", exp).getName(), is("вася"));
-});    }
-//    /**
-//     * Between 14 and 18.
-//     */
-//    @Test
-//    public void whenBetween14and18ThenLimited() throws DatabaseException {
-//        Users users = new Users("0", "user", "user123");
-//        DispatchDiapason dispatchDiapason = new DispatchDiapason().init();
-//        assertThat(
-//                dispatchDiapason.access(
-//                        "add", users
-//                ).get(),
-//                is("this user add to database")
-//        );
-//        assertThat(
-//                dispatchDiapason.access(
-//                        "update", new Users("0", "саша", "user123")
-//                ).get(),
-//                is("user id = 0 updated")
-//        );
-//        assertThat(
-//                dispatchDiapason.access(
-//                        "findbyid", new Users("0", "саша", "user123")
-//                ).get(),
-//                is(users)
-//        );
-//        List<Users> map = (List<Users>) dispatchDiapason.access("findall", new Users()).get();
-//        assertThat(map.get(0), is(users));
-//        assertThat(
-//                dispatchDiapason.access(
-//                        "delete", users
-//                ).get(),
-//                is("user id = 0 deleted")
-//        );
-//
-//    }
+        this.fulltest((disp, exp) -> {
+            Assert.assertThat(disp.access("delete", exp), is(exp));
+            Assert.assertThat(disp.access("findbyid", exp).getId(), is((String) null));
 
+        });
+    }
 }
