@@ -23,19 +23,25 @@ public class MemoryStore implements Store<Users> {
     }
 
     @Override
-    public void update(Users users) {
+    public Users update(Users users) {
         if (users.getName().length() > 0) {
             this.database.get(Integer.valueOf(users.getId())).setName(users.getName());
         }
         if (users.getLogin().length() > 0) {
             this.database.get(Integer.valueOf(users.getId())).setLogin(users.getLogin());
         }
+        return this.findById(users);
     }
 
+    /**
+     * вернёт старый объект
+     * @param users
+     * @return
+     */
     @Override
-    public void delete(Users users) {
+    public Users delete(Users users) {
         int i = Integer.valueOf(users.getId());
-        this.database.remove(i);
+        return this.database.remove(i);
     }
 
     @Override

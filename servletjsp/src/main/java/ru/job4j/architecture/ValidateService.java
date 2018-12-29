@@ -47,11 +47,10 @@ public class ValidateService implements Validate<Users> {
      * @return
      */
     @Override
-    public String update(Users users) throws DatabaseException {
+    public Users update(Users users) throws DatabaseException {
         this.isIdFORMAT(users);
         this.isNameLoginFORMAT(users);
-        this.logic.update(users);
-        return "user id = " + users.getId() + " updated";
+        return this.logic.update(users);
     }
 
     /**
@@ -62,10 +61,9 @@ public class ValidateService implements Validate<Users> {
      * @throws DatabaseException
      */
     @Override
-    public String delete(Users users) throws DatabaseException {
+    public Users delete(Users users) throws DatabaseException {
         this.isIdFORMAT(users);
-        this.logic.delete(users);
-        return "user id = " + users.getId() + " deleted";
+        return this.logic.delete(users);
     }
 
     @Override

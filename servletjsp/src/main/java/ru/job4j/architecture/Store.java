@@ -11,9 +11,9 @@ import java.util.List;
 public interface Store<T> {
     T add(T users);
 
-    void update(T users);
+    T update(T users);
 
-    void delete(T users);
+    T delete(T users);
 
     List<T> findAll();
 

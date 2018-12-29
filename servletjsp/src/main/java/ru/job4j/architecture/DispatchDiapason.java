@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 import ru.job4j.architecture.err.FunEx;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -63,18 +64,13 @@ public class DispatchDiapason {
      *
      * @return true if access are allowed
      */
-    public <R> R access(String key, Users users) {
-        Optional rsl = Optional.empty();
-        try {
-            rsl = this.dispatch.get(key).apply(users);
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
-            rsl = Optional.of(e.getMessage());
-        }
-        return (R) rsl.get();
+    public  Users access(String key, Users users) throws Exception {
+        Optional<Users> rsl = Optional.empty();
+        rsl = this.dispatch.get(key).apply(users);
+        return rsl.get();
     }
 
-    public <R> R access(String key) {
-        return this.access(key, new Users());
+    public List<Users> access(String key) throws Exception {
+        return (List<Users>) this.access(key, new Users());
     }
 }

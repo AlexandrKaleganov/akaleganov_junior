@@ -15,9 +15,9 @@ import java.util.List;
 public interface Validate<E> {
     E add(E users) throws DatabaseException;
 
-    String update(E users) throws DatabaseException;
+    E update(E users) throws DatabaseException;
 
-    String delete(E users) throws DatabaseException;
+    E delete(E users) throws DatabaseException;
 
     List<E> findAll();
 

@@ -51,7 +51,7 @@ public class DbStoreTest {
     }
 
     /**
-     * тестируем метод получения всех щаявок по id
+     * тестируем метод получения всех пользователй по id
      *
      * @throws SQLException
      */
@@ -62,6 +62,9 @@ public class DbStoreTest {
         });
     }
 
+    /**
+     * тестируем метод изменения пользователей
+     */
     @Test
     public void updateTest() {
         this.alltestfunc((bd, exp) -> {

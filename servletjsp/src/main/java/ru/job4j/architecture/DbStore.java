@@ -130,7 +130,7 @@ public class DbStore implements Store<Users> {
     }
 
     @Override
-    public void update(Users users) {
+    public Users update(Users users) {
         this.db(
                 "UPDATE users SET NAME = ?, login = ? where users.id = ? ", Arrays.asList(users.getName(), users.getLogin(), Integer.valueOf(users.getId())),
                 ps -> {
@@ -138,10 +138,12 @@ public class DbStore implements Store<Users> {
                     return users;
                 }
         );
+        return this.findById(users);
     }
 
     @Override
-    public void delete(Users users) {
+    public Users delete(Users users) {
+        Users rsl = this.findById(users);
         this.db(
                 "delete from users where users.id = ? ", Arrays.asList(Integer.valueOf(users.getId())),
                 ps -> {
@@ -149,6 +151,7 @@ public class DbStore implements Store<Users> {
                     return users;
                 }
         );
+        return rsl;
     }
 
     @Override
