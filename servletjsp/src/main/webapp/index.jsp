@@ -1,4 +1,4 @@
-<%--
+<%@ page import="ru.job4j.architecture.Users" %><%--
   Created by IntelliJ IDEA.
   User: Lis
   Date: 15 дек 18
@@ -17,10 +17,10 @@
     <tr>
         <th>System Message</th>
     </tr>
-        <%String message = (String)request.getAttribute("message");
+        <%Users message = (Users) request.getAttribute("message");
          if (message!=null){%>
     <tr>
-        <td><%=message%>
+        <td><%=message.toString()%>
         </td>
     </tr>
     <%}%>
@@ -38,6 +38,11 @@
                 <form action="<%=request.getContextPath()%>/list" method="post">
                     <input type="hidden" name="action" value="findall">
                     <input type="submit" value="СПИСОК ПОЛЬЗОВАТЕЛЕЙ">
+                </form>
+            </td>
+            <td>
+                <form action="<%=request.getContextPath()%>/loggererror.jsp" method="get">
+                    <input type="submit" value="ПОКАЗАТЬ ЛОГ ОШИБОК">
                 </form>
             </td>
         </tr>

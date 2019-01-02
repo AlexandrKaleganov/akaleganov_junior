@@ -14,7 +14,7 @@ import java.util.*;
 
 public class DbStore implements Store<Users> {
     //не стал делать поле статичным, т.к. иначе не зню как прикрутить тесты
-    private final BasicDataSource source;
+    private BasicDataSource source;
     private static final DbStore INSTANCE = new DbStore();
     private final Map<Class<?>, TriplexConEx<Integer, PreparedStatement, Object>> dispat = new HashMap<>();
     private static final Logger LOGGER = Logger.getLogger(DbStore.class);
@@ -33,13 +33,13 @@ public class DbStore implements Store<Users> {
     private void init() {
         try {
             Properties settings = new Properties();
-            try (InputStream in = new FileInputStream(new File("src//main//resources//gradle.properties"))) {
+            try (InputStream in = DbStore.class.getClassLoader().getResourceAsStream("gradle.properties")) {
                 settings.load(in);
             }
             this.source.setDriverClassName(settings.getProperty("db.driver"));
             this.source.setUrl(settings.getProperty("db.host"));
             this.source.setUsername(settings.getProperty("db.login"));
-            this.source.setPassword(settings.getProperty(""));
+            this.source.setPassword(settings.getProperty("db.password"));
             this.source.setMinIdle(5);
             this.source.setMaxIdle(10);
             this.source.setMaxOpenPreparedStatements(100);
@@ -66,7 +66,7 @@ public class DbStore implements Store<Users> {
     public void addTable() {
         try {
             Properties settings = new Properties();
-            try (InputStream in = new FileInputStream(new File("src//main//resources//gradle.properties"))) {
+            try (InputStream in = DbStore.class.getClassLoader().getResourceAsStream("gradle.properties")) {
                 settings.load(in);
             }
             db(settings.getProperty("add.table"), new ArrayList<>(), pr -> pr.executeUpdate());
@@ -100,10 +100,10 @@ public class DbStore implements Store<Users> {
      */
     public <R> Optional<R> db(String sql, List<Object> param, FunEx<PreparedStatement, R> fun) {
         Optional<R> rsl = Optional.empty();
-        try (var conn = source.getConnection();
-             var pr = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection conn = source.getConnection();
+             PreparedStatement pr = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             this.forIdex(param, (index, value) -> dispat.get(value.getClass()).accept(index + 1, pr, value));
-            rsl = Optional.of(fun.apply(pr));
+            rsl = Optional.ofNullable(fun.apply(pr));
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
         }
@@ -187,7 +187,7 @@ public class DbStore implements Store<Users> {
         return this.db(
                 "select * from users where id = ?", Arrays.asList(Integer.valueOf(users.getId())),
                 ps -> {
-                    Users res = new Users("`name", "login");
+                    Users res = null;
                     try (ResultSet rs = ps.executeQuery()) {
                         if (rs.next()) {
                             res = new Users(String.valueOf(rs.getInt("id")), rs.getString("name"),

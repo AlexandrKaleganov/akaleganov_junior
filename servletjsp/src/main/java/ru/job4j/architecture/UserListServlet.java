@@ -19,12 +19,11 @@ public class UserListServlet extends HttpServlet {
         resp.setContentType("text/html;charset=utf-8");
         req.setCharacterEncoding("utf-8");
         try {
-            req.setAttribute("list", DispatchDiapason.getInstance().access(req.getParameter("action"),
-                    new Users(req.getParameter("id"), req.getParameter("name"), req.getParameter("login"))));
+            req.setAttribute("list", DispatchDiapason.getInstance().access(req.getParameter("action")));
+            req.getRequestDispatcher("/list.jsp").forward(req, resp);
         } catch (Exception e) {
             req.setAttribute("message", e.getMessage());
-            req.getRequestDispatcher("/").forward(req, resp);
+            req.getRequestDispatcher("/loggererror.jsp").forward(req, resp);
         }
-        req.getRequestDispatcher("/list.jsp").forward(req, resp);
     }
 }

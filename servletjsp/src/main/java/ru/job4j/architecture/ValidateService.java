@@ -17,7 +17,7 @@ import java.util.function.Predicate;
  * поля пользователя тоже должны соответствовать формату
  */
 public class ValidateService implements Validate<Users> {
-    private final Store<Users> logic = DbStore.getInstance();
+    private final Store<Users> logic = MemoryStore.getInstance();
     private static final ValidateService INSTANCE = new ValidateService();
 
     public static ValidateService getInstance() {
@@ -34,7 +34,6 @@ public class ValidateService implements Validate<Users> {
     public Users add(Users users) throws DatabaseException {
         this.isIdFORMAT(users);
         this.isNameLoginFORMAT(users);
-
         return this.logic.add(users);
     }
 

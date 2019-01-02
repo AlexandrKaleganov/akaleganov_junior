@@ -1,5 +1,9 @@
 package ru.job4j.architecture;
 
+import ru.job4j.architecture.err.BiFunEx;
+import ru.job4j.architecture.err.FunEx;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -17,6 +21,7 @@ public class MemoryStore implements Store<Users> {
 
     @Override
     public Users add(Users users) {
+        users.setCreateDate(LocalDateTime.now());
         this.database.add(users);
         this.database.get(this.database.size() - 1).setId("" + (this.database.size() - 1));
         return this.database.get(this.database.size() - 1);
@@ -35,14 +40,16 @@ public class MemoryStore implements Store<Users> {
 
     /**
      * вернёт старый объект
+     *
      * @param users
      * @return
      */
     @Override
     public Users delete(Users users) {
-        int i = Integer.valueOf(users.getId());
-        return this.database.remove(i);
+        return this.db(users, Integer.parseInt(users.getId()), i ->
+                this.database.remove((int) i)).orElse(new Users());
     }
+
 
     @Override
     public CopyOnWriteArrayList<Users> findAll() {
@@ -51,13 +58,13 @@ public class MemoryStore implements Store<Users> {
 
     @Override
     public Users findById(Users users) {
-        Optional<Users> rsl = Optional.empty();
-        rsl = Optional.of(this.database.get(Integer.valueOf(users.getId())));
-        return rsl.orElse(new Users());
+        return this.db(users, Integer.parseInt(users.getId()), i ->
+                this.database.get(i)).orElse(new Users());
     }
 
     /**
      * метод очистки бд был создан для тестов
+     *
      * @return
      */
     @Override
@@ -65,4 +72,15 @@ public class MemoryStore implements Store<Users> {
         this.database.clear();
         return this.findAll();
     }
+
+    private <R, K> Optional<R> db(R users, K i, FunEx<K, R> funEx) {
+        Optional<R> rsl = Optional.empty();
+        try {
+            rsl = Optional.of(funEx.apply(i));
+        } catch (Exception e) {
+            rsl = Optional.empty();
+        }
+        return rsl;
+    }
+
 }
