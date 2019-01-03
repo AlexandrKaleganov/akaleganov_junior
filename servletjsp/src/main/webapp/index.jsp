@@ -41,7 +41,7 @@
                 </form>
             </td>
             <td>
-                <form action="<%=request.getContextPath()%>/loggererror.jsp" method="get">
+                <form action="<%=request.getContextPath()%>/error.jsp" method="get">
                     <input type="submit" value="ПОКАЗАТЬ ЛОГ ОШИБОК">
                 </form>
             </td>

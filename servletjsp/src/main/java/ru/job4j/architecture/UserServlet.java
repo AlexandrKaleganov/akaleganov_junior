@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class UserServlet extends HttpServlet {
@@ -100,8 +101,8 @@ public class UserServlet extends HttpServlet {
                     new Users(req.getParameter("id"), req.getParameter("name"), req.getParameter("login"))));
             req.getRequestDispatcher("/").forward(req, resp);
         } catch (Exception e) {
-            req.setAttribute("message", e.getMessage());
-            req.getRequestDispatcher("/loggererror.jsp").forward(req, resp);
+            req.setAttribute("message", new Err(e.getMessage(), LocalDateTime.now()));
+            req.getRequestDispatcher("/error.jsp").forward(req, resp);
         }
     }
 }

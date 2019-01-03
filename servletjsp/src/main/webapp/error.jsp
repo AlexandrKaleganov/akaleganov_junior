@@ -1,4 +1,4 @@
-<%--
+<%@ page import="ru.job4j.architecture.Err" %><%--
   Created by IntelliJ IDEA.
   User: Lis
   Date: 02 янв 19
@@ -17,7 +17,7 @@
     <tr>
         <th>Error Message</th>
     </tr>
-        <%String message = (String)request.getAttribute("message");
+        <%Err message = (Err) request.getAttribute("message");
          if (message!=null){%>
     <tr>
         <td><%=message%>

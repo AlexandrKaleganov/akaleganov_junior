@@ -69,7 +69,8 @@ public class DbStore implements Store<Users> {
             try (InputStream in = DbStore.class.getClassLoader().getResourceAsStream("gradle.properties")) {
                 settings.load(in);
             }
-            db(settings.getProperty("add.table"), new ArrayList<>(), pr -> pr.executeUpdate());
+            db(settings.getProperty("add.tableUser"), new ArrayList<>(), pr -> pr.executeUpdate());
+            db(settings.getProperty("add.tableErr"), new ArrayList<>(), pr -> pr.executeUpdate());
         } catch (Exception e) {
             e.printStackTrace();
         }

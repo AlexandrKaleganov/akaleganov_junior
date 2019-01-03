@@ -23,7 +23,7 @@ public class UserListServlet extends HttpServlet {
             req.getRequestDispatcher("/list.jsp").forward(req, resp);
         } catch (Exception e) {
             req.setAttribute("message", e.getMessage());
-            req.getRequestDispatcher("/loggererror.jsp").forward(req, resp);
+            req.getRequestDispatcher("/error.jsp").forward(req, resp);
         }
     }
 }

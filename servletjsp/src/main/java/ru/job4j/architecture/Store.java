@@ -7,7 +7,6 @@ import java.util.List;
  */
 
 
-
 public interface Store<T> {
     T add(T users);
 

@@ -12,10 +12,8 @@ package ru.job4j.architecture;
 import org.apache.log4j.Logger;
 import ru.job4j.architecture.err.FunEx;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Function;
 
 public class DispatchDiapason {
     /**
@@ -23,6 +21,7 @@ public class DispatchDiapason {
      */
 
     private final Map<String, FunEx<Users, Optional>> dispatch = new HashMap<String, FunEx<Users, Optional>>();
+    private final Map<String, Function<Err, Optional>> disErr = new HashMap<String, Function<Err, Optional>>();
     private final Validate validate = ValidateService.getInstance();
     private final static DispatchDiapason INSTANCE = new DispatchDiapason().init();
     private static final Logger LOGGER = Logger.getLogger(DispatchDiapason.class);
@@ -40,6 +39,7 @@ public class DispatchDiapason {
         this.dispatch.put("add", (users) ->
                 Optional.of(this.validate.add(users))
         );
+
         this.dispatch.put("update", (users) ->
                 Optional.of(this.validate.update(users))
         );
@@ -64,7 +64,7 @@ public class DispatchDiapason {
      *
      * @return true if access are allowed
      */
-    public  Users access(String key, Users users) throws Exception {
+    public Users access(String key, Users users) throws Exception {
         Optional<Users> rsl = Optional.empty();
         rsl = this.dispatch.get(key).apply(users);
         return rsl.get();
@@ -72,7 +72,7 @@ public class DispatchDiapason {
 
     public List<Users> access(String key) throws Exception {
         Optional<List<Users>> rsl = Optional.empty();
-        rsl = this.dispatch.get(key).apply(new Users());
+            rsl = this.dispatch.get(key).apply(new Users());
         return rsl.get();
     }
 }

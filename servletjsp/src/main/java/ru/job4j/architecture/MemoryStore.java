@@ -1,6 +1,5 @@
 package ru.job4j.architecture;
 
-import ru.job4j.architecture.err.BiFunEx;
 import ru.job4j.architecture.err.FunEx;
 
 import java.time.LocalDateTime;
@@ -13,6 +12,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class MemoryStore implements Store<Users> {
     private final CopyOnWriteArrayList<Users> database = new CopyOnWriteArrayList<>();
+    private final CopyOnWriteArrayList<Err> errr = new CopyOnWriteArrayList<>();
     private static final MemoryStore INSTANCE = new MemoryStore();
 
     public static MemoryStore getInstance() {

@@ -26,8 +26,7 @@ public class DispatchDiapasonTest {
         var users = new Users("1", "user", "user123");
         var disp = new DispatchDiapason().init();
         try {
-            var exp = (Users) disp.access("add", users);
-
+            var exp = disp.access("add", users);
             fanc.accept(disp, exp);
         } catch (Exception e) {
         } finally {
