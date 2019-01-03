@@ -21,7 +21,7 @@ import java.util.List;
 
 public class UserServlet extends HttpServlet {
     private final DispatchDiapason dispatsh = DispatchDiapason.getInstance();
-
+    private final ErrLog errLog = MemoryErrLog.getINSTANCE();
     /**
      * закомментил за ненадобностью, т.к. за интерфейс теперь отвечает jsp
      *
@@ -101,7 +101,8 @@ public class UserServlet extends HttpServlet {
                     new Users(req.getParameter("id"), req.getParameter("name"), req.getParameter("login"))));
             req.getRequestDispatcher("/").forward(req, resp);
         } catch (Exception e) {
-            req.setAttribute("message", new Err(e.getMessage(), LocalDateTime.now()));
+            req.setAttribute("err", this.errLog.add(new Err(e.getMessage())));
+            req.setAttribute("list", this.errLog.findALL());
             req.getRequestDispatcher("/error.jsp").forward(req, resp);
         }
     }

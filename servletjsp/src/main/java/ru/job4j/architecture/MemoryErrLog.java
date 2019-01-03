@@ -6,9 +6,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class MemoryErrLog implements ErrLog {
     CopyOnWriteArrayList<Err> dataERR = new CopyOnWriteArrayList<>();
-    private static MemoryStore INSTANCE = new MemoryStore();
+    private static MemoryErrLog INSTANCE = new MemoryErrLog();
 
-    public static MemoryStore getINSTANCE() {
+    public static MemoryErrLog getINSTANCE() {
         return INSTANCE;
     }
 

@@ -1,4 +1,5 @@
-<%@ page import="ru.job4j.architecture.Err" %><%--
+<%@ page import="ru.job4j.architecture.Err" %>
+<%@ page import="java.util.List" %><%--
   Created by IntelliJ IDEA.
   User: Lis
   Date: 02 янв 19
@@ -17,7 +18,7 @@
     <tr>
         <th>Error Message</th>
     </tr>
-        <%Err message = (Err) request.getAttribute("message");
+        <%Err message = (Err) request.getAttribute("err");
          if (message!=null){%>
     <tr>
         <td><%=message%>
@@ -29,5 +30,20 @@
 <form action="<%=request.getContextPath()%>/" method="get">
     <input type="submit" value="ВЕРНУТЬСЯ НА ГЛАВНУЮ СТРАНИЦУ">
 </form>
+<table style="border: 1px solid black;" cellpadding="1" cellspacing="1" border="2">
+    <tbody>
+    <tr>
+        <th>Error List</th>
+    </tr>
+        <%List<Err> list = (List<Err>) request.getAttribute("list");
+         for(Err err : list){%>
+    <tr>
+        <td><%=err.getError()%>
+        </td>
+        <td><%=err.getDateTime()%>
+        </td>
+    </tr>
+        <%}%>
+</table>
 </body>
 </html>
