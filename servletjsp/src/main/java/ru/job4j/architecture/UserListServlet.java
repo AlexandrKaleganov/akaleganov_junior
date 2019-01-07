@@ -21,10 +21,10 @@ public class UserListServlet extends HttpServlet {
         req.setCharacterEncoding("utf-8");
         try {
             req.setAttribute("list", DispatchDiapason.getInstance().access(req.getParameter("action")));
-            req.getRequestDispatcher("/list.jsp").forward(req, resp);
+            req.getRequestDispatcher("/WEB-INF/views/list.jsp").forward(req, resp);
         } catch (Exception e) {
             req.setAttribute("err", new Err(e.getMessage(), LocalDateTime.now()));
-            req.getRequestDispatcher("/error.jsp").forward(req, resp);
+            req.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(req, resp);
         }
     }
 }

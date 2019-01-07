@@ -7,6 +7,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <head>
     <title>Loger_Error</title>
@@ -29,7 +30,7 @@
         <%}%>
 </table>
 <br/>
-<form action="<%=request.getContextPath()%>/" method="get">
+<form action="${pageContext.servletContext.contextPath}/" method="get">
     <input type="submit" value="ВЕРНУТЬСЯ НА ГЛАВНУЮ СТРАНИЦУ">
 </form>
 </body>

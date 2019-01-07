@@ -8,6 +8,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <head>
     <title>edit</title>
@@ -16,7 +17,7 @@
 <table border="1">
 
     <caption>Изменение данных пользователя, если поле будет стёрто, то данные поля не будут обновлены</caption>
-    <form action="<%=request.getContextPath()%>/data" method="post">
+    <form action="${pageContext.servletContext.contextPath}/" method="post">
         <tr>
             <td> ID :</td>
             <td><input readonly="readonly" name="id" value="<%=request.getParameter("id")%>"></td>

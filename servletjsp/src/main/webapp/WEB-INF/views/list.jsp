@@ -9,13 +9,14 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <head>
     <title>List</title>
 </head>
 <body>
 <br/>
-<form action="<%=request.getContextPath()%>/" method="get">
+<form action="${pageContext.servletContext.contextPath}/" method="get">
     <input type="submit" value="ВЕРНУТЬСЯ НА ГЛАВНУЮ СТРАНИЦУ">
 </form>
 <br/>
@@ -44,7 +45,7 @@
         <td><%=u.getCreateDate()%>
         </td>
         <td>
-            <form action="<%=request.getContextPath()%>/edit.jsp?=" method="get">
+            <form action="${pageContext.servletContext.contextPath}/edit" method="get">
                 <input type="hidden" name="id" value="<%=u.getId()%>">
                 <input type="hidden" name="name" value="<%=u.getName()%>">
                 <input type="hidden" name="login" value="<%=u.getLogin()%>">
@@ -52,7 +53,7 @@
             </form>
         </td>
         <td>
-            <form action="<%=request.getContextPath()%>/data" method="post">
+            <form action="${pageContext.servletContext.contextPath}/" method="post">
                 <input type="hidden" name="action" value="delete">
                 <input type="hidden" name="id" value="<%=u.getId()%>">
                 <input type="submit" value="DELETE">
