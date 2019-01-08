@@ -19,15 +19,15 @@
     <caption>
         Error Message
     </caption>
-        <%Err message = (Err) request.getAttribute("err");
-         if (message!=null){%>
-    <tr>
-        <td><%=message.getDateTime()%>
+    <c:if item="${err}">
+        <tr>
+        <td><c:out value="${err.DateTime}"></c:out>
         </td>
-        <td><%=message.getError()%>
+        <td><c:out value="${err.getError()}"></c:out>
         </td>
     </tr>
-        <%}%>
+    </c:if>
+
 </table>
 <br/>
 <form action="${pageContext.servletContext.contextPath}/" method="get">

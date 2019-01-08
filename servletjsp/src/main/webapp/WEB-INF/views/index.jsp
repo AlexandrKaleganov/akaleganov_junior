@@ -18,13 +18,11 @@
     <tr>
         <th>System Message</th>
     </tr>
-        <%Users message = (Users) request.getAttribute("message");
-         if (message!=null){%>
     <tr>
-        <td><%=message.toString()%>
+             <td><c:out value="${message}"></c:out>
         </td>
+
     </tr>
-        <%}%>
 </table>
 <br/>
 
