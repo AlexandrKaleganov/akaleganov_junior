@@ -19,14 +19,15 @@
     <caption>
         Error Message
     </caption>
-    <c:if item="${err}">
-        <tr>
-        <td><c:out value="${err.DateTime}"></c:out>
+
+    <tr>
+        <c:set var="eror" value="${err}"></c:set>
+        <td>
+            <c:out value="${err.DateTime}"></c:out>
         </td>
-        <td><c:out value="${err.getError()}"></c:out>
+        <td><c:out value="${err.Error}"></c:out>
         </td>
     </tr>
-    </c:if>
 
 </table>
 <br/>
