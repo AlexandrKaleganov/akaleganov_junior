@@ -31,36 +31,60 @@
         <th>EDIT</th>
         <th>DELETE</th>
     </tr>
-    <%
-        List<Users> list = (List<Users>) request.getAttribute("list");
-        for (Users u : list) {
-    %>
-    <tr>
-        <td><%=u.getId()%>
-        </td>
-        <td><%=u.getName()%>
-        </td>
-        <td><%=u.getLogin()%>
-        </td>
-        <td><%=u.getCreateDate()%>
-        </td>
-        <td>
-            <form action="${pageContext.servletContext.contextPath}/edit" method="get">
-                <input type="hidden" name="id" value="<%=u.getId()%>">
-                <input type="hidden" name="name" value="<%=u.getName()%>">
-                <input type="hidden" name="login" value="<%=u.getLogin()%>">
-                <input type="submit" value="EDIT">
-            </form>
-        </td>
-        <td>
-            <form action="${pageContext.servletContext.contextPath}/" method="post">
-                <input type="hidden" name="action" value="delete">
-                <input type="hidden" name="id" value="<%=u.getId()%>">
-                <input type="submit" value="DELETE">
-            </form>
-        </td>
-    </tr>
-    <%}%>
+    <c:forEach items="${list}" var="u">
+        <tr>
+            <td><c:out value="${u.id}"/></td>
+            <td><c:out value="${u.name}"/></td>
+            <td><c:out value="${u.login}"/></td>
+            <td><c:out value="${u.createDate}"/></td>
+            <td>
+                <form action="${pageContext.servletContext.contextPath}/edit" method="get">
+                    <input type="hidden" name="id" value="${u.id}">
+                    <input type="hidden" name="name" value="${u.name}">
+                    <input type="hidden" name="login" value="${u.login}">
+                    <input type="submit" value="EDIT">
+                </form>
+            </td>
+            <td>
+                <form action="${pageContext.servletContext.contextPath}/" method="post">
+                    <input type="hidden" name="action" value="delete">
+                    <input type="hidden" name="id" value="${u.id}">
+                    <input type="submit" value="DELETE">
+                </form>
+            </td>
+        </tr>
+    </c:forEach>
+    <%----%>
+    <%--<%--%>
+    <%--List<Users> list = (List<Users>) request.getAttribute("list");--%>
+    <%--for (Users u : list) {--%>
+    <%--%>--%>
+    <%--<tr>--%>
+    <%--<td><%=u.getId()%>--%>
+    <%--</td>--%>
+    <%--<td><%=u.getName()%>--%>
+    <%--</td>--%>
+    <%--<td><%=u.getLogin()%>--%>
+    <%--</td>--%>
+    <%--<td><%=u.getCreateDate()%>--%>
+    <%--</td>--%>
+    <%--<td>--%>
+    <%--<form action="${pageContext.servletContext.contextPath}/edit" method="get">--%>
+    <%--<input type="hidden" name="id" value="<%=u.getId()%>">--%>
+    <%--<input type="hidden" name="name" value="<%=u.getName()%>">--%>
+    <%--<input type="hidden" name="login" value="<%=u.getLogin()%>">--%>
+    <%--<input type="submit" value="EDIT">--%>
+    <%--</form>--%>
+    <%--</td>--%>
+    <%--<td>--%>
+    <%--<form action="${pageContext.servletContext.contextPath}/" method="post">--%>
+    <%--<input type="hidden" name="action" value="delete">--%>
+    <%--<input type="hidden" name="id" value="<%=u.getId()%>">--%>
+    <%--<input type="submit" value="DELETE">--%>
+    <%--</form>--%>
+    <%--</td>--%>
+    <%--</tr>--%>
+    <%--<%}%>--%>
 </table>
 </body>
 </html>

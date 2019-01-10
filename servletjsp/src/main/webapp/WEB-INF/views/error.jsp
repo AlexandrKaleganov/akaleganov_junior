@@ -21,11 +21,10 @@
     </caption>
 
     <tr>
-        <c:set var="eror" value="${err}"></c:set>
         <td>
-            <c:out value="${err.DateTime}"></c:out>
+            <c:out value="${err.dateTime}"></c:out>
         </td>
-        <td><c:out value="${err.Error}"></c:out>
+        <td><c:out value="${err.error}"></c:out>
         </td>
     </tr>
 

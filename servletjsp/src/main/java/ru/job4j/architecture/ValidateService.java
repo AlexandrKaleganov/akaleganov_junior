@@ -33,7 +33,7 @@ public class ValidateService implements Validate<Users> {
     @Override
     public Users add(Users users) throws DatabaseException {
         this.isIdFORMAT(users);
-        this.isNameLoginFORMAT(users);
+        this.isNameLoginFORMAT(users, 2);
         return this.logic.add(users);
     }
 
@@ -48,7 +48,7 @@ public class ValidateService implements Validate<Users> {
     @Override
     public Users update(Users users) throws DatabaseException {
         this.isIdFORMAT(users);
-        this.isNameLoginFORMAT(users);
+        this.isNameLoginFORMAT(users, 0);
         return this.logic.update(users);
     }
 
@@ -141,9 +141,9 @@ public class ValidateService implements Validate<Users> {
      * @param users
      * @throws DatabaseException
      */
-    private void isNameLoginFORMAT(Users users) throws DatabaseException {
-        this.validation(users, (u) -> !u.getName().matches("[a-zA-Z]{0,20}||[а-яА-Я]{0,20}"), "USERNAME");
-        this.validation(users, (u) -> !u.getLogin().matches("[a-zA-Z, 0-9]{0,20}"), "LOGIN");
+    private void isNameLoginFORMAT(Users users, int start) throws DatabaseException {
+        this.validation(users, (u) -> !u.getName().matches("[a-zA-Z]{" + start + ",20}||[а-яА-Я]{" + start + ",20}"), "USERNAME");
+        this.validation(users, (u) -> !u.getLogin().matches("[a-zA-Z, 0-9]{" + start + ",20}"), "LOGIN");
     }
 
 }
