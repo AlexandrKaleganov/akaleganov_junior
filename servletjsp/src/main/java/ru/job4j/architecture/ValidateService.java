@@ -142,7 +142,7 @@ public class ValidateService implements Validate<Users> {
      * @throws DatabaseException
      */
     private void isNameLoginFORMAT(Users users, int start) throws DatabaseException {
-        this.validation(users, (u) -> !u.getName().matches("[a-zA-Z]{" + start + ",20}||[а-яА-Я]{" + start + ",20}"), "USERNAME");
+        this.validation(users, (u) -> !u.getName().matches("[a-zA-Z]{" + start + ",20}|[а-яА-Я]{" + start + ",20}"), "USERNAME");
         this.validation(users, (u) -> !u.getLogin().matches("[a-zA-Z, 0-9]{" + start + ",20}"), "LOGIN");
     }
 

@@ -30,7 +30,8 @@
     <caption>ПРИВЕТ</caption>
     <tr>
         <td>
-            <form action="${pageContext.servletContext.contextPath}/create" method="get">
+            <form action="${pageContext.servletContext.contextPath}/" method="get">
+                <input type="hidden" name="link" value="create">
                 <input type="submit" value="ДОБАВИТЬ ПОЛЬЗОВАТЕЛЯ">
             </form>
         </td>

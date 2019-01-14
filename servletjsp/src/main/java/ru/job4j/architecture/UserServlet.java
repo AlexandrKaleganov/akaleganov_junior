@@ -25,7 +25,12 @@ public class UserServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("/WEB-INF/views/index.jsp").forward(req, resp);
+        String link = req.getParameter("link");
+        if (link != null) {
+            req.getRequestDispatcher(String.format("/WEB-INF/views/%s.jsp", req.getParameter("link"))).forward(req, resp);
+        } else {
+            req.getRequestDispatcher(String.format("/WEB-INF/views/%s.jsp", "index")).forward(req, resp);
+        }
     }
 
 
