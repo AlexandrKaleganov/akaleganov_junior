@@ -11,7 +11,7 @@ public class ValidateServiceTest {
 
     private void fulltest(BiConEx<Validate<Users>, Users> test) throws Exception {
         Validate<Users> valid = ValidateService.getInstance();
-        Users users = new Users("12", "sasha", "alexmur07");
+        Users users = new Users("12", "sasha", "alexmur07", "root");
         try {
             Users exp = valid.add(users);
             test.accept(valid, exp);
@@ -22,7 +22,7 @@ public class ValidateServiceTest {
 
     @Test(expected = DatabaseException.class)
     public void formatidtest() throws Exception {
-        Users users = new Users("1fsf", "name", "login");
+        Users users = new Users("1fsf", "name", "login", "pass");
         this.fulltest((valid, exp) -> {
             valid.add(users);
         });
@@ -88,7 +88,7 @@ public class ValidateServiceTest {
     @Test
     public void update() throws Exception {
         this.fulltest((val, exp) -> {
-            Users expected = val.update(new Users(exp.getId(), "vass", "expected"));
+            Users expected = val.update(new Users(exp.getId(), "vass", "expected", "password"));
             Assert.assertThat(val.findById(exp), Is.is(expected));
         });
     }

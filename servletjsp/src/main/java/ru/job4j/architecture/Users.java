@@ -8,7 +8,7 @@ public class Users {
     private LocalDateTime createDate;
     private String name;
     private String login;
-
+    private String password;
     //конструктор
     public Users(String id, String name, String login) {
         this.id = id;
@@ -17,6 +17,13 @@ public class Users {
         this.login = login;
     }
 
+    public Users(String id, String name, String login, String password) {
+        this.id = id;
+        this.createDate = LocalDateTime.now();
+        this.name = name;
+        this.login = login;
+        this.password = password;
+    }
     public Users(String id, String name, String login, LocalDateTime date) {
         this.id = id;
         this.createDate = date;
@@ -27,10 +34,6 @@ public class Users {
     public Users(String name, String login) {
         this.name = name;
         this.login = login;
-    }
-
-    Users(String s) {
-
     }
 
     public Users() {
@@ -69,11 +72,10 @@ public class Users {
         this.login = login;
     }
 
-//    @Override
-//    public String toString() {
-//        return "Users{" + "id='" + id + '\'' + ", createDate=" + createDate + ", name='" + name + '\''
-//                + ", login='" + login + '\'' + '}';
-//    }
+    public String getPassword() {
+        return password;
+    }
+
     @Override
     public String toString() {
         return "Users{" + "id=" + this.id + " createDate=" + createDate + ", name=" + name + " , login=" + login + "}";

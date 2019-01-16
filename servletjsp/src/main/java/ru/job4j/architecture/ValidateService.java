@@ -102,29 +102,6 @@ public class ValidateService implements Validate<Users> {
         }
     }
 
-//    /**
-//     * если объект уже есть в базе, или если объект с таким логином уже есть в базе то выкинет исключение
-//     *
-//     * @param users
-//     * @throws DatabaseException
-//     */
-//    private void isContainsUsers(Users users) throws DatabaseException {
-//        this.validation(users, (k) -> {
-//            ArrayList<Users> list = (ArrayList<Users>) this.logic.findAll();
-//            boolean rsl = false;
-//            rsl = this.logic.findAll().contains(k);
-//            if (!rsl) {
-//                for (int i = 0; i < list.size(); i++) {
-//                    if (list.get(i).getLogin().contains(k.getLogin())) {
-//                        rsl = true;
-//                        break;
-//                    }
-//                }
-//            }
-//            return rsl;
-//        }, " already exists");
-//    }
-
     /**
      * проверяет формат id
      *
@@ -144,6 +121,7 @@ public class ValidateService implements Validate<Users> {
     private void isNameLoginFORMAT(Users users, int start) throws DatabaseException {
         this.validation(users, (u) -> !u.getName().matches("[a-zA-Z]{" + start + ",20}|[а-яА-Я]{" + start + ",20}"), "USERNAME");
         this.validation(users, (u) -> !u.getLogin().matches("[a-zA-Z, 0-9]{" + start + ",20}"), "LOGIN");
+        this.validation(users, (u)-> !u.getPassword().matches("[a-zA-Z, 0-9]{" + start + ",20}"), "Error Password");
     }
 
 }

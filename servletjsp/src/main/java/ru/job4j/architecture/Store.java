@@ -19,4 +19,5 @@ public interface Store<T> {
     T findById(T users);
 
     List<T> deleteALL();
+
 }

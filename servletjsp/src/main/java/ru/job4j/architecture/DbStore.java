@@ -70,7 +70,6 @@ public class DbStore implements Store<Users> {
                 settings.load(in);
             }
             db(settings.getProperty("add.tableUser"), new ArrayList<>(), pr -> pr.executeUpdate());
-            db(settings.getProperty("add.tableErr"), new ArrayList<>(), pr -> pr.executeUpdate());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -114,7 +113,7 @@ public class DbStore implements Store<Users> {
     @Override
     public Users add(Users user) {
         this.db(
-                "insert into users (name, login) values (?, ?)", Arrays.asList(user.getName(), user.getLogin()),
+                "insert into users (name, login, pass) values (?, ?, ?)", Arrays.asList(user.getName(), user.getLogin(), user.getPassword()),
                 ps -> {
                     ps.executeUpdate();
                     try (ResultSet generatedKeys = ps.getGeneratedKeys()) {

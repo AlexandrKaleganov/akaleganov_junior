@@ -28,6 +28,10 @@
             <td> Login :</td>
             <td><input type="text" name="login" value=""></td>
         </tr>
+        <tr>
+            <td>Password :</td>
+            <td><input type="password" , name="password" , value=""></td>
+        </tr>
         <input type="submit" value="ДОБАВИТЬ">
     </form>
 </table>

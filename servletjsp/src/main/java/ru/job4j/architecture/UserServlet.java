@@ -7,6 +7,8 @@ package ru.job4j.architecture;
  */
 
 
+import org.apache.log4j.Logger;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,7 +19,22 @@ import java.time.LocalDateTime;
 
 public class UserServlet extends HttpServlet {
     private final DispatchDiapason dispatsh = DispatchDiapason.getInstance();
+    private static final org.apache.log4j.Logger LOGGER = Logger.getLogger(UserServlet.class);
 
+    /**
+     * проинициализируем нашь сервлет
+     * при инициализации добавим сразу пользователя админа
+     *
+     * @throws ServletException
+     */
+    @Override
+    public void init() throws ServletException {
+        try {
+            DispatchDiapason.getInstance().access("add", new Users("", "root", "root", "root"));
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+    }
 
     /**
      * закомментил за ненадобностью, т.к. за интерфейс теперь отвечает jsp
@@ -40,7 +57,7 @@ public class UserServlet extends HttpServlet {
         req.setCharacterEncoding("utf-8");
         try {
             req.setAttribute("message", this.dispatsh.access(req.getParameter("action"),
-                    new Users(req.getParameter("id"), req.getParameter("name"), req.getParameter("login"))));
+                    new Users(req.getParameter("id"), req.getParameter("name"), req.getParameter("login"), req.getParameter("password"))));
             req.getRequestDispatcher("/WEB-INF/views/index.jsp").forward(req, resp);
         } catch (Exception e) {
             req.setAttribute("err", new Err(e.getMessage(), LocalDateTime.now()));
