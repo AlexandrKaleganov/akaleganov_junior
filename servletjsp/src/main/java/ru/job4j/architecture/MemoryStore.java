@@ -72,6 +72,25 @@ public class MemoryStore implements Store<Users> {
         return this.findAll();
     }
 
+    /**
+     * поиск пользоваеля по логину
+     * @param users
+     * @return
+     */
+    @Override
+    public Users findByLogin(Users users) {
+        return this.db(users, users, (users1) -> {
+            Users rs = null;
+            for (Users us : this.database) {
+                if (us.getLogin().contains(users1.getLogin())) {
+                    rs = us;
+                    break;
+                }
+            }
+            return rs;
+        }).orElse(new Users());
+    }
+
     private <R, K> Optional<R> db(R users, K i, FunEx<K, R> funEx) {
         Optional<R> rsl = Optional.empty();
         try {

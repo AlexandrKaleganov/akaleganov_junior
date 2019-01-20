@@ -38,11 +38,10 @@
             <td><c:out value="${u.login}"/></td>
             <td><c:out value="${u.createDate}"/></td>
             <td>
-                <form action="${pageContext.servletContext.contextPath}/" method="get">
+                <form action="${pageContext.servletContext.contextPath}/edit" method="get">
                     <input type="hidden" name="id" value="${u.id}">
-                    <input type="hidden" name="name" value="${u.name}">
-                    <input type="hidden" name="login" value="${u.login}">
-                    <input type="hidden" name="link" value="edit">
+                    <input type="text" name="name" value="${u.name}">
+                    <input type="text" name="login" value="${u.login}">
                     <input type="submit" value="EDIT">
                 </form>
             </td>

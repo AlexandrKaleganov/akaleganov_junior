@@ -4,6 +4,7 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import org.hamcrest.core.Is;
 import org.junit.Assert;
 import org.junit.Test;
+import org.postgresql.jdbc2.ArrayAssistantRegistry;
 import ru.job4j.architecture.err.BiConEx;
 import ru.job4j.architecture.err.ConEx;
 
@@ -28,7 +29,7 @@ public class DbStoreTest {
      * @param fank
      */
     private void alltestfunc(BiConEx<DbStore, Users> fank) {
-        Users users = new Users("12", "sacha", "alexmur07");
+        Users users = new Users("12", "sacha", "alexmur07", "password");
         DbStore dbStore = DbStore.getInstance();
         Users expected = dbStore.add(users);
         try {
@@ -81,6 +82,12 @@ public class DbStoreTest {
         this.alltestfunc((db, exp) -> {
             db.delete(exp);
             Assert.assertThat(db.findById(exp).getId(), Is.is(new Users().getId()));
+        });
+    }
+    @Test
+    public void findByLogin() {
+        this.alltestfunc((db, exp) -> {
+            Assert.assertThat(db.findByLogin(exp).getLogin(), Is.is(exp.getLogin()));
         });
     }
 }

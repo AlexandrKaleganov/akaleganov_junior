@@ -182,6 +182,31 @@ public class DbStore implements Store<Users> {
         return this.findAll();
     }
 
+    /**
+     * поиск пользоваеля по логину
+     *
+     * @param users
+     * @return
+     */
+    @Override
+    public Users findByLogin(Users users) {
+        return this.db(
+                "select * from users where login = ?", Arrays.asList(users.getLogin()),
+                ps -> {
+                    Users res = null;
+                    try (ResultSet rs = ps.executeQuery()) {
+                        if (rs.next()) {
+                            res = new Users(String.valueOf(rs.getInt("id")), rs.getString("name"),
+                                    rs.getString("login"), rs.getTimestamp("create_date").toLocalDateTime());
+                        }
+                    } catch (SQLException e) {
+                        LOGGER.error(e.getMessage(), e);
+                    }
+                    return res;
+                }
+        ).orElse(new Users());
+    }
+
     @Override
     public Users findById(Users users) {
         return this.db(

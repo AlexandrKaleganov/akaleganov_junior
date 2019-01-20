@@ -9,7 +9,6 @@ import java.io.IOException;
 public class UserCreateServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println(String.format(" mama/%s", req.getParameter("link")));
         req.getRequestDispatcher("/WEB-INF/views/create.jsp").forward(req, resp);
     }
 }

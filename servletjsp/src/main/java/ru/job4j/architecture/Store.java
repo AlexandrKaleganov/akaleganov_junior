@@ -20,4 +20,6 @@ public interface Store<T> {
 
     List<T> deleteALL();
 
+    T findByLogin(T users);
+
 }
