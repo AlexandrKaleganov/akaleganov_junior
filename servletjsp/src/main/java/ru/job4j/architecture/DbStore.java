@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.sql.*;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class DbStore implements Store<Users> {
@@ -224,6 +225,30 @@ public class DbStore implements Store<Users> {
                     return res;
                 }
         ).orElse(new Users());
+    }
 
+    @Override
+    public List<Users> filter(Users users) {
+        List<Users> rsl = new ArrayList<>();
+        System.out.println(Timestamp.valueOf(users.getCreateDate()));
+        if (Integer.valueOf(users.getId()) > 0) {
+            rsl.add(this.findById(users));
+        } else {
+            this.db("select * from users where name like '%?%' and login like '%?%'",
+                    Arrays.asList(users.getName(), users.getLogin()),
+                    ps -> {
+                        try (ResultSet rs = ps.executeQuery()) {
+                            while (rs.next()) {
+                                rsl.add(new Users(String.valueOf(rs.getInt("id")), rs.getString("name"),
+                                        rs.getString("login"), rs.getTimestamp("create_date").toLocalDateTime()));
+                            }
+                        } catch (SQLException e) {
+                            LOGGER.error(e.getMessage(), e);
+                        }
+                        return rsl;
+                    }
+            );
+        }
+        return rsl;
     }
 }

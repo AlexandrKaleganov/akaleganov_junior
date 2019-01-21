@@ -1,5 +1,6 @@
 package ru.job4j.architecture;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -19,10 +20,10 @@ public class Users {
 
     public Users(String id, String name, String login, String password) {
         this.id = id;
-        this.createDate = LocalDateTime.now();
         this.name = name;
         this.login = login;
         this.password = password;
+        this.createDate = LocalDate.of(1999, 01, 01).atTime(00, 00);
     }
     public Users(String id, String name, String login, LocalDateTime date) {
         this.id = id;

@@ -91,6 +91,11 @@ public class MemoryStore implements Store<Users> {
         }).orElse(new Users());
     }
 
+    @Override
+    public List<Users> filter(Users users) {
+        return null;
+    }
+
     private <R, K> Optional<R> db(R users, K i, FunEx<K, R> funEx) {
         Optional<R> rsl = Optional.empty();
         try {
