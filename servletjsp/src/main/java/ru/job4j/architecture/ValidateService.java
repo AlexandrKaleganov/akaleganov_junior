@@ -124,4 +124,8 @@ public class ValidateService implements Validate<Users> {
         this.validation(users, (u)-> !u.getPassword().matches("[a-zA-Z, 0-9]{" + start + ",20}"), "Error Password");
     }
 
+    @Override
+    public List<Users> filter(Users users) {
+        return this.logic.filter(users);
+    }
 }

@@ -55,6 +55,8 @@ public class DispatchDiapason {
         this.dispatch.put("deleteAll", (users) ->
                 Optional.of(this.validate.deleteALL())
         );
+        this.dispatch.put("filter", (users) ->
+                Optional.of(this.validate.filter(users)));
         return this;
     }
 
@@ -74,5 +76,9 @@ public class DispatchDiapason {
         rsl = this.dispatch.get(key).apply(new Users());
         return rsl.get();
     }
-
+    public List<Users> access(String key, Users users, int modif) throws Exception {
+        Optional<List<Users>> rsl = Optional.empty();
+        rsl = this.dispatch.get(key).apply(users);
+        return rsl.get();
+    }
 }

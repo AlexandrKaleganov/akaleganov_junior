@@ -6,6 +6,7 @@ import org.junit.Test;
 import ru.job4j.architecture.err.BiConEx;
 import ru.job4j.architecture.err.DatabaseException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -23,7 +24,7 @@ public class DispatchDiapasonTest {
 
 
     private void fulltest(BiConEx<DispatchDiapason, Users> fanc) {
-        var users = new Users("1", "user", "user123");
+        var users = new Users("1", "user", "user123", "pass");
         var disp = new DispatchDiapason().init();
         try {
             var exp = disp.access("add", users);
@@ -75,7 +76,16 @@ public class DispatchDiapasonTest {
         this.fulltest((disp, exp) -> {
             Assert.assertThat(disp.access("delete", exp), is(exp));
             Assert.assertThat(disp.access("findbyid", exp).getId(), is((String) null));
+        });
+    }
 
+    @Test
+    public void filter() {
+        this.fulltest((disp, exp) -> {
+            System.out.println(disp.access("filter", new Users("", "user", "", LocalDateTime.of(1999, 10, 5, 12, 00)), 1));
+
+            Assert.assertThat(disp.access("filter", new Users("", "user", "", LocalDateTime.of(1999, 10, 5, 12, 00)), 1).get(0).getLogin()
+                    , is(exp.getLogin()));
         });
     }
 }

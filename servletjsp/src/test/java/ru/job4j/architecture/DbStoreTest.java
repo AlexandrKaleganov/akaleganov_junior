@@ -96,7 +96,6 @@ public class DbStoreTest {
             db.add(new Users("0","name", "alexmur", "pass"));
             Assert.assertThat(db.filter(exp).get(0).getId(), Is.is(exp.getId()));
             Assert.assertThat(db.filter(new Users("0", "","alex", "")).get(0).getId(), Is.is(exp.getId()));
-
         });
     }
 }
