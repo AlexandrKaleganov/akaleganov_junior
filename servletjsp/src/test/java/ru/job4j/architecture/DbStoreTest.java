@@ -12,6 +12,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Properties;
 
 
@@ -84,18 +86,21 @@ public class DbStoreTest {
             Assert.assertThat(db.findById(exp).getId(), Is.is(new Users().getId()));
         });
     }
+
     @Test
     public void findByLogin() {
         this.alltestfunc((db, exp) -> {
             Assert.assertThat(db.findByLogin(exp).getLogin(), Is.is(exp.getLogin()));
         });
     }
+
     @Test
     public void filterTest() {
-        this.alltestfunc((db, exp)->{
-            db.add(new Users("0","name", "alexmur", "pass"));
-            Assert.assertThat(db.filter(exp).get(0).getId(), Is.is(exp.getId()));
-            Assert.assertThat(db.filter(new Users("0", "","alex", "")).get(0).getId(), Is.is(exp.getId()));
+        this.alltestfunc((db, exp) -> {
+            db.add(new Users("", "name", "alexmur", "pass"));
+//            Assert.assertThat(db.filter(exp).get(0).getId(), Is.is(exp.getId()));
+            Assert.assertThat(db.filter(new Users("0", "", "alex",
+                    LocalDateTime.of(1980, 10, 10, 10, 00))).get(0).getId(), Is.is(exp.getId()));
         });
     }
 }

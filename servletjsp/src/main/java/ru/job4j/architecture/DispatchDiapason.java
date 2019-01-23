@@ -70,14 +70,14 @@ public class DispatchDiapason {
         rsl = this.dispatch.get(key).apply(users);
         return rsl.get();
     }
-
-    public List<Users> access(String key) throws Exception {
-        Optional<List<Users>> rsl = Optional.empty();
-        rsl = this.dispatch.get(key).apply(new Users());
-        return rsl.get();
-    }
-    public List<Users> access(String key, Users users, int modif) throws Exception {
-        Optional<List<Users>> rsl = Optional.empty();
+//
+//    public List<Users> access(String key) throws Exception {
+//        Optional<List<Users>> rsl = Optional.empty();
+//        rsl = this.dispatch.get(key).apply(new Users());
+//        return rsl.get();
+//    }
+    public <E> E  access(String key, Users users, E param) throws Exception {
+        Optional<E> rsl = Optional.empty();
         rsl = this.dispatch.get(key).apply(users);
         return rsl.get();
     }

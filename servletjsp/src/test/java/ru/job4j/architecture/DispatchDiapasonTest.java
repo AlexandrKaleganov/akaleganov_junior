@@ -7,6 +7,7 @@ import ru.job4j.architecture.err.BiConEx;
 import ru.job4j.architecture.err.DatabaseException;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -32,7 +33,7 @@ public class DispatchDiapasonTest {
         } catch (Exception e) {
         } finally {
             try {
-                disp.access("deleteAll");
+                disp.access("deleteAll", new Users(), new ArrayList<Users>());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -56,7 +57,7 @@ public class DispatchDiapasonTest {
     @Test
     public void findall() {
         this.fulltest((disp, exp) -> {
-            Assert.assertThat(disp.access("findall").get(0), Is.is(exp));
+            Assert.assertThat(disp.access("findall", new Users(), new ArrayList<Users>()).get(0), Is.is(exp));
         });
     }
 
@@ -75,17 +76,18 @@ public class DispatchDiapasonTest {
     public void delete() {
         this.fulltest((disp, exp) -> {
             Assert.assertThat(disp.access("delete", exp), is(exp));
-            Assert.assertThat(disp.access("findbyid", exp).getId(), is((String) null));
+            Assert.assertThat(disp.access("findbyid", exp).getId(), is("0"));
         });
     }
 
     @Test
     public void filter() {
         this.fulltest((disp, exp) -> {
-            System.out.println(disp.access("filter", new Users("", "user", "", LocalDateTime.of(1999, 10, 5, 12, 00)), 1));
 
-            Assert.assertThat(disp.access("filter", new Users("", "user", "", LocalDateTime.of(1999, 10, 5, 12, 00)), 1).get(0).getLogin()
-                    , is(exp.getLogin()));
+            Assert.assertThat(disp.access("filter",
+                    new Users("", "user", "",
+                            LocalDateTime.of(1999, 10, 5, 12, 00)),
+                     new ArrayList<Users>()).get(0).getLogin(), is(exp.getLogin()));
         });
     }
 }

@@ -7,6 +7,8 @@ import ru.job4j.architecture.err.BiConEx;
 import ru.job4j.architecture.err.ConEx;
 import ru.job4j.architecture.err.DatabaseException;
 
+import java.time.LocalDateTime;
+
 public class ValidateServiceTest {
 
     private void fulltest(BiConEx<Validate<Users>, Users> test) throws Exception {
@@ -101,6 +103,15 @@ public class ValidateServiceTest {
             Assert.assertThat(val.findAll().get(0), Is.is(exp));
             val.delete(exp);
             Assert.assertThat(val.findAll().size(), Is.is(0));
+        });
+    }
+
+    @Test
+    public void filterTest() throws Exception {
+        this.fulltest((val, exp) -> {
+            Assert.assertThat(val.filter(exp).get(0).getId(), Is.is(exp.getId()));
+            Assert.assertThat(val.filter(new Users("0", "", "alex",
+                    LocalDateTime.of(1995, 01, 01, 01, 01))).get(0).getId(), Is.is(exp.getId()));
         });
     }
 }

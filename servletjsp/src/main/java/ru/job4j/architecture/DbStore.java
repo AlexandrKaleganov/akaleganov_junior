@@ -249,13 +249,11 @@ public class DbStore implements Store<Users> {
                     }
             );
         }
-        System.out.println(rsl);
         for (int i = 0; i < rsl.size(); i++) {
             if (rsl.get(i).getCreateDate().compareTo(users.getCreateDate()) < 0) {
-                System.out.println(11);
+                rsl.remove(i);
             }
         }
-//        rsl.stream().filter(e-> e.getCreateDate() >= users.getCreateDate());
         return rsl;
     }
 }

@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 
 /**
@@ -20,7 +21,9 @@ public class UserListServlet extends HttpServlet {
         resp.setContentType("text/html;charset=utf-8");
         req.setCharacterEncoding("utf-8");
         try {
-            req.setAttribute("list", DispatchDiapason.getInstance().access(req.getParameter("action")));
+            req.setAttribute("list", DispatchDiapason.getInstance().access(req.getParameter("action"),
+                  new Users(req.getParameter("id"), req.getParameter("name"), req.getParameter("login"), req.getParameter("create_date")),
+                    new ArrayList<Users>()));
             req.getRequestDispatcher("/WEB-INF/views/list.jsp").forward(req, resp);
         } catch (Exception e) {
             req.setAttribute("err", new Err(e.getMessage(), LocalDateTime.now()));

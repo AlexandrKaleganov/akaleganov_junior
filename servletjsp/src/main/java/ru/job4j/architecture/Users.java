@@ -10,23 +10,25 @@ public class Users {
     private String name;
     private String login;
     private String password;
+
     //конструктор
     public Users(String id, String name, String login) {
-        this.id = id;
+        this.id = iscorrectedID(id);
         this.createDate = LocalDateTime.now();
         this.name = name;
         this.login = login;
     }
 
     public Users(String id, String name, String login, String password) {
-        this.id = id;
+        this.id = iscorrectedID(id);
         this.name = name;
         this.login = login;
         this.password = password;
         this.createDate = LocalDate.of(1999, 01, 01).atTime(00, 00);
     }
+
     public Users(String id, String name, String login, LocalDateTime date) {
-        this.id = id;
+        this.id = iscorrectedID(id);
         this.createDate = date;
         this.name = name;
         this.login = login;
@@ -38,7 +40,7 @@ public class Users {
     }
 
     public Users() {
-
+        this.id = "0";
     }
 
     public String getId() {
@@ -80,6 +82,11 @@ public class Users {
     @Override
     public String toString() {
         return "Users{" + "id=" + this.id + " createDate=" + createDate + ", name=" + name + " , login=" + login + "}";
+    }
+
+    private String iscorrectedID(String id) {
+        return id.length() > 0 ? id : "0";
+
     }
 
     @Override
