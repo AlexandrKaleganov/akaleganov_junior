@@ -98,7 +98,7 @@ public class DbStoreTest {
     public void filterTest() {
         this.alltestfunc((db, exp) -> {
             db.add(new Users("", "name", "alexmur", "pass"));
-//            Assert.assertThat(db.filter(exp).get(0).getId(), Is.is(exp.getId()));
+            Assert.assertThat(db.filter(exp).get(0).getId(), Is.is(exp.getId()));
             Assert.assertThat(db.filter(new Users("0", "", "alex",
                     LocalDateTime.of(1980, 10, 10, 10, 00))).get(0).getId(), Is.is(exp.getId()));
         });

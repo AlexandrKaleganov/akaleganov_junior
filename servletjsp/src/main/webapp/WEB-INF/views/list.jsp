@@ -20,7 +20,9 @@
     <input type="submit" value="ВЕРНУТЬСЯ НА ГЛАВНУЮ СТРАНИЦУ">
 </form>
 <br/>
+<table border="1">
 
+</table>
 <table border="1">
     <caption>DataBase</caption>
     <tr>

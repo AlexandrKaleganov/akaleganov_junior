@@ -85,8 +85,7 @@ public class Users {
     }
 
     private String iscorrectedID(String id) {
-        return id.length() > 0 ? id : "0";
-
+        return id!=null && id.length() > 0 ? id : "0";
     }
 
     @Override
