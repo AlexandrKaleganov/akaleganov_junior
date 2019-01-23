@@ -249,9 +249,11 @@ public class DbStore implements Store<Users> {
                     }
             );
         }
-        for (int i = 0; i < rsl.size(); i++) {
-            if (rsl.get(i).getCreateDate().compareTo(users.getCreateDate()) < 0) {
-                rsl.remove(i);
+        if (users.getCreateDate() != null) {
+            for (int i = 0; i < rsl.size(); i++) {
+                if (rsl.get(i).getCreateDate().toLocalDate().compareTo(users.getCreateDate().toLocalDate()) != 0) {
+                    rsl.remove(i);
+                }
             }
         }
         return rsl;

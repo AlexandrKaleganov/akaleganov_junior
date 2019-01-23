@@ -21,7 +21,26 @@
 </form>
 <br/>
 <table border="1">
+    <caption>DataBase FILTER</caption>
+    <tr>
 
+
+
+        <th>ID</th>
+        <th>NAME</th>
+        <th>LOGIN</th>
+        <th>CREATE_DATE</th>
+        <th>FILTER</th>
+    </tr>
+    <tr>
+        <form action="${pageContext.servletContext.contextPath}/list" METHOD="post">
+            <td><input type="text" name="id" value=""></td>
+            <td><input type="text" name="name" value=""></td>
+            <td><input type="text" name="login" value=""></td>
+            <td><input type="date" name="CREATE_DATE" value=""></td>
+            <td><input type="submit" value="FILTER"></td>
+        </form>
+    </tr>
 </table>
 <table border="1">
     <caption>DataBase</caption>
@@ -42,8 +61,8 @@
             <td>
                 <form action="${pageContext.servletContext.contextPath}/edit" method="get">
                     <input type="hidden" name="id" value="${u.id}">
-                    <input type="text" name="name" value="${u.name}">
-                    <input type="text" name="login" value="${u.login}">
+                    <input type="hidden" name="name" value="${u.name}">
+                    <input type="hidden" name="login" value="${u.login}">
                     <input type="submit" value="EDIT">
                 </form>
             </td>

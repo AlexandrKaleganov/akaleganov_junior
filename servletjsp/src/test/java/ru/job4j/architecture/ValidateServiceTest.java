@@ -8,6 +8,7 @@ import ru.job4j.architecture.err.ConEx;
 import ru.job4j.architecture.err.DatabaseException;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class ValidateServiceTest {
 
@@ -111,7 +112,8 @@ public class ValidateServiceTest {
         this.fulltest((val, exp) -> {
             Assert.assertThat(val.filter(exp).get(0).getId(), Is.is(exp.getId()));
             Assert.assertThat(val.filter(new Users("0", "", "alex",
-                    LocalDateTime.of(1995, 01, 01, 01, 01))).get(0).getId(), Is.is(exp.getId()));
+                    LocalDateTime.parse(exp.getCreateDate().toLocalDate().toString() + " 00:00",
+                            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")))).get(0).getId(), Is.is(exp.getId()));
         });
     }
 }

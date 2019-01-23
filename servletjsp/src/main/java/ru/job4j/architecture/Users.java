@@ -14,7 +14,6 @@ public class Users {
     //конструктор
     public Users(String id, String name, String login) {
         this.id = iscorrectedID(id);
-        this.createDate = LocalDateTime.now();
         this.name = name;
         this.login = login;
     }
@@ -24,7 +23,7 @@ public class Users {
         this.name = name;
         this.login = login;
         this.password = password;
-        this.createDate = LocalDate.of(1999, 01, 01).atTime(00, 00);
+        this.createDate = LocalDateTime.now();
     }
 
     public Users(String id, String name, String login, LocalDateTime date) {
@@ -48,7 +47,7 @@ public class Users {
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.id = iscorrectedID(id);
     }
 
     public LocalDateTime getCreateDate() {
@@ -85,7 +84,7 @@ public class Users {
     }
 
     private String iscorrectedID(String id) {
-        return id!=null && id.length() > 0 ? id : "0";
+        return id != null && id.length() > 0 ? id : "0";
     }
 
     @Override
