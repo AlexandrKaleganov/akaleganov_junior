@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashSet;
 import java.util.Properties;
 
 
@@ -100,7 +101,6 @@ public class DbStoreTest {
         this.alltestfunc((db, exp) -> {
             db.add(new Users("", "name", "alexmur", "pass"));
             Assert.assertThat(db.filter(exp).get(0).getId(), Is.is(exp.getId()));
-            System.out.println(exp.getCreateDate().toLocalDate());
             Assert.assertThat(db.filter(new Users("0", "", "alex",
                     LocalDateTime.parse(exp.getCreateDate().toLocalDate().toString() + " 00:00",
                             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")))).get(0).getId(), Is.is(exp.getId()));

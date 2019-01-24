@@ -4,6 +4,8 @@ import org.hamcrest.core.Is;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.function.BiConsumer;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -63,6 +65,15 @@ public class MemoryStoreTest {
     public void deleteALL() {
         this.fulltest(((memoryStore, users) -> {
             assertThat(memoryStore.deleteALL().size(), is(0));
+        }));
+    }
+
+    @Test
+    public void filterTest() {
+        this.fulltest(((memoryStore, users) -> {
+            Assert.assertThat(memoryStore.filter(new Users("0", "", "alex",
+                    LocalDateTime.parse(users.getCreateDate().toLocalDate().toString() + " 00:00",
+                            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")))).get(0).getId(), Is.is(users.getId()));
         }));
     }
 }

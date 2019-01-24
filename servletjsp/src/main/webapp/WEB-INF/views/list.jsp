@@ -38,7 +38,7 @@
             <td><input type="text" name="name" value=""></td>
             <td><input type="text" name="login" value=""></td>
             <td><input type="date" name="CREATE_DATE" value=""></td>
-            <td><input type="submit" value="FILTER"></td>
+            <td><input type="hidden" name="action" value="filter"><input type="submit" value="FILTER"></td>
         </form>
     </tr>
 </table>

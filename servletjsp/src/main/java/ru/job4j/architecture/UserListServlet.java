@@ -24,29 +24,22 @@ public class UserListServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html;charset=utf-8");
         req.setCharacterEncoding("utf-8");
-
-
         try {
-
+            Users users = new Users();
+            users.setId(req.getParameter("id"));
+            users.setName(req.getParameter("name"));
+            users.setLogin(req.getParameter("login"));
+            System.out.println(req.getParameter("CREATE_DATE"));
+            if (req.getParameter("CREATE_DATE") != null) {
+                users.setCreateDate(LocalDateTime.parse(req.getParameter("CREATE_DATE") + " 00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+            }
             req.setAttribute("list", DispatchDiapason.getInstance().access(req.getParameter("action"),
-                    this.initUsers(req),
-                    new ArrayList<Users>()));
-//            LocalDateTime.parse(req.getParameter("CREATE_DATE") + " 00:00",
-//                    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
-//            )
+                    users, new ArrayList<Users>()));
             req.getRequestDispatcher("/WEB-INF/views/list.jsp").forward(req, resp);
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
             req.setAttribute("err", new Err(e.getMessage(), LocalDateTime.now()));
             req.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(req, resp);
         }
-    }
-
-    private Users initUsers(HttpServletRequest reg) {
-        Users rsl = new Users();
-        rsl.setId(reg.getParameter("id"));
-        rsl.setName(reg.getParameter("name"));
-        rsl.setLogin(reg.getParameter("login"));
-        return rsl;
     }
 }

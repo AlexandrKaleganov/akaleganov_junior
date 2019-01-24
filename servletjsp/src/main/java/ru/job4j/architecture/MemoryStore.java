@@ -2,7 +2,11 @@ package ru.job4j.architecture;
 
 import ru.job4j.architecture.err.FunEx;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -74,6 +78,7 @@ public class MemoryStore implements Store<Users> {
 
     /**
      * поиск пользоваеля по логину
+     *
      * @param users
      * @return
      */
@@ -93,7 +98,62 @@ public class MemoryStore implements Store<Users> {
 
     @Override
     public List<Users> filter(Users users) {
-        return null;
+        List<Users> rsl = new ArrayList<>();
+        if (Integer.valueOf(users.getId()) > 0) {
+            rsl.add(this.findById(users));
+        } else {
+            for (int i = 0; i < this.database.size(); i++) {
+                if (!this.isADD(this.database.get(i), users)) {
+                    rsl.add(this.database.get(i));
+                }
+            }
+        }
+        return rsl;
+    }
+
+    /**
+     * метод проверяет по всем полям пользователя
+     *
+     * @param datausers
+     * @param users
+     * @return
+     */
+    private boolean isADD(Users datausers, Users users) {
+        return this.isValid(datausers.getName(), users.getName()) && this.isValid(datausers.getLogin(), users.getLogin()) && this.isDataValid(datausers, users);
+    }
+
+    /**
+     * метод проверяет совпадение стринговых значений
+     *
+     * @param datausers
+     * @param users
+     * @return
+     */
+    private boolean isValid(String datausers, String users) {
+        boolean rsl = true;
+        if (users != null) {
+            rsl = false;
+        } else if (datausers.contains(users)) {
+            rsl = false;
+        }
+        return rsl;
+    }
+
+    /**
+     * метод проверяет совпадение дат
+     *
+     * @param data
+     * @param users
+     * @return
+     */
+    private boolean isDataValid(Users data, Users users) {
+        boolean rsl = true;
+        if (users.getCreateDate() == null) {
+            rsl = false;
+        } else if (data.getCreateDate().toLocalDate().compareTo(users.getCreateDate().toLocalDate()) == 0) {
+            rsl = false;
+        }
+        return rsl;
     }
 
     private <R, K> Optional<R> db(R users, K i, FunEx<K, R> funEx) {
