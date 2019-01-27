@@ -1,6 +1,8 @@
 package ru.job4j.architecture;
 
 import org.apache.log4j.Logger;
+import ru.job4j.architecture.model.Err;
+import ru.job4j.architecture.model.Users;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -8,8 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Optional;
 
 
 /**
@@ -25,16 +27,9 @@ public class UserListServlet extends HttpServlet {
         resp.setContentType("text/html;charset=utf-8");
         req.setCharacterEncoding("utf-8");
         try {
-            Users users = new Users();
-            users.setId(req.getParameter("id"));
-            users.setName(req.getParameter("name"));
-            users.setLogin(req.getParameter("login"));
-            System.out.println(req.getParameter("CREATE_DATE"));
-            if (req.getParameter("CREATE_DATE") != null) {
-                users.setCreateDate(LocalDateTime.parse(req.getParameter("CREATE_DATE") + " 00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
-            }
             req.setAttribute("list", DispatchDiapason.getInstance().access(req.getParameter("action"),
-                    users, new ArrayList<Users>()));
+                    new Users(req.getParameter("id"), req.getParameter("name"), req.getParameter("login"),
+                            Optional.ofNullable(req.getParameter("CREATE_DATE"))), new ArrayList<Users>()));
             req.getRequestDispatcher("/WEB-INF/views/list.jsp").forward(req, resp);
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);

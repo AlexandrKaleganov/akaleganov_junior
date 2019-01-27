@@ -1,6 +1,6 @@
 <%@ page import="ru.job4j.architecture.DispatchDiapason" %>
 <%@ page import="java.util.Map" %>
-<%@ page import="ru.job4j.architecture.Users" %>
+<%@ page import="ru.job4j.architecture.model.Users" %>
 <%@ page import="java.util.List" %><%--
   Created by IntelliJ IDEA.
   User: Kaleganov Alxandr
@@ -59,10 +59,9 @@
             <td><c:out value="${u.login}"/></td>
             <td><c:out value="${u.createDate}"/></td>
             <td>
-                <form action="${pageContext.servletContext.contextPath}/edit" method="get">
+                <form action="${pageContext.servletContext.contextPath}/edit" method="post">
                     <input type="hidden" name="id" value="${u.id}">
-                    <input type="hidden" name="name" value="${u.name}">
-                    <input type="hidden" name="login" value="${u.login}">
+                    <input type="hidden" name="action" value="findbyid">
                     <input type="submit" value="EDIT">
                 </form>
             </td>
@@ -75,37 +74,6 @@
             </td>
         </tr>
     </c:forEach>
-    <%----%>
-    <%--<%--%>
-    <%--List<Users> list = (List<Users>) request.getAttribute("list");--%>
-    <%--for (Users u : list) {--%>
-    <%--%>--%>
-    <%--<tr>--%>
-    <%--<td><%=u.getId()%>--%>
-    <%--</td>--%>
-    <%--<td><%=u.getName()%>--%>
-    <%--</td>--%>
-    <%--<td><%=u.getLogin()%>--%>
-    <%--</td>--%>
-    <%--<td><%=u.getCreateDate()%>--%>
-    <%--</td>--%>
-    <%--<td>--%>
-    <%--<form action="${pageContext.servletContext.contextPath}/edit" method="get">--%>
-    <%--<input type="hidden" name="id" value="<%=u.getId()%>">--%>
-    <%--<input type="hidden" name="name" value="<%=u.getName()%>">--%>
-    <%--<input type="hidden" name="login" value="<%=u.getLogin()%>">--%>
-    <%--<input type="submit" value="EDIT">--%>
-    <%--</form>--%>
-    <%--</td>--%>
-    <%--<td>--%>
-    <%--<form action="${pageContext.servletContext.contextPath}/" method="post">--%>
-    <%--<input type="hidden" name="action" value="delete">--%>
-    <%--<input type="hidden" name="id" value="<%=u.getId()%>">--%>
-    <%--<input type="submit" value="DELETE">--%>
-    <%--</form>--%>
-    <%--</td>--%>
-    <%--</tr>--%>
-    <%--<%}%>--%>
 </table>
 </body>
 </html>

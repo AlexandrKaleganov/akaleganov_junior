@@ -4,12 +4,10 @@ import org.hamcrest.core.Is;
 import org.junit.Assert;
 import org.junit.Test;
 import ru.job4j.architecture.err.BiConEx;
-import ru.job4j.architecture.err.DatabaseException;
+import ru.job4j.architecture.model.Users;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.function.BiConsumer;
 
 import static org.hamcrest.core.Is.is;
 
@@ -87,7 +85,7 @@ public class DispatchDiapasonTest {
             Assert.assertThat(disp.access("filter",
                     new Users("", "user", "",
                             LocalDateTime.of(1999, 10, 5, 12, 00)),
-                     new ArrayList<Users>()).get(0).getLogin(), is(exp.getLogin()));
+                    new ArrayList<Users>()).get(0).getLogin(), is(exp.getLogin()));
         });
     }
 }

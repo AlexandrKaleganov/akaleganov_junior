@@ -8,6 +8,8 @@ package ru.job4j.architecture;
 
 
 import org.apache.log4j.Logger;
+import ru.job4j.architecture.model.Err;
+import ru.job4j.architecture.model.Users;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -55,6 +57,7 @@ public class UserServlet extends HttpServlet {
                     new Users(req.getParameter("id"), req.getParameter("name"), req.getParameter("login"), req.getParameter("password"))));
             req.getRequestDispatcher("/WEB-INF/views/index.jsp").forward(req, resp);
         } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
             req.setAttribute("err", new Err(e.getMessage(), LocalDateTime.now()));
             req.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(req, resp);
         }

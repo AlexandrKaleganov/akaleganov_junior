@@ -1,12 +1,10 @@
 package ru.job4j.architecture;
 
 import ru.job4j.architecture.err.FunEx;
+import ru.job4j.architecture.model.Users;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;

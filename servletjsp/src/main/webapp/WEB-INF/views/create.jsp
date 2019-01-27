@@ -22,17 +22,17 @@
         </tr>
         <tr>
             <td> Name :</td>
-            <td><input type="text" name="name" value=""></td>
+            <td><input type="text" name="name" value="${u.name}"></td>
         </tr>
         <tr>
             <td> Login :</td>
-            <td><input type="text" name="login" value=""></td>
+            <td><input type="text" name="login" value="${u.login}"></td>
         </tr>
         <tr>
             <td>Password :</td>
-            <td><input type="password" , name="password" , value=""></td>
+            <td><input type="password" , name="password" , value="${u.password}"></td>
         </tr>
-        <input type="submit" value="ДОБАВИТЬ">
+        <input type="submit" value="Добавить">
     </form>
 </table>
 </body>

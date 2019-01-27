@@ -1,22 +1,14 @@
 package ru.job4j.architecture;
 
-import org.apache.commons.dbcp2.BasicDataSource;
 import org.hamcrest.core.Is;
 import org.junit.Assert;
 import org.junit.Test;
-import org.postgresql.jdbc2.ArrayAssistantRegistry;
 import ru.job4j.architecture.err.BiConEx;
-import ru.job4j.architecture.err.ConEx;
+import ru.job4j.architecture.model.Users;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashSet;
-import java.util.Properties;
 
 
 public class DbStoreTest {

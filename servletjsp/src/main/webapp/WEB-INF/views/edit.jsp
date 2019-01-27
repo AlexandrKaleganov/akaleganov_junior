@@ -1,4 +1,4 @@
-<%@ page import="ru.job4j.architecture.Users" %>
+<%@ page import="ru.job4j.architecture.model.Users" %>
 <%@ page import="ru.job4j.architecture.DispatchDiapason" %>
 <%@ page import="java.util.Optional" %><%--
   Created by IntelliJ IDEA.
@@ -20,16 +20,16 @@
     <form action="${pageContext.servletContext.contextPath}/" method="post">
         <tr>
             <td> ID :</td>
-            <td><input readonly="readonly" name="id" value="<%=request.getParameter("id")%>"></td>
+            <td><input readonly="readonly" name="id" value="${u.id}"></td>
         </tr>
         <br>
         <tr>
             <td> Name :</td>
-            <td><input type="text" name="name" value="<%=request.getParameter("name")%>"></td>
+            <td><input type="text" name="name" value="${u.name}"></td>
         </tr>
         <tr>
             <td> Login :</td>
-            <td><input type="text" name="login" value="<%=request.getParameter("login")%>"></td>
+            <td><input type="text" name="login" value="${u.login}"></td>
         </tr>
         <input type="hidden" name="action" value="update">
         <input type="submit" value="ИЗМЕНИТЬ">

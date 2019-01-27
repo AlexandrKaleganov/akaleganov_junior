@@ -4,11 +4,12 @@ import org.hamcrest.core.Is;
 import org.junit.Assert;
 import org.junit.Test;
 import ru.job4j.architecture.err.BiConEx;
-import ru.job4j.architecture.err.ConEx;
 import ru.job4j.architecture.err.DatabaseException;
+import ru.job4j.architecture.model.Users;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 public class ValidateServiceTest {
 
@@ -91,8 +92,10 @@ public class ValidateServiceTest {
     @Test
     public void update() throws Exception {
         this.fulltest((val, exp) -> {
-            Users expected = val.update(new Users(exp.getId(), "vass", "expected", "password"));
+            Users expected = val.update(new Users(exp.getId(), "vass", "expected", "roo"));
             Assert.assertThat(val.findById(exp), Is.is(expected));
+            Users expected1 = val.update(new Users(exp.getId(), "vass", "expec", Optional.of("2010-11-23")));
+
         });
     }
 
@@ -116,4 +119,5 @@ public class ValidateServiceTest {
                             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")))).get(0).getId(), Is.is(exp.getId()));
         });
     }
+
 }

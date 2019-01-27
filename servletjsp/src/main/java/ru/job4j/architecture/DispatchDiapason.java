@@ -11,9 +11,9 @@ package ru.job4j.architecture;
 
 import org.apache.log4j.Logger;
 import ru.job4j.architecture.err.FunEx;
+import ru.job4j.architecture.model.Users;
 
 import java.util.*;
-import java.util.function.Function;
 
 public class DispatchDiapason {
     /**
@@ -70,12 +70,7 @@ public class DispatchDiapason {
         rsl = this.dispatch.get(key).apply(users);
         return rsl.get();
     }
-//
-//    public List<Users> access(String key) throws Exception {
-//        Optional<List<Users>> rsl = Optional.empty();
-//        rsl = this.dispatch.get(key).apply(new Users());
-//        return rsl.get();
-//    }
+
     public <E> E  access(String key, Users users, E param) throws Exception {
         Optional<E> rsl = Optional.empty();
         rsl = this.dispatch.get(key).apply(users);

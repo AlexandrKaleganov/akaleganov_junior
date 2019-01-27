@@ -1,8 +1,9 @@
-package ru.job4j.architecture;
+package ru.job4j.architecture.model;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
+import java.util.Optional;
 
 public class Users {
     private String id;
@@ -36,6 +37,29 @@ public class Users {
     public Users(String name, String login) {
         this.name = name;
         this.login = login;
+    }
+
+    public Users(String id, String name, String login, Optional<String> date) {
+        this.id = iscorrectedID(id);
+        if (this.isformatDate(date.orElse("dat"))) {
+            this.createDate = LocalDateTime.parse(date.get() + " 00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        }
+        this.name = name;
+        this.login = login;
+        this.password = "root";
+    }
+
+    private boolean isformatDate(String date) {
+        boolean rsl = false;
+        if (date.matches("[0-9]{4}-[0-9]{2}-[0-9]{2}$")) {
+            String[] dat = date.split("-");
+            if (Integer.valueOf(dat[1]) >= 0 && Integer.valueOf(dat[1]) <= 12) {
+                if (Integer.valueOf(dat[2]) >= 0 && Integer.valueOf(dat[1]) <= 31) {
+                    rsl = true;
+                }
+            }
+        }
+        return rsl;
     }
 
     public Users() {
