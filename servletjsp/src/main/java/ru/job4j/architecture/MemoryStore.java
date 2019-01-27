@@ -1,7 +1,6 @@
 package ru.job4j.architecture;
 
 import ru.job4j.architecture.err.FunEx;
-import ru.job4j.architecture.model.Users;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

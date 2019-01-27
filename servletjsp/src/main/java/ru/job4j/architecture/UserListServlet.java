@@ -1,8 +1,6 @@
 package ru.job4j.architecture;
 
 import org.apache.log4j.Logger;
-import ru.job4j.architecture.model.Err;
-import ru.job4j.architecture.model.Users;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
