@@ -13,6 +13,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
@@ -42,7 +43,14 @@ public class UserServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-            req.getRequestDispatcher("/WEB-INF/views/index.jsp").forward(req, resp);
+        HttpSession session = req.getSession(false);
+        synchronized (session) {
+            if (session == null || session.getAttribute("name")==null) {
+                req.getRequestDispatcher("/WEB-INF/views/index.jsp").forward(req, resp);
+            } else {
+                resp.sendRedirect(String.format("%s/signin", req.getContextPath()));
+            }
+        }
     }
 
 
