@@ -27,7 +27,7 @@ public class UserUpdateServlet extends HttpServlet {
         try {
             req.setAttribute("u", DispatchDiapason.getInstance().access(req.getParameter("action"),
                     new Users(req.getParameter("id"), req.getParameter("name"), req.getParameter("login"), req.getParameter("password"))));
-            req.getRequestDispatcher("/WEB-INF/views/update.jsp").forward(req, resp);
+            req.getRequestDispatcher("/WEB-INF/views/edit.jsp").forward(req, resp);
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
             req.setAttribute("err", new Err(e.getMessage(), LocalDateTime.now()));

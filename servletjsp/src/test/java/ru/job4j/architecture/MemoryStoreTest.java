@@ -14,7 +14,7 @@ import static org.hamcrest.core.Is.is;
 public class MemoryStoreTest {
 
     private void fulltest(BiConsumer<MemoryStore, Users> fank) {
-        Users users = new Users("12", "sacha", "alexmur07");
+        Users users = new Users("12", "sacha", "alexmur07", "pass");
         MemoryStore store = MemoryStore.getInstance();
         Users expected = store.add(users);
         try {
@@ -74,6 +74,16 @@ public class MemoryStoreTest {
             Assert.assertThat(memoryStore.filter(new Users("0", "", "alex",
                     LocalDateTime.parse(users.getCreateDate().toLocalDate().toString() + " 00:00",
                             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")))).get(0).getId(), Is.is(users.getId()));
+        }));
+    }
+
+    @Test
+    public void isCredentional() {
+        this.fulltest(((memoryStore, users) -> {
+            Assert.assertThat(memoryStore.isCredentional(new Users("0", "", "alexmur07","pass")), Is.is(true));
+            Assert.assertThat(memoryStore.isCredentional(new Users("0", "", "alexmu07","pass")), Is.is(false));
+            Assert.assertThat(memoryStore.isCredentional(new Users("0", "", "alexmur07","pas")), Is.is(false));
+
         }));
     }
 }

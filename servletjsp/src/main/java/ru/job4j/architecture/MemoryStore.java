@@ -108,6 +108,19 @@ public class MemoryStore implements Store<Users> {
         return rsl;
     }
 
+    @Override
+    public boolean isCredentional(Users users) {
+        Boolean rsl = false;
+        for (Users test:this.database) {
+            if (test.getLogin().equals(users.getLogin())) {
+                if (test.getPassword().equals(users.getPassword())) {
+                    rsl = true;
+                }
+                break;
+            }
+        } return rsl;
+    }
+
     /**
      * метод проверяет по всем полям пользователя
      *

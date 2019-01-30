@@ -56,6 +56,8 @@ public class DispatchDiapason {
         );
         this.dispatch.put("filter", (users) ->
                 Optional.of(this.validate.filter(users)));
+        this.dispatch.put("isCredentional", (users) ->
+                Optional.of(this.validate.isCredentional(users)));
         return this;
     }
 
@@ -70,7 +72,7 @@ public class DispatchDiapason {
         return rsl.get();
     }
 
-    public <E> E  access(String key, Users users, E param) throws Exception {
+    public <E> E access(String key, Users users, E param) throws Exception {
         Optional<E> rsl = Optional.empty();
         rsl = this.dispatch.get(key).apply(users);
         return rsl.get();

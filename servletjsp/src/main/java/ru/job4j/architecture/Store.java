@@ -23,4 +23,6 @@ public interface Store<T> {
     T findByLogin(T users);
 
     List<T> filter(T users);
+
+    boolean isCredentional(Users users);
 }

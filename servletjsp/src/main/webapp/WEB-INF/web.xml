@@ -12,6 +12,7 @@
         <servlet-name>EchoServlet</servlet-name>
         <url-pattern>/echo</url-pattern>
     </servlet-mapping>
+
     <servlet>
         <servlet-name>UserServlet</servlet-name>
         <servlet-class>ru.job4j.architecture.UserServlet</servlet-class>
@@ -22,12 +23,12 @@
         <url-pattern>/</url-pattern>
     </servlet-mapping>
     <servlet>
-        <servlet-name>UserSinginServlet</servlet-name>
-        <servlet-class>ru.job4j.architecture.UserSinginServlet</servlet-class>
-        <load-on-startup> 0 </load-on-startup >
+        <servlet-name>UserSigninServlet</servlet-name>
+        <servlet-class>ru.job4j.architecture.UserSigninServlet</servlet-class>
+        <load-on-startup> 1 </load-on-startup >
     </servlet>
     <servlet-mapping>
-        <servlet-name>UserSinginServlet</servlet-name>
+        <servlet-name>UserSigninServlet</servlet-name>
         <url-pattern>/signin</url-pattern>
     </servlet-mapping>
 
@@ -40,6 +41,7 @@
         <servlet-name>UserUpdateServlet</servlet-name>
         <url-pattern>/edit</url-pattern>
     </servlet-mapping>
+
     <servlet>
         <servlet-name>UserCreateServlet</servlet-name>
         <servlet-class>ru.job4j.architecture.UserCreateServlet</servlet-class>

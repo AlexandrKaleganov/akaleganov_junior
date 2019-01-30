@@ -129,5 +129,10 @@ public class ValidateService implements Validate<Users> {
         return this.logic.filter(users);
     }
 
+    @Override
+    public Boolean isCredentional(Users users) {
+        return this.logic.isCredentional(users);
+    }
+
 
 }

@@ -205,6 +205,29 @@ public class DbStore implements Store<Users> {
         ).orElse(new Users());
     }
 
+    /**
+     * проверяет есть ли пользователь с таким логином и паролем
+     * @param users
+     * @return
+     */
+    @Override
+    public boolean isCredentional(Users users) {
+        return this.db(
+                "select * from users where login = ? and pass = ?", Arrays.asList(users.getLogin(), users.getPassword()),
+                ps -> {
+                    Boolean res = false;
+                    try (ResultSet rs = ps.executeQuery()) {
+                        if (rs.next()) {
+                           res = true;
+                        }
+                    } catch (SQLException e) {
+                        LOGGER.error(e.getMessage(), e);
+                    }
+                    return res;
+                }
+        ).get();
+    }
+
     @Override
     public Users findById(Users users) {
         return this.db(

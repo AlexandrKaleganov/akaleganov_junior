@@ -25,4 +25,5 @@ public interface Validate<E> {
 
     List<E> deleteALL();
     List<E> filter(E users);
+    Boolean isCredentional(Users users);
 }

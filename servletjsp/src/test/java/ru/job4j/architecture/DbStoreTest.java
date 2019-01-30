@@ -97,4 +97,13 @@ public class DbStoreTest {
                             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")))).get(0).getId(), Is.is(exp.getId()));
         });
     }
+
+    @Test
+    public void isCredentional() {
+        this.alltestfunc((db, exp) -> {
+            Assert.assertThat(db.isCredentional(new Users("12", "sacha", "alexmur07", "password")), Is.is(true));
+            Assert.assertThat(db.isCredentional(new Users("12", "sacha", "alexmu07", "password")), Is.is(false));
+            Assert.assertThat(db.isCredentional(new Users("12", "sacha", "alexmur07", "ssword")), Is.is(false));
+        });
+    }
 }
