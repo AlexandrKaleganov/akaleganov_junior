@@ -80,10 +80,9 @@ public class MemoryStoreTest {
     @Test
     public void isCredentional() {
         this.fulltest(((memoryStore, users) -> {
-            Assert.assertThat(memoryStore.isCredentional(new Users("0", "", "alexmur07","pass")), Is.is(true));
-            Assert.assertThat(memoryStore.isCredentional(new Users("0", "", "alexmu07","pass")), Is.is(false));
-            Assert.assertThat(memoryStore.isCredentional(new Users("0", "", "alexmur07","pas")), Is.is(false));
-
+            Assert.assertThat(memoryStore.isCredentional(new Users("0", "", "alexmur07", "pass")), Is.is(true));
+            Assert.assertThat(memoryStore.isCredentional(new Users("0", "", "alexmu07", "pass")), Is.is(false));
+            Assert.assertThat(memoryStore.isCredentional(new Users("0", "", "alexmur07", "pas")), Is.is(false));
         }));
     }
 }
