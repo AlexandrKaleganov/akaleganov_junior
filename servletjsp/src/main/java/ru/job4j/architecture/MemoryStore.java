@@ -19,6 +19,16 @@ public class MemoryStore implements Store<Users> {
         return INSTANCE;
     }
 
+    MemoryStore() {
+        this.initRoot();
+    }
+
+    private void initRoot() {
+        if (this.findByLogin(new Users("0", "root", "root", "root")).getLogin() == null) {
+            this.add(new Users("0", "root", "root", "root"));
+        }
+    }
+
     @Override
     public Users add(Users users) {
         users.setCreateDate(LocalDateTime.now());
@@ -111,14 +121,15 @@ public class MemoryStore implements Store<Users> {
     @Override
     public boolean isCredentional(Users users) {
         Boolean rsl = false;
-        for (Users test:this.database) {
+        for (Users test : this.database) {
             if (test.getLogin().equals(users.getLogin())) {
                 if (test.getPassword().equals(users.getPassword())) {
                     rsl = true;
                 }
                 break;
             }
-        } return rsl;
+        }
+        return rsl;
     }
 
     /**

@@ -23,6 +23,13 @@ public class DbStore implements Store<Users> {
         this.dispat.put(Integer.class, (index, ps, value) -> ps.setInt(index, (Integer) value));
         this.dispat.put(String.class, (index, ps, value) -> ps.setString(index, (String) value));
         this.addTable();
+        this.initRoot();
+    }
+
+    private void initRoot() {
+        if (this.findByLogin(new Users("0", "root", "root", "root")).getLogin() == null) {
+            this.add(new Users("0", "root", "root", "root"));
+        }
     }
 
     /**
@@ -52,6 +59,7 @@ public class DbStore implements Store<Users> {
         this.dispat.put(Integer.class, (index, ps, value) -> ps.setInt(index, (Integer) value));
         this.dispat.put(String.class, (index, ps, value) -> ps.setString(index, (String) value));
         this.addTable();
+        this.initRoot();
     }
 
     public static DbStore getInstance() {
@@ -207,6 +215,7 @@ public class DbStore implements Store<Users> {
 
     /**
      * проверяет есть ли пользователь с таким логином и паролем
+     *
      * @param users
      * @return
      */
@@ -218,7 +227,7 @@ public class DbStore implements Store<Users> {
                     Boolean res = false;
                     try (ResultSet rs = ps.executeQuery()) {
                         if (rs.next()) {
-                           res = true;
+                            res = true;
                         }
                     } catch (SQLException e) {
                         LOGGER.error(e.getMessage(), e);

@@ -22,20 +22,6 @@ public class UserServlet extends HttpServlet {
     private final DispatchDiapason dispatsh = DispatchDiapason.getInstance();
     private static final org.apache.log4j.Logger LOGGER = Logger.getLogger(UserServlet.class);
 
-    /**
-     * проинициализируем нашь сервлет
-     * при инициализации добавим сразу пользователя админа
-     *
-     * @throws ServletException
-     */
-    @Override
-    public void init() throws ServletException {
-        try {
-            DispatchDiapason.getInstance().access("add", new Users("0", "root", "root", "root"));
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
-        }
-    }
 
     /**
      * закомментил за ненадобностью, т.к. за интерфейс теперь отвечает jsp
