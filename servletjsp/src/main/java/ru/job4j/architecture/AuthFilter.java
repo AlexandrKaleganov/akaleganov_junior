@@ -16,17 +16,25 @@ public class AuthFilter implements Filter {
 
     }
 
+    /**
+     * как я это понял
+     * @param req
+     * @param res
+     * @param chain
+     * @throws IOException
+     * @throws ServletException
+     */
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
-        HttpServletRequest request = (HttpServletRequest) req;
+        HttpServletRequest request = (HttpServletRequest) req;    //два запроса переделываем под HttpServlet
         HttpServletResponse response = (HttpServletResponse) res;
-        if (request.getRequestURI().contains("/signin")) {
-            chain.doFilter(req, res);
-        } else if (request.getSession().getAttribute("login") == null) {
-            response.sendRedirect(String.format(request.getContextPath() + "/signin"));
-            return;
+        if (request.getRequestURI().contains("/signin")) {     //если лезим на страницу авторизации - то
+            chain.doFilter(req, res);                           //фильтр нас пропускает и наши запросы де нас в свою очередь перекинет на loginIN.jsp
+        } else if (request.getSession().getAttribute("login") == null) {   //если в сессии нет  атрибута login
+            response.sendRedirect(String.format(request.getContextPath() + "/signin")); //то нас опять бросит на сервлет signin где перекинет на loginIN.jsp
+            return;                                                                  //и дальше метод завершится
         }
-        chain.doFilter(req, res);
+        chain.doFilter(req, res);   //а вот если всё пучком и запрос не на страницу авторизации и сессия содержит логин то фильтр нас пропускает куда угодно
     }
 
     @Override
