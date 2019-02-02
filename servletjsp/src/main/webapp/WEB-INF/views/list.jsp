@@ -23,9 +23,6 @@
 <table border="1">
     <caption>DataBase FILTER</caption>
     <tr>
-
-
-
         <th>ID</th>
         <th>NAME</th>
         <th>LOGIN</th>

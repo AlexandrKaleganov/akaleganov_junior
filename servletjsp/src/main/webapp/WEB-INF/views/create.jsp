@@ -12,7 +12,12 @@
     <title>create_user</title>
 </head>
 <body>
-<br>
+<br/>
+<form action="${pageContext.servletContext.contextPath}/" method="post">
+    <input type="hidden" name="exit" value="">
+    <input type="submit" value="ВЫХОД">
+</form>
+<br/>
 <table border="1">
     <form action="${pageContext.servletContext.contextPath}/" method="post">
         <input type="hidden" name="action" value="add">

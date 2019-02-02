@@ -73,7 +73,7 @@ public class MemoryStoreTest {
         this.fulltest(((memoryStore, users) -> {
             Assert.assertThat(memoryStore.filter(new Users("0", "", "alex",
                     LocalDateTime.parse(users.getCreateDate().toLocalDate().toString() + " 00:00",
-                            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")))).get(0).getId(), Is.is(users.getId()));
+                            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")))).get(1).getId(), Is.is(users.getId()));
         }));
     }
 

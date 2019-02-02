@@ -13,6 +13,11 @@
 </head>
 <body>
 <br/>
+<form action="${pageContext.servletContext.contextPath}/" method="post">
+    <input type="hidden" name="exit" value="">
+    <input type="submit" value="ВЫХОД">
+</form>
+<br/>
 <table style="border: 1px solid black;" cellpadding="1" cellspacing="1" border="2">
     <tbody>
     <tr>
