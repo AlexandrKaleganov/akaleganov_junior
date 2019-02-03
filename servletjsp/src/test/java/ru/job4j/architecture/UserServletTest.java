@@ -9,6 +9,7 @@ import static org.junit.Assert.*;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -34,7 +35,7 @@ public class UserServletTest {
         <E, R, S> void accept(E e, R r, S s);
     }
 
-    private void fulltestServlet(String testCommand, DryConsumer<DbStore, Users, UserServlet> test) {
+    private void fulltestServlet(BiConsumer<DbStore, UserServlet> test) {
         try {
             UserServlet servlet = new UserServlet();
             when(this.req.getRequestDispatcher("/WEB-INF/views/index.jsp")).thenReturn(this.disp);
@@ -42,10 +43,9 @@ public class UserServletTest {
             when(this.req.getParameter("name")).thenReturn("Alex");
             when(this.req.getParameter("login")).thenReturn("alexmur07");
             when(this.req.getParameter("password")).thenReturn("pass12");
-            when(this.req.getParameter("action")).thenReturn(testCommand);
+            when(this.req.getParameter("action")).thenReturn("add");
             servlet.doPost(this.req, this.res);
-            Store db = DbStore.getInstance();
-            test.accept(DbStore.getInstance(), db.findAll().get(db.findAll().size() - 1), servlet);
+            test.accept(DbStore.getInstance(), servlet);
         } catch (IOException | ServletException e) {
             e.printStackTrace();
         } finally {
@@ -53,12 +53,23 @@ public class UserServletTest {
         }
     }
 
+    private void testdoPOST(UserServlet servlet, String command) throws IOException, ServletException {
+        when(this.req.getParameter("action")).thenReturn(command);
+        servlet.doPost(this.req, this.res);
+    }
 
     @Test
     public void testAddUser() {
-        this.fulltestServlet("add", (db, user, servlet) -> {
+        this.fulltestServlet((db, servlet) -> {
             assertThat(db.findAll().get(1).getLogin(), Is.is("alexmur07"));
         });
     }
 
+    @Test
+    public void testUpdateUser() {
+        this.fulltestServlet((db, servlet) -> {
+            when(this.req.getParameter("action")).thenReturn("update");
+            when(this.req.getParameter("id")).thenReturn(db.findAll().get(0).getId());
+        });
+    }
 }
