@@ -6,10 +6,15 @@ import org.junit.Assert;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 import static org.mockito.Mockito.mock;
@@ -20,12 +25,13 @@ public class UserServletTest {
         try {
             UserServlet servlet = new UserServlet();
             HttpServletRequest req = mock(HttpServletRequest.class);
+            HttpServletResponse res = mock(HttpServletResponse.class);
+            when(req.getRequestDispatcher("/WEB-INF/views/index.jsp")).thenCallRealMethod();
             when(req.getParameter("id")).thenReturn("0");
             when(req.getParameter("name")).thenReturn("Alex");
             when(req.getParameter("login")).thenReturn("alexmur07");
             when(req.getParameter("password")).thenReturn("pass12");
             when(req.getParameter("action")).thenReturn(command);
-            HttpServletResponse res = mock(HttpServletResponse.class);
             servlet.doPost(req, res);
             test.accept(DbStore.getInstance());
         } catch (IOException | ServletException e) {
