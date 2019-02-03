@@ -12,6 +12,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import static org.mockito.Mockito.mock;
@@ -29,7 +30,11 @@ public class UserServletTest {
         res = mock(HttpServletResponse.class);
     }
 
-    private void fulltestServlet(String testCommand, Consumer<DbStore> test) {
+    private static interface DryConsumer<E, R, S> {
+        <E, R, S> void accept(E e, R r, S s);
+    }
+
+    private void fulltestServlet(String testCommand, DryConsumer<DbStore, Users, UserServlet> test) {
         try {
             UserServlet servlet = new UserServlet();
             when(this.req.getRequestDispatcher("/WEB-INF/views/index.jsp")).thenReturn(this.disp);
@@ -39,7 +44,8 @@ public class UserServletTest {
             when(this.req.getParameter("password")).thenReturn("pass12");
             when(this.req.getParameter("action")).thenReturn(testCommand);
             servlet.doPost(this.req, this.res);
-            test.accept(DbStore.getInstance());
+            Store db = DbStore.getInstance();
+            test.accept(DbStore.getInstance(), db.findAll().get(db.findAll().size() - 1), servlet);
         } catch (IOException | ServletException e) {
             e.printStackTrace();
         } finally {
@@ -50,7 +56,7 @@ public class UserServletTest {
 
     @Test
     public void testAddUser() {
-        this.fulltestServlet("add", (db) -> {
+        this.fulltestServlet("add", (db, user, servlet) -> {
             assertThat(db.findAll().get(1).getLogin(), Is.is("alexmur07"));
         });
     }
