@@ -39,7 +39,6 @@ public class UserServlet extends HttpServlet {
         try {
             req.setAttribute("message", this.dispatsh.access(req.getParameter("action"),
                     new Users(req.getParameter("id"), req.getParameter("name"), req.getParameter("login"), req.getParameter("password"))));
-            System.out.println(  req.getRequestDispatcher("/WEB-INF/views/index.jsp") + " wqdewqedqwedqwdddddddddd");
             req.getRequestDispatcher("/WEB-INF/views/index.jsp").forward(req, resp);
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);

@@ -2,37 +2,43 @@ package ru.job4j.architecture;
 
 
 import org.hamcrest.core.Is;
-import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+
 import static org.junit.Assert.*;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Objects;
 import java.util.function.Consumer;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class UserServletTest {
-    private void fulltestServlet(String command, Consumer<DbStore> test) {
+    private RequestDispatcher disp;
+    private HttpServletResponse res;
+    private HttpServletRequest req;
+
+    @Before
+    public void setup() {
+        disp = mock(RequestDispatcher.class);
+        req = mock(HttpServletRequest.class);
+        res = mock(HttpServletResponse.class);
+    }
+
+    private void fulltestServlet(String testCommand, Consumer<DbStore> test) {
         try {
             UserServlet servlet = new UserServlet();
-            HttpServletRequest req = mock(HttpServletRequest.class);
-            HttpServletResponse res = mock(HttpServletResponse.class);
-            when(req.getRequestDispatcher("/WEB-INF/views/index.jsp")).thenCallRealMethod();
-            when(req.getParameter("id")).thenReturn("0");
-            when(req.getParameter("name")).thenReturn("Alex");
-            when(req.getParameter("login")).thenReturn("alexmur07");
-            when(req.getParameter("password")).thenReturn("pass12");
-            when(req.getParameter("action")).thenReturn(command);
-            servlet.doPost(req, res);
+            when(this.req.getRequestDispatcher("/WEB-INF/views/index.jsp")).thenReturn(this.disp);
+            when(this.req.getParameter("id")).thenReturn("0");
+            when(this.req.getParameter("name")).thenReturn("Alex");
+            when(this.req.getParameter("login")).thenReturn("alexmur07");
+            when(this.req.getParameter("password")).thenReturn("pass12");
+            when(this.req.getParameter("action")).thenReturn(testCommand);
+            servlet.doPost(this.req, this.res);
             test.accept(DbStore.getInstance());
         } catch (IOException | ServletException e) {
             e.printStackTrace();
@@ -41,10 +47,11 @@ public class UserServletTest {
         }
     }
 
+
     @Test
     public void testAddUser() {
         this.fulltestServlet("add", (db) -> {
-            assertThat(db.findAll().get(1).getLogin(),  Is.is("alexmur07"));
+            assertThat(db.findAll().get(1).getLogin(), Is.is("alexmur07"));
         });
     }
 
