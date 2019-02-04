@@ -5,11 +5,11 @@ import org.hamcrest.core.Is;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -29,47 +29,56 @@ public class UserServletTest {
         disp = mock(RequestDispatcher.class);
         req = mock(HttpServletRequest.class);
         res = mock(HttpServletResponse.class);
-    }
-
-    private static interface DryConsumer<E, R, S> {
-        <E, R, S> void accept(E e, R r, S s);
+        when(this.req.getRequestDispatcher("/WEB-INF/views/index.jsp")).thenReturn(this.disp);
+        when(this.req.getParameter("id")).thenReturn("0");
+        when(this.req.getParameter("name")).thenReturn("Alex");
+        when(this.req.getParameter("login")).thenReturn("alexmur07");
+        when(this.req.getParameter("password")).thenReturn("pass12");
     }
 
     private void fulltestServlet(BiConsumer<DbStore, UserServlet> test) {
         try {
             UserServlet servlet = new UserServlet();
-            when(this.req.getRequestDispatcher("/WEB-INF/views/index.jsp")).thenReturn(this.disp);
-            when(this.req.getParameter("id")).thenReturn("0");
-            when(this.req.getParameter("name")).thenReturn("Alex");
-            when(this.req.getParameter("login")).thenReturn("alexmur07");
-            when(this.req.getParameter("password")).thenReturn("pass12");
-            when(this.req.getParameter("action")).thenReturn("add");
-            servlet.doPost(this.req, this.res);
             test.accept(DbStore.getInstance(), servlet);
-        } catch (IOException | ServletException e) {
-            e.printStackTrace();
         } finally {
             DbStore.getInstance().deleteALL();
         }
     }
 
-    private void testdoPOST(UserServlet servlet, String command) throws IOException, ServletException {
+    private void testdoPOST(UserServlet servlet, String command) {
         when(this.req.getParameter("action")).thenReturn(command);
-        servlet.doPost(this.req, this.res);
+        try {
+            servlet.doPost(this.req, this.res);
+        } catch (IOException | ServletException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
     public void testAddUser() {
         this.fulltestServlet((db, servlet) -> {
-            assertThat(db.findAll().get(1).getLogin(), Is.is("alexmur07"));
+            this.testdoPOST(servlet, "add");
+            assertThat(db.findByLogin(new Users("alex", "alexmur07")).getLogin(), Is.is("alexmur07"));
         });
     }
 
     @Test
     public void testUpdateUser() {
         this.fulltestServlet((db, servlet) -> {
-            when(this.req.getParameter("action")).thenReturn("update");
+            this.testdoPOST(servlet, "add");
             when(this.req.getParameter("id")).thenReturn(db.findAll().get(0).getId());
+            when(this.req.getParameter("login")).thenReturn("test");
+            this.testdoPOST(servlet, "update");
+            assertThat(db.findByLogin(new Users("alex", "test")).getLogin(), is("test"));
+        });
+    }
+
+    @Test
+    public void testDeleteUser() {
+        this.fulltestServlet((db, servlet) -> {
+            when(this.req.getParameter("id")).thenReturn(DbStore.getInstance().findByLogin(new Users("root", "root")).getId());
+            this.testdoPOST(servlet, "delete");
+            assertThat(db.findAll().size(), is(0));
         });
     }
 }

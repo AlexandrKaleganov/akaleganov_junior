@@ -28,6 +28,7 @@ public class UserListServlet extends HttpServlet {
             req.setAttribute("list", DispatchDiapason.getInstance().access(req.getParameter("action"),
                     new Users(req.getParameter("id"), req.getParameter("name"), req.getParameter("login"),
                             Optional.ofNullable(req.getParameter("CREATE_DATE"))), new ArrayList<Users>()));
+            System.out.println(req.getAttribute("list"));
             req.getRequestDispatcher("/WEB-INF/views/list.jsp").forward(req, resp);
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
