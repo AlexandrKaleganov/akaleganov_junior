@@ -1,6 +1,5 @@
 package ru.job4j.architecture;
 
-import org.hamcrest.core.Is;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -11,8 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.function.BiConsumer;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
