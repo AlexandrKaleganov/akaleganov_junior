@@ -8,39 +8,29 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script>
+        function isValid(r, l) {
+            var rsl = false;
+            if (r.val() == l) {
+                rsl = true;
+                alert(r.attr("title"));
+            }
+            return rsl;
+        }
+
         function validate() {
-
-
-            if ($("#id").val() == "") {
-                alert($("#id").attr("title"));
+            var rsl = false;
+            if (isValid($("#id"), "")) {
+                rsl = true;
             } else {
                 var tableID = document.getElementById("user table").getElementsByTagName("tr");
-                alert(tableID.length);
-                for (var i = 1; i < tableID.length ; i++) {
-
-                        alert(tableID[i].getElementsByTagName("td")[0].getText() + "vvvaaalue");
-                        // if (tableID[i].value == $("#id").val()){
-                        //     alert($("#id").val() + "присутствует в таблице");
-                        //     break;
-                        // }
-
+                for (var i = 1; i < tableID.length; i++) {
+                    if (isValid($("#id"), tableID[i].getElementsByTagName("td")[0].innerHTML)) {
+                        rsl = true;
+                        break;
+                    }
                 }
-
             }
-            if ($("#surname").val() == "") {
-                alert($("#surname").attr("title"));
-            }
-
-            if ($("#name").val() == "") {
-                alert($("#name").attr("title"));
-            }
-            if ($("#sex").val() == "") {
-                alert($("#sex").attr("title"));
-            }
-            if ($("#disc").val() == "") {
-                alert($("#disc").attr("title"));
-            }
-            return false;
+            return !(rsl + isValid($("#surname"), "") + isValid($("#name"), "") + isValid($("#sex"), "") + isValid($("#desc"), ""));
         }
     </script>
 </head>
@@ -53,7 +43,7 @@
     <form class="form-inline" action="/action_page.php">
         <div class="form-group">
             <label for="id">ID:</label>
-            <input type="text" class="form-control" title="Enter ID." id="id">
+            <input type="text" class="form-control" title="Error ID. Enter ID." id="id">
         </div>
         <div class="form-group">
             <label for="surname">Фамилия:</label>
@@ -72,8 +62,8 @@
             </select>
         </div>
         <div class="form-group">
-            <label for="disc">Описание:</label>
-            <textarea type="text" class="form-control" title="Enter description." id="disc"></textarea>
+            <label for="desc">Описание:</label>
+            <textarea type="text" class="form-control" title="Enter description." id="desc"></textarea>
         </div>
         <button type="submit" class="btn btn-default" onclick="return validate();">Submit</button>
     </form>
