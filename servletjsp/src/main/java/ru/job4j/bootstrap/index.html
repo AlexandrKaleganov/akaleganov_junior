@@ -27,7 +27,7 @@
             if (isValid($("#id"), "")) {
                 rsl = true;
             } else {
-                var tableID = document.getElementById("user table").getElementsByTagName("tr");
+                var tableID = document.getElementById("table-user").getElementsByTagName("tr");
                 for (var i = 1; i < tableID.length; i++) {
                     if (isValid($("#id"), tableID[i].getElementsByTagName("td")[0].innerHTML)) {
                         rsl = true;
@@ -37,15 +37,26 @@
             }
             return !(rsl + isValid($("#surname"), "") + isValid($("#name"), "") + isValid($("#sex"), "") + isValid($("#desc"), ""));
         }
+
+        function addRow() {
+            if (this.validate()) {
+                $("#table-user tr:last").after("<tr><td>" + $("#id").val() + "</td><td>" + $("#surname").val() +
+                    "</td><td>" + $("#name").val() + "</td><td>" + $("#sex").val() + "</td><td>" + $("#desc").val() + "</td></tr>");
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
     </script>
 </head>
 <body>
-<div class="container-fluid">
+<div class="container-fluid" >
     <h1>My First Bootstrap Page</h1>
     <p>This is some text.</p>
 </div>
 <div>
-    <form class="form-inline" action="/action_page.php">
+    <form class="form-inline">
         <div class="form-group">
             <label for="id">ID:</label>
             <input type="text" class="form-control" title="Error ID. Enter ID." id="id">
@@ -70,11 +81,11 @@
             <label for="desc">Описание:</label>
             <textarea type="text" class="form-control" title="Enter description." id="desc"></textarea>
         </div>
-        <button type="submit" class="btn btn-default" onclick="return validate();">Submit</button>
+        <button type="submit" class="btn btn-default" onclick="return addRow();">Submit</button>
     </form>
 </div>
 <div>
-    <table class="table table-bordered" id="user table">
+    <table class="table table-bordered" id="table-user">
         <thead>
         <tr>
             <th>ID</th>
