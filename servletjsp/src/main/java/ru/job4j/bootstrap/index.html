@@ -39,7 +39,7 @@
         }
 
         function addRow() {
-            if (this.validate()) {
+            if (validate()) {
                 $("#table-user tr:last").after("<tr><td>" + $("#id").val() + "</td><td>" + $("#surname").val() +
                     "</td><td>" + $("#name").val() + "</td><td>" + $("#sex").val() + "</td><td>" + $("#desc").val() + "</td></tr>");
                 return true;
@@ -80,7 +80,7 @@
             <label for="desc">Описание:</label>
             <textarea type="text" class="form-control" title="Enter description." id="desc"></textarea>
         </div>
-        <button type="submit" class="btn btn-default" onclick="return addRow();">Submit</button>
+        <button type="button" class="btn btn-default" onclick="return addRow();">Submit</button>
     </form>
 </div>
 <div>
