@@ -27,9 +27,7 @@
                 $.ajax({
                     type: "POST",
                     url: "dispatch",
-                    data: data({id: $("#id").val(), surname:$("#surname").val(), name:$("#name").val(), sex:$("#sex"), desc:$("#desc")}),
-                    success: success,
-                    dataType: dataType
+                    data: {id: $("#id").val(), surname:$("#surname").val(), name:$("#name").val(), sex:$("#sex"), desc:$("#desc")}
                 });
                 return true;
             } else {
