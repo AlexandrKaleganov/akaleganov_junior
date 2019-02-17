@@ -8,14 +8,34 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script>
-//не понимаю как запрос отправить
-        $.ajax({
-            type: "POST",
-            url: "./dispatch",
-            data: data,
-            success: success,
-            dataType: dataType
-        });
+        //не понимаю как запрос отправить
+        $(
+            $.ajax({
+                type: "GET",
+                url: "dispatch",
+                data: data,
+                success: function (data) {
+                    var users = JSON.parse(data);
+                    $("#table-user tr:last").after("<tr><td>" + users[0].id + "</td><td>" + users[0].surname +
+                        "</td><td>" + users[0].name + "</td><td>" + users[0].sex + "</td><td>" + users[0].desc + "</td></tr>");
+                },
+
+            }))
+
+        function doPOSR() {
+            if (validate()) {
+                $.ajax({
+                    type: "POST",
+                    url: "dispatch",
+                    data: {id: $("#id").val()}
+
+                });
+                return true;
+            } else {
+                return false;
+            }
+        }
+
         //рефактор скрипта
         function isValid(r, l) {
             var rsl = false;
@@ -88,7 +108,7 @@
             <label for="desc">Описание:</label>
             <textarea type="text" class="form-control" title="Enter description." id="desc"></textarea>
         </div>
-        <button type="button" class="btn btn-default" onclick="return validate();">Submit</button>
+        <button type="button" class="btn btn-default" onclick="return doPOSR();">Submit</button>
     </form>
 </div>
 <div>
