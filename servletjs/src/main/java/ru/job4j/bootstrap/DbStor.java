@@ -24,7 +24,8 @@ public class DbStor<E, R> implements Db<E, R> {
 
     @Override
     public R add(E e, R r) {
-        return this.data.put(e, r);
+        this.data.putIfAbsent(e, r);
+        return this.data.get(e);
     }
 
     @Override

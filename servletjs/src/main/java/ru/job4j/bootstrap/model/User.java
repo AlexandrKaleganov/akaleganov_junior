@@ -20,6 +20,10 @@ public class User {
         this.desc = desc;
     }
 
+    public User() {
+
+    }
+
     public Integer getId() {
         return id;
     }

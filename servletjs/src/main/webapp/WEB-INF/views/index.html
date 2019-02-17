@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script>
+//не понимаю как запрос отправить
+        $.ajax({
+            type: "POST",
+            url: "./dispatch",
+            data: data,
+            success: success,
+            dataType: dataType
+        });
+        //рефактор скрипта
+        function isValid(r, l) {
+            var rsl = false;
+            if (r.val() == l) {
+                rsl = true;
+                alert(r.attr("title"));
+            }
+            return rsl;
+        }
+
+        /**
+         * проверяет пустые поля или нет, и есть или нет в таблице данный id
+         * @returns {boolean}
+         */
+        function validate() {
+            var rsl = false;
+            if (isValid($("#id"), "")) {
+                rsl = true;
+            } else {
+                var tableID = document.getElementById("table-user").getElementsByTagName("tr");
+                for (var i = 1; i < tableID.length; i++) {
+                    if (isValid($("#id"), tableID[i].getElementsByTagName("td")[0].innerHTML)) {
+                        rsl = true;
+                        break;
+                    }
+                }
+            }
+            return !(rsl + isValid($("#surname"), "") + isValid($("#name"), "") + isValid($("#sex"), "") + isValid($("#desc"), ""));
+        }
+
+        function addRow() {
+            if (validate()) {
+                $("#table-user tr:last").after("<tr><td>" + $("#id").val() + "</td><td>" + $("#surname").val() +
+                    "</td><td>" + $("#name").val() + "</td><td>" + $("#sex").val() + "</td><td>" + $("#desc").val() + "</td></tr>");
+                return true;
+            } else {
+                return false;
+            }
+        }
+    </script>
+</head>
+<body>
+<div class="container-fluid">
+    <h1>My First Bootstrap Page</h1>
+    <p>This is some text.</p>
+</div>
+<div>
+    <form class="form-inline" action="/dispatch" method="post">
+        <div class="form-group">
+            <label for="id">ID:</label>
+            <input type="number" class="form-control" title="Error ID. Enter ID." id="id">
+        </div>
+        <div class="form-group">
+            <label for="surname">Фамилия:</label>
+            <input type="text" class="form-control" title="Enter surname." id="surname">
+        </div>
+        <div class="form-group">
+            <label for="name">Имя:</label>
+            <input type="text" class="form-control" title="Enter name." id="name">
+        </div>
+        <div class="form-group">
+            <label for="sex">Пол:</label>
+            <select class="form-control" title="Enter sex." id="sex">
+                <option value=""></option>
+                <option value="М">М</option>
+                <option value="Ж">Ж</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="desc">Описание:</label>
+            <textarea type="text" class="form-control" title="Enter description." id="desc"></textarea>
+        </div>
+        <button type="button" class="btn btn-default" onclick="return validate();">Submit</button>
+    </form>
+</div>
+<div>
+    <table class="table table-bordered" id="table-user">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Фамилия</th>
+            <th>Имя</th>
+            <th>Пол</th>
+            <th>Описание</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
