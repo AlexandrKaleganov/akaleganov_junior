@@ -24,10 +24,10 @@ public class UserIndexJSServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println(req.getParameter("desc"));
-//        BufferedReader reader = req.getReader();
-//        String string = reader.readLine();
-//        System.out.println(string);
+        System.out.println(req.getParameter("data"));
+        BufferedReader reader = req.getReader();
+        String string = reader.readLine();
+        System.out.println(string);
         System.out.println(req.getParameter("id"));
         req.getRequestDispatcher("/WEB-INF/views/index.html").forward(req, resp);
     }

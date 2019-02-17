@@ -22,12 +22,12 @@
         //
         //     }))
 
-        function doPOSR() {
+        function doPOST() {
             if (validate()) {
                 $.ajax({
                     type: "POST",
                     url: "dispatch",
-                    data: {id: $("#id").val(), surname:$("#surname").val(), name:$("#name").val(), sex:$("#sex"), desc:$("#desc")},
+                    data: data({id: $("#id").val(), surname:$("#surname").val(), name:$("#name").val(), sex:$("#sex"), desc:$("#desc")}),
                     success: success,
                     dataType: dataType
                 });
@@ -109,7 +109,7 @@
             <label for="desc">Описание:</label>
             <textarea type="text" class="form-control" title="Enter description." id="desc"></textarea>
         </div>
-        <button type="button" class="btn btn-default" onclick="return doPOSR();">Submit</button>
+        <button type="button" class="btn btn-default" onclick="return doPOST();">Submit</button>
     </form>
 </div>
 <div>
