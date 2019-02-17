@@ -16,19 +16,15 @@ public class UserIndexJSServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-
-//        req.setAttribute("js", rsl);
         req.getRequestDispatcher("/WEB-INF/views/index.html").forward(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println(req.getParameter("data"));
-        BufferedReader reader = req.getReader();
-        String string = reader.readLine();
-        System.out.println(string);
-        System.out.println(req.getParameter("id"));
+        User rsl = disp.submit("add", new User(Integer.valueOf(req.getParameter("id")),
+                req.getParameter("surname"), req.getParameter("name"), req.getParameter("sex"), req.getParameter("desc")), new User());
+        System.out.println(rsl);
+        req.setAttribute("u", rsl);
         req.getRequestDispatcher("/WEB-INF/views/index.html").forward(req, resp);
     }
 }

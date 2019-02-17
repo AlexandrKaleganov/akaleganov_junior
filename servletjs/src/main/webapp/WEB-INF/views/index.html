@@ -26,9 +26,23 @@
             if (validate()) {
                 $.ajax({
                     type: "POST",
-                    url: "dispatch",
-                    data: {id: $("#id").val(), surname:$("#surname").val(), name:$("#name").val(), sex:$("#sex"), desc:$("#desc")},
-                    dataType:"json",
+                    url: "./dispatch",
+                    // data: {id: $("#id").val()}
+                    data: {
+                        id: $("#id").val(),
+                        surname: $("#surname").val(),
+                        name: $("#name").val(),
+                        sex: $("#sex").val(),
+                        desc: $("#desc").val()
+                    },
+                    success: function (data) {
+                        var users = JSON.parse(data);
+                        alert(users);
+                        $("#table-user tr:last").after("<tr><td>" + users[0].id + "</td><td>" + users[0].surname +
+                                        "</td><td>" + users[0].name + "</td><td>" + users[0].sex + "</td><td>" + users[0].desc + "</td></tr>");
+
+                    },
+                    // dataType:"json",
                 });
                 return true;
             } else {
