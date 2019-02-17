@@ -9,26 +9,27 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script>
         //не понимаю как запрос отправить
-        $(
-            $.ajax({
-                type: "GET",
-                url: "dispatch",
-                data: data,
-                success: function (data) {
-                    var users = JSON.parse(data);
-                    $("#table-user tr:last").after("<tr><td>" + users[0].id + "</td><td>" + users[0].surname +
-                        "</td><td>" + users[0].name + "</td><td>" + users[0].sex + "</td><td>" + users[0].desc + "</td></tr>");
-                },
-
-            }))
+        // $(
+        //     $.ajax({
+        //         type: "GET",
+        //         url: "./doget",
+        //         data: data,
+        //         success: function (data) {
+        //             var users = JSON.parse(data);
+        //             $("#table-user tr:last").after("<tr><td>" + users[0].id + "</td><td>" + users[0].surname +
+        //                 "</td><td>" + users[0].name + "</td><td>" + users[0].sex + "</td><td>" + users[0].desc + "</td></tr>");
+        //         },
+        //
+        //     }))
 
         function doPOSR() {
             if (validate()) {
                 $.ajax({
                     type: "POST",
                     url: "dispatch",
-                    data: {id: $("#id").val()}
-
+                    data: {id: $("#id").val()},
+                    success: success,
+                    dataType: dataType
                 });
                 return true;
             } else {
