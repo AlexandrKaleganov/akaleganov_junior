@@ -27,7 +27,8 @@
                 $.ajax({
                     type: "POST",
                     url: "dispatch",
-                    data: {id: $("#id").val(), surname:$("#surname").val(), name:$("#name").val(), sex:$("#sex"), desc:$("#desc")}
+                    data: {id: $("#id").val(), surname:$("#surname").val(), name:$("#name").val(), sex:$("#sex"), desc:$("#desc")},
+                    dataType:"json",
                 });
                 return true;
             } else {
