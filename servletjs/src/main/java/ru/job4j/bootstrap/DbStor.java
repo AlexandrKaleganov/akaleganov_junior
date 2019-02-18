@@ -9,9 +9,9 @@ import ru.job4j.bootstrap.model.User;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class DbStor<E, R> implements Db<E, R> {
-    private final ConcurrentHashMap<E, R> data;
-    private final static DbStor<Integer, User> INSTANCE = new DbStor();
+public class DbStor implements Db<Integer, User> {
+    private final ConcurrentHashMap<Integer, User> data;
+    private final static DbStor INSTANCE = new DbStor();
 
     public DbStor() {
         this.data = new ConcurrentHashMap<>();
@@ -23,13 +23,18 @@ public class DbStor<E, R> implements Db<E, R> {
 
 
     @Override
-    public R add(E e, R r) {
-        this.data.putIfAbsent(e, r);
-        return this.data.get(e);
+    public User add(User r) {
+        Integer id = r.hashCode();
+        r.setId(id);
+        if (this.data.putIfAbsent(id, r) != null) {
+            return new User();
+        } else {
+            return this.data.get(id);
+        }
     }
 
     @Override
-    public Map<E, R> findall() {
+    public Map<Integer, User> findall() {
         return this.data;
     }
 }

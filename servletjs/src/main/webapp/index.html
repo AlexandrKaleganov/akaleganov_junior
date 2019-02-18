@@ -26,7 +26,7 @@
             if (validate()) {
                 $.ajax({
                     type: "POST",
-                    url: "./dispatch",
+                    url: "./index",
                     // data: {id: $("#id").val()}
                     data: {
                         id: $("#id").val(),
@@ -100,7 +100,7 @@
     <form class="form-inline" action="/dispatch" method="post">
         <div class="form-group">
             <label for="id">ID:</label>
-            <input type="number" class="form-control" title="Error ID. Enter ID." id="id">
+            <input type="hidden" class="form-control" value="37" title="Error ID. Enter ID." id="id">
         </div>
         <div class="form-group">
             <label for="surname">Фамилия:</label>

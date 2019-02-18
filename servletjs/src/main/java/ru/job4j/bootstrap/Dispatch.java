@@ -15,7 +15,7 @@ public class Dispatch {
         this.db = DbStor.getINSTANCE();
         this.command = new HashMap<>();
         this.command.put("add", (u ->
-                Optional.of(this.db.add(u.getId(), u))
+                Optional.of(this.db.add(u))
         ));
         this.command.put("findall", (u ->
                 Optional.of(this.db.findall())

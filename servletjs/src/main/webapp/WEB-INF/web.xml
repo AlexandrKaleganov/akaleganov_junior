@@ -12,7 +12,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>UserIndexJSServlet</servlet-name>
-        <url-pattern>/dispatch</url-pattern>
+        <url-pattern>/index</url-pattern>
     </servlet-mapping>
     <servlet>
         <servlet-name>UserServletGet</servlet-name>

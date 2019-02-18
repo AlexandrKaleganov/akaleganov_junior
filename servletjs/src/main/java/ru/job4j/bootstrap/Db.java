@@ -4,7 +4,7 @@ import java.util.Map;
 
 public interface Db<E, R> {
 
-    R add(E e, R r);
+    R add(R r);
 
     Map<E, R> findall();
 

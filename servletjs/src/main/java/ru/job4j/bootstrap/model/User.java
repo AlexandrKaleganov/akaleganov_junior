@@ -1,10 +1,15 @@
 package ru.job4j.bootstrap.model;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
 import java.util.Objects;
 
 /**
  * модель нашего обхекта
  */
+
+
+@JsonPropertyOrder({ "id", "surname", "name", "sex", "desc"  })
 public class User {
     private Integer id;
     private String surname;
@@ -19,7 +24,13 @@ public class User {
         this.sex = sex;
         this.desc = desc;
     }
-
+    public User(String surname, String name, String sex, String desc) {
+        this.id = 37;
+        this.surname = surname;
+        this.name = name;
+        this.sex = sex;
+        this.desc = desc;
+    }
     public User() {
 
     }
