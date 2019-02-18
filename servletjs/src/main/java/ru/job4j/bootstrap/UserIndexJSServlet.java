@@ -9,7 +9,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public class UserIndexJSServlet extends HttpServlet {
     private Dispatch disp = Dispatch.getINSTANCE();
@@ -23,6 +25,11 @@ public class UserIndexJSServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         User rsl = disp.submit("add", new User(Integer.valueOf(req.getParameter("id")),
                 req.getParameter("surname"), req.getParameter("name"), req.getParameter("sex"), req.getParameter("desc")), new User());
+        resp.setContentType("text/json");
+        resp.setCharacterEncoding("UTF-8");
+        System.out.println(rsl);
+        resp.getWriter().write(String.format("{'id':'%s', 'surname':'%s', 'name':'%s', 'sex':'%s', 'desc':'%s'}",
+                rsl.getId(), rsl.getSurname(), rsl.getName(), rsl.getSex(), rsl.getDesc()));
 //        System.out.println(rsl);
 //        req.setAttribute("u", rsl);
 //        req.getRequestDispatcher("/WEB-INF/views/index.html").forward(req, resp);

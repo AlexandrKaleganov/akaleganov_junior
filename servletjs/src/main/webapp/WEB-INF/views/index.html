@@ -35,9 +35,9 @@
                         sex: $("#sex").val(),
                         desc: $("#desc").val()
                     },
-                    success: function (data) {
-                        var users = JSON.parse(data);
-                        alert(users);
+                    success: function (responce) {
+                        var users = JSON.parse(responce);
+                        alert(users[0]);
                         $("#table-user tr:last").after("<tr><td>" + users[0].id + "</td><td>" + users[0].surname +
                                         "</td><td>" + users[0].name + "</td><td>" + users[0].sex + "</td><td>" + users[0].desc + "</td></tr>");
 
