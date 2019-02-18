@@ -6,6 +6,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,6 +19,8 @@ public class UserServletGet extends HttpServlet {
         resp.setContentType("text/json");
         User user = new User(1, "fame", "name", "М", "desc");
         PrintWriter writer = resp.getWriter();
+
+
         StringBuilder rsl = new StringBuilder("[");
         disp.submit("add", user, user);
         ConcurrentHashMap<Integer, User> temp = disp.submit("findall", new User(), new ConcurrentHashMap<Integer, User>());

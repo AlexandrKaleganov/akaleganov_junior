@@ -23,8 +23,8 @@ public class UserIndexJSServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         User rsl = disp.submit("add", new User(Integer.valueOf(req.getParameter("id")),
                 req.getParameter("surname"), req.getParameter("name"), req.getParameter("sex"), req.getParameter("desc")), new User());
-        System.out.println(rsl);
-        req.setAttribute("u", rsl);
-        req.getRequestDispatcher("/WEB-INF/views/index.html").forward(req, resp);
+//        System.out.println(rsl);
+//        req.setAttribute("u", rsl);
+//        req.getRequestDispatcher("/WEB-INF/views/index.html").forward(req, resp);
     }
 }
