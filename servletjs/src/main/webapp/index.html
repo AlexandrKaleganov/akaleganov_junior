@@ -14,6 +14,7 @@
                 type: "GET",
                 url: "./doget",
                 success: function (data) {
+                    alert("сработал метод");
                     var users = JSON.parse(data);
                     alert("сработал метод");
                     for (var i = 0; i < users.length; i++) {
