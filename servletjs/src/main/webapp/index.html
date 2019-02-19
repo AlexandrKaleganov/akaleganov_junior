@@ -16,7 +16,6 @@
                 success: function (data) {
                     alert("сработал метод");
                     var users = JSON.parse(data);
-                    alert("сработал метод");
                     for (var i = 0; i < users.length; i++) {
                         $("#table-user tr:last").after("<tr><td>" + users[i].id + "</td><td>" + users[i].surname +
                             "</td><td>" + users[i].name + "</td><td>" + users[i].sex + "</td><td>" + users[i].desc + "</td></tr>");
@@ -38,13 +37,13 @@
                         sex: $("#sex").val(),
                         desc: $("#desc").val()
                     }),
-                    success: function (responce) {
-                        var users = JSON.parse(responce);
-                        alert(users[0]);
-                        $("#table-user tr:last").after("<tr><td>" + users[0].id + "</td><td>" + users[0].surname +
-                            "</td><td>" + users[0].name + "</td><td>" + users[0].sex + "</td><td>" + users[0].desc + "</td></tr>");
-
-                    },
+                    // success: function (responce) {
+                    //     var users = JSON.parse(responce);
+                    //     alert(users[0]);
+                    //     $("#table-user tr:last").after("<tr><td>" + users[0].id + "</td><td>" + users[0].surname +
+                    //         "</td><td>" + users[0].name + "</td><td>" + users[0].sex + "</td><td>" + users[0].desc + "</td></tr>");
+                    //
+                    // },
                     dataType: "application/json",
                 });
                 return true;
