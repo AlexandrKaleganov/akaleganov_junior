@@ -9,7 +9,6 @@ import java.util.Objects;
  */
 
 
-@JsonPropertyOrder({ "id", "surname", "name", "sex", "desc"  })
 public class User {
     private Integer id;
     private String surname;
@@ -24,6 +23,7 @@ public class User {
         this.sex = sex;
         this.desc = desc;
     }
+
     public User(String surname, String name, String sex, String desc) {
         this.id = 37;
         this.surname = surname;
@@ -31,6 +31,7 @@ public class User {
         this.sex = sex;
         this.desc = desc;
     }
+
     public User() {
 
     }
@@ -93,7 +94,11 @@ public class User {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, surname, name, sex, desc);
+        int rsl = Objects.hash(id, surname, name, sex, desc);
+        if (rsl < 0) {
+            rsl = rsl * -1;
+        }
+        return rsl;
     }
 
     @Override

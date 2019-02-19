@@ -9,40 +9,42 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script>
         //не понимаю как запрос отправить
-        // $(
-        //     $.ajax({
-        //         type: "GET",
-        //         url: "./doget",
-        //         data: data,
-        //         success: function (data) {
-        //             var users = JSON.parse(data);
-        //             $("#table-user tr:last").after("<tr><td>" + users[0].id + "</td><td>" + users[0].surname +
-        //                 "</td><td>" + users[0].name + "</td><td>" + users[0].sex + "</td><td>" + users[0].desc + "</td></tr>");
-        //         },
-        //
-        //     }))
+        $(document).ready(function () {
+            $.ajax({
+                type: "GET",
+                url: "./doget",
+                success: function (data) {
+                    var users = JSON.parse(data);
+                    alert("сработал метод");
+                    for (var i = 0; i < users.length; i++) {
+                        $("#table-user tr:last").after("<tr><td>" + users[i].id + "</td><td>" + users[i].surname +
+                            "</td><td>" + users[i].name + "</td><td>" + users[i].sex + "</td><td>" + users[i].desc + "</td></tr>");
+                    }
+                },
+
+            });
+        });
 
         function doPOST() {
             if (validate()) {
                 $.ajax({
                     type: "POST",
-                    url: "./index",
-                    // data: {id: $("#id").val()}
-                    data: {
+                    url: "./dispatch",
+                    data: JSON.stringify({
                         id: $("#id").val(),
                         surname: $("#surname").val(),
                         name: $("#name").val(),
                         sex: $("#sex").val(),
                         desc: $("#desc").val()
-                    },
+                    }),
                     success: function (responce) {
                         var users = JSON.parse(responce);
                         alert(users[0]);
                         $("#table-user tr:last").after("<tr><td>" + users[0].id + "</td><td>" + users[0].surname +
-                                        "</td><td>" + users[0].name + "</td><td>" + users[0].sex + "</td><td>" + users[0].desc + "</td></tr>");
+                            "</td><td>" + users[0].name + "</td><td>" + users[0].sex + "</td><td>" + users[0].desc + "</td></tr>");
 
                     },
-                    dataType:"aplication/json",
+                    dataType: "application/json",
                 });
                 return true;
             } else {
