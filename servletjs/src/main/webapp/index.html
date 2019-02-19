@@ -14,8 +14,8 @@
                 type: "GET",
                 url: "./doget",
                 success: function (data) {
-                    alert("сработал метод");
-                    var users = JSON.parse(data);
+                    var users = JSON.parse(data.responseText);
+                    alert("сработало");
                     for (var i = 0; i < users.length; i++) {
                         $("#table-user tr:last").after("<tr><td>" + users[i].id + "</td><td>" + users[i].surname +
                             "</td><td>" + users[i].name + "</td><td>" + users[i].sex + "</td><td>" + users[i].desc + "</td></tr>");
