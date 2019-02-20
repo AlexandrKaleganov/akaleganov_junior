@@ -49,13 +49,9 @@ public class UserIndexJSServlet extends HttpServlet {
         while ((temp = rider.readLine()) != null) {
             stringBuilder.append(temp);
         }
-
-        User user = mapper.readValue(stringBuilder.toString(), User.class);
-        User userFinal = this.disp.submit("add", user, new User());
-        if (userFinal.getName() != null) {
-            String te = mapper.writeValueAsString(userFinal);
-            System.out.println(te);
-            writer.append(te);
+        User user = this.disp.submit("add", mapper.readValue(stringBuilder.toString(), User.class), new User());
+        if (user.getName() != null) {
+            writer.append(mapper.writeValueAsString(user));
             writer.flush();
         }
     }
