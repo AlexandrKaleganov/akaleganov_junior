@@ -12,15 +12,6 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>UserIndexJSServlet</servlet-name>
-        <url-pattern>/dispatch</url-pattern>
-    </servlet-mapping>
-    <servlet>
-        <servlet-name>UserServletGet</servlet-name>
-        <servlet-class>ru.job4j.bootstrap.UserServletGet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>UserServletGet</servlet-name>
-        <url-pattern>/doget</url-pattern>
+        <url-pattern>/user</url-pattern>
     </servlet-mapping>
 </web-app>
