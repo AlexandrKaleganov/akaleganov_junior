@@ -15,7 +15,7 @@ public class DbStorTest {
     public void addandFindALLtest() {
         User user = new User(1, "fame", "name", "М", "desc");
         User user1 = new User(1, "fame", "name", "М", "dessdc");
-        Db<Integer, User> db = DbStor.getINSTANCE();
+        Db<Integer, User> db = new DbStor();
         user1 = db.add(user);
         Assert.assertThat(db.findall().get(user.getId()), Is.is(user1));
     }

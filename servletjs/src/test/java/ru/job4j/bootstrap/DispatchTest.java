@@ -15,7 +15,7 @@ public class DispatchTest {
 
     @Before
     public void init() {
-        dispatch = Dispatch.getINSTANCE();
+        dispatch = new Dispatch();
     }
 
     @Test
