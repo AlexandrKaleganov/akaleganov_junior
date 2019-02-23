@@ -24,7 +24,7 @@ public class DbStoreTest {
      * @param fank
      */
     private void alltestfunc(BiConEx<DbStore, Users> fank) {
-        Users users = new Users("12", "sacha", "alexmur07", "password");
+        Users users = new Users("12", LocalDateTime.now(), "sacha", "alexmur07", "password", "Россия", );
         DbStore dbStore = DbStore.getInstance();
         Users expected = dbStore.add(users);
         try {

@@ -11,43 +11,66 @@ public class Users {
     private String name;
     private String login;
     private String password;
-
+    private String country;
+    private String city;
     //конструктор
-    public Users(String id, String name, String login) {
-        this.id = iscorrectedID(id);
-        this.name = name;
-        this.login = login;
-    }
 
-    public Users(String id, String name, String login, String password) {
-        this.id = iscorrectedID(id);
+    public Users(String id, LocalDateTime createDate, String name, String login, String password, String country, String city) {
+        this.id = id;
+        this.createDate = createDate;
         this.name = name;
         this.login = login;
         this.password = password;
-        this.createDate = LocalDateTime.now();
+        this.country = country;
+        this.city = city;
     }
-
-    public Users(String id, String name, String login, LocalDateTime date) {
-        this.id = iscorrectedID(id);
-        this.createDate = date;
-        this.name = name;
-        this.login = login;
-    }
-
-    public Users(String name, String login) {
-        this.name = name;
-        this.login = login;
-    }
-
-    public Users(String id, String name, String login, Optional<String> date) {
-        this.id = iscorrectedID(id);
+    public Users(String id, Optional<String> date, String name, String login, String password, String country, String city) {
+        this.id = id;
         if (this.isformatDate(date.orElse("dat"))) {
             this.createDate = LocalDateTime.parse(date.get() + " 00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
         }
         this.name = name;
         this.login = login;
-        this.password = "root";
+        this.password = password;
+        this.country = country;
+        this.city = city;
     }
+
+//    public Users(String id, String name, String login) {
+//        this.id = iscorrectedID(id);
+//        this.name = name;
+//        this.login = login;
+//    }
+//
+//    public Users(String id, String name, String login, String password) {
+//        this.id = iscorrectedID(id);
+//        this.name = name;
+//        this.login = login;
+//        this.password = password;
+//        this.createDate = LocalDateTime.now();
+//    }
+//
+//    public Users(String id, String name, String login, LocalDateTime date) {
+//        this.id = iscorrectedID(id);
+//        this.createDate = date;
+//        this.name = name;
+//        this.login = login;
+//    }
+//
+//    public Users(String name, String login) {
+//        this.name = name;
+//        this.login = login;
+//    }
+//
+//    public Users(String id, String name, String login, Optional<String> date) {
+//        this.id = iscorrectedID(id);
+//        if (this.isformatDate(date.orElse("dat"))) {
+//            this.createDate = LocalDateTime.parse(date.get() + " 00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+//        }
+//        this.name = name;
+//        this.login = login;
+//        this.password = "root";
+//    }
 
     private boolean isformatDate(String date) {
         boolean rsl = false;
