@@ -1,5 +1,6 @@
 package ru.job4j.architecture;
 
+import net.bytebuddy.asm.Advice;
 import org.hamcrest.core.Is;
 import org.junit.Assert;
 import org.junit.Test;
@@ -14,7 +15,7 @@ import static org.hamcrest.core.Is.is;
 public class MemoryStoreTest {
 
     private void fulltest(BiConsumer<MemoryStore, Users> fank) {
-        Users users = new Users("12", "sacha", "alexmur07", "pass");
+        Users users = new Users("12", LocalDateTime.now(), "sacha", "alexmur07", "pass", "", "");
         MemoryStore store = MemoryStore.getInstance();
         Users expected = store.add(users);
         try {
@@ -34,7 +35,7 @@ public class MemoryStoreTest {
     @Test
     public void update() {
         this.fulltest((stor, exp) -> {
-            Users ex = stor.update(new Users(exp.getId(), "expected", "ale99"));
+            Users ex = stor.update(new Users(exp.getId(), LocalDateTime.now(), "expected", "ale99", "", "", ""));
             assertThat(ex.getName(), is("expected"));
         });
     }
@@ -71,18 +72,19 @@ public class MemoryStoreTest {
     @Test
     public void filterTest() {
         this.fulltest(((memoryStore, users) -> {
-            Assert.assertThat(memoryStore.filter(new Users("0", "", "alex",
-                    LocalDateTime.parse(users.getCreateDate().toLocalDate().toString() + " 00:00",
-                            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")))).get(1).getId(), Is.is(users.getId()));
+            Assert.assertThat(memoryStore.filter(new Users("0", LocalDateTime.parse(users.getCreateDate().toLocalDate().toString() + " 00:00",
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")), "", "alex", "", "", ""
+            )).get(1).getId(), Is.is(users.getId()));
         }));
     }
 
     @Test
     public void isCredentional() {
         this.fulltest(((memoryStore, users) -> {
-            Assert.assertThat(memoryStore.isCredentional(new Users("0", "", "alexmur07", "pass")), Is.is(true));
-            Assert.assertThat(memoryStore.isCredentional(new Users("0", "", "alexmu07", "pass")), Is.is(false));
-            Assert.assertThat(memoryStore.isCredentional(new Users("0", "", "alexmur07", "pas")), Is.is(false));
+            Assert.assertThat(memoryStore.isCredentional(new Users("0", LocalDateTime.now(),
+                    "", "alexmur07", "pass", "", "")), Is.is(true));
+            Assert.assertThat(memoryStore.isCredentional(new Users("0", LocalDateTime.now(), "", "alexmu07", "pass", "", "")), Is.is(false));
+            Assert.assertThat(memoryStore.isCredentional(new Users("0", LocalDateTime.now(), "", "alexmur07", "pas", "", "")), Is.is(false));
         }));
     }
 }

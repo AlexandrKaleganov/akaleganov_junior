@@ -8,6 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.function.BiConsumer;
 
 import static org.mockito.Mockito.mock;
@@ -24,10 +25,14 @@ public class UserListServletTest {
         req = mock(HttpServletRequest.class);
         res = mock(HttpServletResponse.class);
         when(this.req.getRequestDispatcher("/WEB-INF/views/list.jsp")).thenReturn(this.disp);
-        when(this.req.getParameter("id")).thenReturn(DbStore.getInstance().findByLogin(new Users("root", "root")).getId());
+        when(this.req.getParameter("id")).thenReturn(DbStore.getInstance().findByLogin(new Users("",
+                LocalDateTime.now(), "name", "root", "root", "", "")).getId());
         when(this.req.getParameter("name")).thenReturn("root");
         when(this.req.getParameter("login")).thenReturn("root");
         when(this.req.getParameter("CREATE_DATE")).thenReturn(null);
+        when(this.req.getParameter("country")).thenReturn("country");
+        when(this.req.getParameter("city")).thenReturn("city");
+
     }
     private void fulltestServlet(BiConsumer<DbStore, UserListServlet> test) {
         try {

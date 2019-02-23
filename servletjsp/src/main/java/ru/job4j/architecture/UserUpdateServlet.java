@@ -26,7 +26,8 @@ public class UserUpdateServlet extends HttpServlet {
         req.setCharacterEncoding("utf-8");
         try {
             req.setAttribute("u", DispatchDiapason.getInstance().access(req.getParameter("action"),
-                    new Users(req.getParameter("id"), req.getParameter("name"), req.getParameter("login"), req.getParameter("password"))));
+                    new Users(req.getParameter("id"), LocalDateTime.now(), req.getParameter("name"), req.getParameter("login"), req.getParameter("password"),
+                            req.getParameter("country"), req.getParameter("city"))));
             req.getRequestDispatcher("/WEB-INF/views/edit.jsp").forward(req, resp);
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);

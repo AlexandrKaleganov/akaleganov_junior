@@ -24,8 +24,8 @@ public class MemoryStore implements Store<Users> {
     }
 
     private void initRoot() {
-        if (this.findByLogin(new Users("0", "root", "root", "root")).getLogin() == null) {
-            this.add(new Users("0", "root", "root", "root"));
+        if (this.findByLogin(new Users("0", LocalDateTime.now(), "root", "root", "root", "root", "root")).getLogin() == null) {
+            this.add(new Users("0", LocalDateTime.now(), "root", "root", "root", "root", "root"));
         }
     }
 

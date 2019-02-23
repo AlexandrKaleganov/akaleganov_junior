@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 
 import java.io.InputStream;
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class DbStore implements Store<Users> {
@@ -27,8 +28,8 @@ public class DbStore implements Store<Users> {
     }
 
     private void initRoot() {
-        if (this.findByLogin(new Users("0", "root", "root", "root")).getLogin() == null) {
-            this.add(new Users("0", "root", "root", "root"));
+        if (this.findByLogin(new Users("0", LocalDateTime.now(), "root", "root", "root", "", "")).getLogin() == null) {
+            this.add(new Users("0", LocalDateTime.now(), "root", "root", "root", "", ""));
         }
     }
 
@@ -119,7 +120,8 @@ public class DbStore implements Store<Users> {
     @Override
     public Users add(Users user) {
         this.db(
-                "insert into users (name, login, pass) values (?, ?, ?)", Arrays.asList(user.getName(), user.getLogin(), user.getPassword()),
+                "insert into users (name, login, pass, country, city) values (?, ?, ?, ?, ?)",
+                Arrays.asList(user.getName(), user.getLogin(), user.getPassword(), user.getCountry(), user.getCity()),
                 ps -> {
                     ps.executeUpdate();
                     try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
@@ -138,7 +140,8 @@ public class DbStore implements Store<Users> {
     @Override
     public Users update(Users users) {
         this.db(
-                "UPDATE users SET NAME = ?, login = ? where users.id = ? ", Arrays.asList(users.getName(), users.getLogin(), Integer.valueOf(users.getId())),
+                "UPDATE users SET NAME = ?, login = ? where users.id = ? ",
+                Arrays.asList(users.getName(), users.getLogin(), Integer.valueOf(users.getId())),
                 ps -> {
                     ps.executeUpdate();
                     return users;
@@ -168,8 +171,9 @@ public class DbStore implements Store<Users> {
                     ArrayList<Users> rsl = new ArrayList<>();
                     try (ResultSet rs = ps.executeQuery()) {
                         while (rs.next()) {
-                            rsl.add(new Users(String.valueOf(rs.getInt("id")), rs.getString("name"),
-                                    rs.getString("login"), rs.getTimestamp("create_date").toLocalDateTime()));
+                            rsl.add(new Users(String.valueOf(rs.getInt("id")), rs.getTimestamp("create_date").toLocalDateTime(),
+                                    rs.getString("name"), rs.getString("login"), "",
+                                    rs.getString("country"), rs.getString("city")));
                         }
                     } catch (SQLException e) {
                         LOGGER.error(e.getMessage(), e);
@@ -202,8 +206,9 @@ public class DbStore implements Store<Users> {
                     Users res = null;
                     try (ResultSet rs = ps.executeQuery()) {
                         if (rs.next()) {
-                            res = new Users(String.valueOf(rs.getInt("id")), rs.getString("name"),
-                                    rs.getString("login"), rs.getTimestamp("create_date").toLocalDateTime());
+                            res = new Users(String.valueOf(rs.getInt("id")), rs.getTimestamp("create_date").toLocalDateTime(),
+                                    rs.getString("name"), rs.getString("login"), "",
+                                    rs.getString("country"), rs.getString("city"));
                         }
                     } catch (SQLException e) {
                         LOGGER.error(e.getMessage(), e);
@@ -245,9 +250,9 @@ public class DbStore implements Store<Users> {
                     Users res = null;
                     try (ResultSet rs = ps.executeQuery()) {
                         if (rs.next()) {
-                            res = new Users(String.valueOf(rs.getInt("id")), rs.getString("name"),
-                                    rs.getString("login"), rs.getTimestamp("create_date").toLocalDateTime());
-                        }
+                            res = new Users(String.valueOf(rs.getInt("id")), rs.getTimestamp("create_date").toLocalDateTime(),
+                                    rs.getString("name"), rs.getString("login"), "",
+                                    rs.getString("country"), rs.getString("city"));                        }
                     } catch (SQLException e) {
                         LOGGER.error(e.getMessage(), e);
                     }
@@ -267,8 +272,9 @@ public class DbStore implements Store<Users> {
                     ps -> {
                         try (ResultSet rs = ps.executeQuery()) {
                             while (rs.next()) {
-                                rsl.add(new Users(String.valueOf(rs.getInt("id")), rs.getString("name"),
-                                        rs.getString("login"), rs.getTimestamp("create_date").toLocalDateTime()));
+                                rsl.add(new Users(String.valueOf(rs.getInt("id")), rs.getTimestamp("create_date").toLocalDateTime(),
+                                        rs.getString("name"), rs.getString("login"), "",
+                                        rs.getString("country"), rs.getString("city")));
 
                             }
                         } catch (SQLException e) {

@@ -15,6 +15,22 @@ public class Users {
     private String city;
     //конструктор
 
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
     public Users(String id, LocalDateTime createDate, String name, String login, String password, String country, String city) {
         this.id = id;
         this.createDate = createDate;
@@ -24,6 +40,7 @@ public class Users {
         this.country = country;
         this.city = city;
     }
+
     public Users(String id, Optional<String> date, String name, String login, String password, String country, String city) {
         this.id = id;
         if (this.isformatDate(date.orElse("dat"))) {
@@ -127,8 +144,10 @@ public class Users {
 
     @Override
     public String toString() {
-        return "Users{" + "id=" + this.id + " createDate=" + createDate + ", name=" + name + " , login=" + login + "}";
+        return "Users{" + "id=" + this.id + " createDate=" + createDate +
+                ", name=" + name + " , login=" + login + ", country=" + country + ", city=" + city + "}";
     }
+
 
     private String iscorrectedID(String id) {
         return id != null && id.length() > 0 ? id : "0";
@@ -150,6 +169,4 @@ public class Users {
     public int hashCode() {
         return Objects.hash(name, login);
     }
-
-
 }

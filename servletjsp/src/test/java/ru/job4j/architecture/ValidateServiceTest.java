@@ -1,5 +1,6 @@
 package ru.job4j.architecture;
 
+import net.bytebuddy.asm.Advice;
 import org.hamcrest.core.Is;
 import org.junit.Assert;
 import org.junit.Test;
@@ -14,21 +15,13 @@ public class ValidateServiceTest {
 
     private void fulltest(BiConEx<Validate<Users>, Users> test) throws Exception {
         Validate<Users> valid = ValidateService.getInstance();
-        Users users = new Users("12", "sasha", "alexmur07", "root");
+        Users users = new Users("12", LocalDateTime.now(), "sasha", "alexmur07", "root", "", "");
         try {
             Users exp = valid.add(users);
             test.accept(valid, exp);
         } finally {
             valid.deleteALL();
         }
-    }
-
-    @Test(expected = DatabaseException.class)
-    public void formatidtest() throws Exception {
-        Users users = new Users("1fsf", "name", "login", "pass");
-        this.fulltest((valid, exp) -> {
-            valid.add(users);
-        });
     }
 
     /**
@@ -39,7 +32,7 @@ public class ValidateServiceTest {
      */
     @Test
     public void findbyid() throws Exception {
-        Users user1 = new Users("100500", "Vasia", "vasilisk");
+        Users user1 = new Users("", LocalDateTime.now(), "Vasia", "vasilisk", "pass", "", "");
         this.fulltest((val, exp) -> {
             Assert.assertThat(val.findById(exp), Is.is(exp));
             Assert.assertThat(val.findById(user1), Is.is(new Users()));
@@ -48,7 +41,7 @@ public class ValidateServiceTest {
 
     @Test(expected = DatabaseException.class)
     public void testformattoLogin() throws Exception {
-        Users user1 = new Users("12", "aAAAa", "vasilis1_");
+        Users user1 = new Users("12", LocalDateTime.now(), "aAAAa", "vasilis1_", "pass", "", "");
         this.fulltest((val, exp) -> {
             val.add(user1);
         });
@@ -61,7 +54,7 @@ public class ValidateServiceTest {
      */
     @Test(expected = DatabaseException.class)
     public void testformattoName() throws Exception {
-        Users user1 = new Users("12", "aAAAa1", "vasilisk");
+        Users user1 = new Users("12", LocalDateTime.now(), "aAAAa1", "vasilisk", "", "", "");
         this.fulltest((val, exp) -> {
             val.add(user1);
         });
@@ -76,7 +69,7 @@ public class ValidateServiceTest {
      */
     @Test
     public void delete() throws Exception {
-        Users user1 = new Users("12", "Vasia", "vasilisk");
+        Users user1 = new Users("12", LocalDateTime.now(), "Vasia", "vasilisk", "", "", "");
         this.fulltest((val, exp) -> {
             Assert.assertThat(val.delete(exp), Is.is(exp));
             Assert.assertThat(val.delete(exp), Is.is(new Users()));
@@ -91,10 +84,8 @@ public class ValidateServiceTest {
     @Test
     public void update() throws Exception {
         this.fulltest((val, exp) -> {
-            Users expected = val.update(new Users(exp.getId(), "vass", "expected", "roo"));
+            Users expected = val.update(new Users(exp.getId(), LocalDateTime.now(), "vass", "expected", "roo", "", ""));
             Assert.assertThat(val.findById(exp), Is.is(expected));
-            Users expected1 = val.update(new Users(exp.getId(), "vass", "expec", Optional.of("2010-11-23")));
-
         });
     }
 
@@ -113,9 +104,9 @@ public class ValidateServiceTest {
     public void filterTest() throws Exception {
         this.fulltest((val, exp) -> {
             Assert.assertThat(val.filter(exp).get(0).getId(), Is.is(exp.getId()));
-            Assert.assertThat(val.filter(new Users("0", "", "alex",
-                    LocalDateTime.parse(exp.getCreateDate().toLocalDate().toString() + " 00:00",
-                            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")))).get(0).getId(), Is.is(exp.getId()));
+            Assert.assertThat(val.filter(new Users("0", LocalDateTime.parse(exp.getCreateDate().toLocalDate().toString() + " 00:00",
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")), "", "alex", "", "", ""
+            )).get(0).getId(), Is.is(exp.getId()));
         });
     }
 

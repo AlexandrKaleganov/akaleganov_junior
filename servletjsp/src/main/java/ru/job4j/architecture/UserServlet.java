@@ -7,12 +7,14 @@ package ru.job4j.architecture;
  */
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
@@ -36,9 +38,24 @@ public class UserServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         resp.setContentType("text/html;charset=utf-8");
         req.setCharacterEncoding("utf-8");
+        BufferedReader rid = req.getReader();
+        String link;
+        StringBuilder bilder = new StringBuilder();
+        while ((link = rid.readLine()) != null) {
+            bilder.append(link);
+            System.out.println(bilder.toString());
+        }
+        String stroka = req.getReader().readLine();
+        System.out.println(String.format("stroka = %s", stroka));
+
+        ObjectMapper mapper = new ObjectMapper();
+        Users users = new Users(req.getParameter("id"), LocalDateTime.now(), req.getParameter("name"),
+                req.getParameter("login"), req.getParameter("password"),
+                req.getParameter("country"), req.getParameter("city"));
+        System.out.println(users);
         try {
             req.setAttribute("message", this.dispatsh.access(req.getParameter("action"),
-                    new Users(req.getParameter("id"), req.getParameter("name"), req.getParameter("login"), req.getParameter("password"))));
+                    users));
             req.getRequestDispatcher("/WEB-INF/views/index.jsp").forward(req, resp);
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);

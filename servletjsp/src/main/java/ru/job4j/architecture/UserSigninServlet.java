@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 public class UserSigninServlet extends HttpServlet {
     @Override
@@ -17,7 +18,8 @@ public class UserSigninServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             if (DispatchDiapason.getInstance().access("isCredentional",
-                    new Users("0", "nam", req.getParameter("login"), req.getParameter("pass")),
+                    new Users("0", LocalDateTime.now(), "nam", req.getParameter("login"), req.getParameter("pass"),
+                            "", ""),
                     true)) {
                 req.getSession().setAttribute("login", req.getParameter("login"));
                 resp.sendRedirect(String.format("%s/", req.getContextPath()));

@@ -1,6 +1,9 @@
 create table if not exists  users(
 id serial primary key,
-name varchar(200),
-login varchar(200),
-pass varchar(200),
-create_date Timestamp default now());
+create_date Timestamp default now(),
+name character(200),
+login character(200),
+pass character(200),
+country character(200),
+city character(200)
+);
