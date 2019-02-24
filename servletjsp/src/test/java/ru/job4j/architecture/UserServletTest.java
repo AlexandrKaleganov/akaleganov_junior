@@ -62,7 +62,7 @@ public class UserServletTest {
     public void testAddUser() {
         this.fulltestServlet((db, servlet) -> {
             this.testdoPOST(servlet, "add");
-            assertThat(db.findByLogin(new Users("", LocalDateTime.now(), "name", "alex", "alexmur07", "", "")).getLogin(), Is.is("alexmur07"));
+            assertThat(db.findByLogin(new Users("", LocalDateTime.now(), "name", "alex", "alexmur07", "","", "")).getLogin(), Is.is("alexmur07"));
         });
     }
 
@@ -73,7 +73,7 @@ public class UserServletTest {
             when(this.req.getParameter("id")).thenReturn(db.findAll().get(0).getId());
             when(this.req.getParameter("login")).thenReturn("test");
             this.testdoPOST(servlet, "update");
-            assertThat(db.findByLogin(new Users("", LocalDateTime.now(), "", "alex", "test", "", "")).getLogin(), is("test"));
+            assertThat(db.findByLogin(new Users("", LocalDateTime.now(), "", "alex", "test", "","", "")).getLogin(), is("test"));
         });
     }
 
@@ -81,7 +81,7 @@ public class UserServletTest {
     public void testDeleteUser() {
         this.fulltestServlet((db, servlet) -> {
             when(this.req.getParameter("id")).thenReturn(DbStore.getInstance().findByLogin(new Users("", LocalDateTime.now(),
-                    "name", "root", "root", "", "")).getId());
+                    "name", "root", "root", "","", "")).getId());
             this.testdoPOST(servlet, "delete");
             assertThat(db.findAll().size(), is(0));
         });

@@ -28,8 +28,8 @@ public class DbStore implements Store<Users> {
     }
 
     private void initRoot() {
-        if (this.findByLogin(new Users("0", LocalDateTime.now(), "root", "root", "root", "", "")).getLogin() == null) {
-            this.add(new Users("0", LocalDateTime.now(), "root", "root", "root", "", ""));
+        if (this.findByLogin(new Users("0", LocalDateTime.now(), "root", "root", "root", "Admin", "", "")).getLogin() == null) {
+            this.add(new Users("0", LocalDateTime.now(), "root", "root", "root", "Admin", "", ""));
         }
     }
 
@@ -76,7 +76,14 @@ public class DbStore implements Store<Users> {
             try (InputStream in = DbStore.class.getClassLoader().getResourceAsStream("gradle.properties")) {
                 settings.load(in);
             }
+
             db(settings.getProperty("add.tableUser"), new ArrayList<>(), pr -> pr.executeUpdate());
+            db(settings.getProperty("add.tableCountry"), new ArrayList<>(), pr -> pr.executeUpdate());
+            db(settings.getProperty("add.tableCity"), new ArrayList<>(), pr -> pr.executeUpdate());
+            db(settings.getProperty("add.tableaccesAttrib "), new ArrayList<>(), pr -> pr.executeUpdate());
+            db(settings.getProperty("add.tabletablAdresHelp"), new ArrayList<>(), pr -> pr.executeUpdate());
+            db(settings.getProperty("add.tableaccesAttribhelp"), new ArrayList<>(), pr -> pr.executeUpdate());
+            db(settings.getProperty("add.tableUserview "), new ArrayList<>(), pr -> pr.executeUpdate());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -105,7 +112,7 @@ public class DbStore implements Store<Users> {
      * @param fun
      * @return
      */
-    public <R> Optional<R> db(String sql, List<Object> param, FunEx<PreparedStatement, R> fun) {
+    private <R> Optional<R> db(String sql, List<Object> param, FunEx<PreparedStatement, R> fun) {
         Optional<R> rsl = Optional.empty();
         try (Connection conn = source.getConnection();
              PreparedStatement pr = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -117,11 +124,69 @@ public class DbStore implements Store<Users> {
         return rsl;
     }
 
+    /**
+     * рефоктор поиска индексов по запросам
+     */
+    private Integer isIndex(String command, List<Object> att) {
+        return this.db(command, att, ps -> {
+            Integer k = 0;
+            try (ResultSet resultSet = ps.executeQuery()) {
+                while (resultSet.next()) {
+                    k = resultSet.getInt("id");
+                }
+            } catch (SQLException e) {
+                LOGGER.error(e.getMessage(), e);
+            }
+            return k;
+        }).get();
+    }
+
+    /**
+     * добавление данных в таблицы и получение индекса
+     *
+     * @param command
+     * @param att
+     * @return
+     */
+    private Integer addToTable(String command, List<Object> att) {
+        return this.db(command, att, ps -> {
+            Integer k = 0;
+            ps.executeUpdate();
+            try (ResultSet resultSet = ps.getGeneratedKeys()) {
+                while (resultSet.next()) {
+                    k = resultSet.getInt(1);
+                }
+            } catch (SQLException e) {
+                LOGGER.error(e.getMessage(), e);
+            }
+            return k;
+        }).get();
+    }
+
+    /**
+     * если id нулевой то будем добавлять запись в таблицу и получать id
+     *
+     * @param command
+     * @param id
+     * @return
+     */
+    private Integer isnotNullId(String command, List<Object> att, Integer id) {
+        if (id == 0) {
+            return addToTable(command, att);
+        } else {
+            return id;
+        }
+    }
+
     @Override
     public Users add(Users user) {
+        Integer country = isIndex("select * from country where country = ?", Arrays.asList(user.getCountry()));
+        Integer city = isIndex("select * from city where city = ?", Arrays.asList(user.getCity()));
+        country = isnotNullId("insert into country(country) values(?)", Arrays.asList(user.getCountry()), country);
+        city = isnotNullId("insert into city(city) values(?)", Arrays.asList(user.getCity()), city);
         this.db(
-                "insert into users (name, login, pass, country, city) values (?, ?, ?, ?, ?)",
-                Arrays.asList(user.getName(), user.getLogin(), user.getPassword(), user.getCountry(), user.getCity()),
+                "insert into users (name, login, pass) values (?, ?, ?)",
+                Arrays.asList(user.getName(), user.getLogin(), user.getPassword()),
                 ps -> {
                     ps.executeUpdate();
                     try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
@@ -172,7 +237,8 @@ public class DbStore implements Store<Users> {
                     try (ResultSet rs = ps.executeQuery()) {
                         while (rs.next()) {
                             rsl.add(new Users(String.valueOf(rs.getInt("id")), rs.getTimestamp("create_date").toLocalDateTime(),
-                                    rs.getString("name"), rs.getString("login"), "",
+                                    rs.getString("name"), rs.getString("login"), rs.getString("pass"),
+                                    rs.getString("accesAttrib"),
                                     rs.getString("country"), rs.getString("city")));
                         }
                     } catch (SQLException e) {
@@ -188,6 +254,11 @@ public class DbStore implements Store<Users> {
      */
     @Override
     public List<Users> deleteALL() {
+        this.db("delete from adreshelp;", new ArrayList<>(), pr -> pr.executeUpdate());
+        this.db("delete from accesAtribhelp;", new ArrayList<>(), pr -> pr.executeUpdate());
+        this.db("delete from country;", new ArrayList<>(), pr -> pr.executeUpdate());
+        this.db("delete from city;", new ArrayList<>(), pr -> pr.executeUpdate());
+        this.db("delete from accesAtrib;", new ArrayList<>(), pr -> pr.executeUpdate());
         this.db("delete from users;", new ArrayList<>(), pr -> pr.executeUpdate());
         return this.findAll();
     }
@@ -252,7 +323,8 @@ public class DbStore implements Store<Users> {
                         if (rs.next()) {
                             res = new Users(String.valueOf(rs.getInt("id")), rs.getTimestamp("create_date").toLocalDateTime(),
                                     rs.getString("name"), rs.getString("login"), "",
-                                    rs.getString("country"), rs.getString("city"));                        }
+                                    rs.getString("country"), rs.getString("city"));
+                        }
                     } catch (SQLException e) {
                         LOGGER.error(e.getMessage(), e);
                     }

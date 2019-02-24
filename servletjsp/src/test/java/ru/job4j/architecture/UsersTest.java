@@ -17,7 +17,7 @@ public class UsersTest {
         users.setName("name");
         users.setLogin("login");
         users.setCreateDate(LocalDateTime.now());
-        Assert.assertThat(users, Is.is(new Users("12", LocalDateTime.now(), "name", "login", "", "", "")));
+        Assert.assertThat(users, Is.is(new Users("12", LocalDateTime.now(), "name", "login", "", "","", "")));
     }
 
     @Test
@@ -27,7 +27,7 @@ public class UsersTest {
         Users user1 = new Users("1", Optional.ofNullable("2018-12-12"), "name", "login", "", "", "");
         Assert.assertThat(user1.getCreateDate(), Is.is(LocalDateTime.of(2018, 12, 12, 00, 00)));
         StringBuilder builder = new StringBuilder("{\"id\":\"37\",\"name\":\"Калег\"," +
-                "\"login\":\"alexmur07\",\"password\":\"pass\",\"country\":\"country\",\"city\":\"city\"}");
+                "\"login\":\"alexmur07\",\"password\":\"pass\",\"accesAttrib\":\"admin\",\"country\":\"country\",\"city\":\"city\"}");
         ObjectMapper mapper = new ObjectMapper();
         Users userrr = mapper.readValue(builder.toString(), Users.class);
         System.out.println(userrr);

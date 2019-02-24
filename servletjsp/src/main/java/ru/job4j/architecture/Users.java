@@ -11,9 +11,22 @@ public class Users {
     private String name;
     private String login;
     private String password;
+    private String accesAttrib;
     private String country;
     private String city;
     //конструктор
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getAccesAttrib() {
+        return accesAttrib;
+    }
+
+    public void setAccesAttrib(String accesAttrib) {
+        this.accesAttrib = accesAttrib;
+    }
 
     public String getCountry() {
         return country;
@@ -31,12 +44,13 @@ public class Users {
         this.city = city;
     }
 
-    public Users(String id, LocalDateTime createDate, String name, String login, String password, String country, String city) {
+    public Users(String id, LocalDateTime createDate, String name, String login, String password, String accesAttrib, String country, String city) {
         this.id = id;
         this.createDate = createDate;
         this.name = name;
         this.login = login;
         this.password = password;
+        this.accesAttrib = accesAttrib;
         this.country = country;
         this.city = city;
     }
@@ -145,7 +159,7 @@ public class Users {
     @Override
     public String toString() {
         return "Users{" + "id=" + this.id + " createDate=" + createDate +
-                ", name=" + name + " , login=" + login + ", country=" + country + ", city=" + city + "}";
+                ", name=" + name + " , login=" + login + " , accesAttrib=" + accesAttrib+ ", country=" + country + ", city=" + city + "}";
     }
 
 

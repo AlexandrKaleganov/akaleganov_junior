@@ -22,6 +22,7 @@
             var pass = $("#password");
             if (login.val() != "" && pass.val() != "") {
                 return true;
+            } else {
                 alert("Введите логин или пароль");
                 return false;
             }
@@ -30,11 +31,13 @@
 </head>
 <body>
 <c:if test="${err!=null && err.error != null}">
-    <div style="background-color: red"/>
-    <c:out value="${err.error}"/>
-</c:if>
+    <div class="alert alert-danger  alert-dismissible">
+        <strong>Ошибка!</strong> <c:out value="${err.error}"/>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">&times;</button>
+    </div>
+           </c:if>
 <div class="container">
-    <h2>Stacked form</h2>
+    <h2>Введите логин и пароль</h2>
     <form action="${pageContext.servletContext.contextPath}/signin" method="post">
         <div class="form-group">
             <label for="login">Login:</label>
