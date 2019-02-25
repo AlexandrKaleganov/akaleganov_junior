@@ -75,7 +75,7 @@ public class DbStoreTest {
     @Test
     public void deleteTest() {
         this.alltestfunc((db, exp) -> {
-            db.delete(exp);
+           db.delete(exp).getId();
             Assert.assertThat(db.findById(exp).getId(), Is.is(new Users().getId()));
         });
     }

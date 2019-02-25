@@ -45,7 +45,7 @@ public class Users {
     }
 
     public Users(String id, LocalDateTime createDate, String name, String login, String password, String accesAttrib, String country, String city) {
-        this.id = id;
+        this.id = iscorrectedID(id);
         this.createDate = createDate;
         this.name = name;
         this.login = login;
@@ -56,7 +56,7 @@ public class Users {
     }
 
     public Users(String id, Optional<String> date, String name, String login, String password, String accesAttrib, String country, String city) {
-        this.id = id;
+        this.id = iscorrectedID(id);
         if (this.isformatDate(date.orElse("dat"))) {
             this.createDate = LocalDateTime.parse(date.get() + " 00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
         }
@@ -69,7 +69,7 @@ public class Users {
     }
 
     public Users() {
-
+        this.id = "0";
     }
 //    public Users(String id, String name, String login) {
 //        this.id = iscorrectedID(id);

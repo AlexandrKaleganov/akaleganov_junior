@@ -149,7 +149,7 @@ public class DbStore implements Store<Users> {
      * @param att
      * @return
      */
-    private Integer addToTable(String command, List<Object> att) {
+    private Integer updateInfo(String command, List<Object> att) {
         return this.db(command, att, ps -> {
             Integer k = 0;
             ps.executeUpdate();
@@ -173,7 +173,7 @@ public class DbStore implements Store<Users> {
      */
     private Integer isnotNullId(String command, List<Object> att, Integer id) {
         if (id == 0) {
-            return addToTable(command, att);
+            return updateInfo(command, att);
         } else {
             return id;
         }
@@ -202,8 +202,8 @@ public class DbStore implements Store<Users> {
                     return user;
                 }
         );
-        this.addToTable("insert into adreshelp(user_id, country_id, city_id) values(?, ?, ?)", Arrays.asList(Integer.valueOf(user.getId()), country, city));
-        this.addToTable("insert into accesAttribhelp(user_id, accesAttrib_id) values(?, ?)", Arrays.asList(Integer.valueOf(user.getId()), accesAttrib));
+        this.updateInfo("insert into adreshelp(user_id, country_id, city_id) values(?, ?, ?)", Arrays.asList(Integer.valueOf(user.getId()), country, city));
+        this.updateInfo("insert into accesAttribhelp(user_id, accesAttrib_id) values(?, ?)", Arrays.asList(Integer.valueOf(user.getId()), accesAttrib));
         return user;
     }
 
@@ -223,20 +223,24 @@ public class DbStore implements Store<Users> {
     @Override
     public Users delete(Users users) {
         Users rsl = this.findById(users);
-        this.db(
-                "delete from users where users.id = ? ", Arrays.asList(Integer.valueOf(users.getId())),
-                ps -> {
-                    ps.executeUpdate();
-                    return users;
-                }
-        );
+        this.updateInfo("delete from adreshelp where user_id = ?", Arrays.asList(Integer.valueOf(users.getId())));
+        this.updateInfo("delete from accesAttribhelp where user_id = ?", Arrays.asList(Integer.valueOf(users.getId())));
+        this.updateInfo("delete from users where users.id = ? ", Arrays.asList(Integer.valueOf(users.getId())));
+//
+//        this.db(
+//                "delete from users where users.id = ? ", Arrays.asList(Integer.valueOf(users.getId())),
+//                ps -> {
+//                    ps.executeUpdate();
+//                    return users;
+//                }
+//        );
         return rsl;
     }
 
     @Override
     public List<Users> findAll() {
         return this.db(
-                "select * from users", new ArrayList<>(),
+                "select * from usersview", new ArrayList<>(),
                 ps -> {
                     ArrayList<Users> rsl = new ArrayList<>();
                     try (ResultSet rs = ps.executeQuery()) {
@@ -260,10 +264,10 @@ public class DbStore implements Store<Users> {
     @Override
     public List<Users> deleteALL() {
         this.db("delete from adreshelp;", new ArrayList<>(), pr -> pr.executeUpdate());
-        this.db("delete from accesAtribhelp;", new ArrayList<>(), pr -> pr.executeUpdate());
+        this.db("delete from accesAttribhelp;", new ArrayList<>(), pr -> pr.executeUpdate());
         this.db("delete from country;", new ArrayList<>(), pr -> pr.executeUpdate());
         this.db("delete from city;", new ArrayList<>(), pr -> pr.executeUpdate());
-        this.db("delete from accesAtrib;", new ArrayList<>(), pr -> pr.executeUpdate());
+        this.db("delete from accesAttrib;", new ArrayList<>(), pr -> pr.executeUpdate());
         this.db("delete from users;", new ArrayList<>(), pr -> pr.executeUpdate());
         return this.findAll();
     }

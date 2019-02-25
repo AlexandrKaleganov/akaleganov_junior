@@ -22,7 +22,7 @@ public class DispatchDiapasonTest {
 
 
     private void fulltest(BiConEx<DispatchDiapason, Users> fanc) {
-        var users = new Users("1", LocalDateTime.now(), "user", "user123", "passs", "", "", "");
+        var users = new Users("1", LocalDateTime.now(), "user", "user123", "passs", "root", "root", "root");
         var disp = new DispatchDiapason().init();
         try {
             var exp = disp.access("add", users);
