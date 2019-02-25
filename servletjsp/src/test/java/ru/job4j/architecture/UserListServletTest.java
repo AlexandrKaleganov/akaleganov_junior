@@ -26,7 +26,7 @@ public class UserListServletTest {
         res = mock(HttpServletResponse.class);
         when(this.req.getRequestDispatcher("/WEB-INF/views/list.jsp")).thenReturn(this.disp);
         when(this.req.getParameter("id")).thenReturn(DbStore.getInstance().findByLogin(new Users("",
-                LocalDateTime.now(), "name", "root", "root", "","", "")).getId());
+                LocalDateTime.now(), "name", "root", "root", "", "", "")).getId());
         when(this.req.getParameter("name")).thenReturn("root");
         when(this.req.getParameter("login")).thenReturn("root");
         when(this.req.getParameter("CREATE_DATE")).thenReturn(null);
@@ -34,6 +34,7 @@ public class UserListServletTest {
         when(this.req.getParameter("city")).thenReturn("city");
 
     }
+
     private void fulltestServlet(BiConsumer<DbStore, UserListServlet> test) {
         try {
             UserListServlet servlet = new UserListServlet();

@@ -55,7 +55,7 @@ public class Users {
         this.city = city;
     }
 
-    public Users(String id, Optional<String> date, String name, String login, String password, String country, String city) {
+    public Users(String id, Optional<String> date, String name, String login, String password, String accesAttrib, String country, String city) {
         this.id = id;
         if (this.isformatDate(date.orElse("dat"))) {
             this.createDate = LocalDateTime.parse(date.get() + " 00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
@@ -63,10 +63,14 @@ public class Users {
         this.name = name;
         this.login = login;
         this.password = password;
+        this.accesAttrib = accesAttrib;
         this.country = country;
         this.city = city;
     }
 
+    public Users() {
+
+    }
 //    public Users(String id, String name, String login) {
 //        this.id = iscorrectedID(id);
 //        this.name = name;
@@ -116,10 +120,6 @@ public class Users {
         return rsl;
     }
 
-    public Users() {
-        this.id = "0";
-    }
-
     public String getId() {
         return id;
     }
@@ -158,8 +158,8 @@ public class Users {
 
     @Override
     public String toString() {
-        return "Users{" + "id=" + this.id + " createDate=" + createDate +
-                ", name=" + name + " , login=" + login + " , accesAttrib=" + accesAttrib+ ", country=" + country + ", city=" + city + "}";
+        return "Users{" + "id=" + this.id + " createDate=" + createDate
+                + ", name=" + name + " , login=" + login + " , accesAttrib=" + accesAttrib + ", country=" + country + ", city=" + city + "}";
     }
 
 

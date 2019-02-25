@@ -24,7 +24,7 @@ public class DbStoreTest {
      * @param fank
      */
     private void alltestfunc(BiConEx<DbStore, Users> fank) {
-        Users users = new Users("12", LocalDateTime.now(), "sacha", "alexmur07", "password", "","Россия", "Чаны");
+        Users users = new Users("12", LocalDateTime.now(), "sacha", "alexmur07", "password", "admin", "Россия", "Чаны");
         DbStore dbStore = DbStore.getInstance();
         Users expected = dbStore.add(users);
         try {
@@ -64,7 +64,7 @@ public class DbStoreTest {
     @Test
     public void updateTest() {
         this.alltestfunc((bd, exp) -> {
-            bd.update(new Users(exp.getId(), LocalDateTime.now(), "lex", "lex07", "psw", "","Россия", "Чаны"));
+            bd.update(new Users(exp.getId(), LocalDateTime.now(), "lex", "lex07", "psw", "", "Россия", "Чаны"));
             Assert.assertThat(bd.findById(exp).getName(), Is.is("lex"));
         });
     }
@@ -90,20 +90,20 @@ public class DbStoreTest {
     @Test
     public void filterTest() {
         this.alltestfunc((db, exp) -> {
-            db.add(new Users("", LocalDateTime.now(), "name", "alexmur", "pass", "","", ""));
+            db.add(new Users("", LocalDateTime.now(), "name", "alexmur", "pass", "", "", ""));
             Assert.assertThat(db.filter(exp).get(0).getId(), Is.is(exp.getId()));
-            Assert.assertThat(db.filter(new Users("0",          LocalDateTime.parse(exp.getCreateDate().toLocalDate().toString() + " 00:00",
-                    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")),"", "alex","","","", ""
-           )).get(0).getId(), Is.is(exp.getId()));
+            Assert.assertThat(db.filter(new Users("0", LocalDateTime.parse(exp.getCreateDate().toLocalDate().toString() + " 00:00",
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")), "", "alex", "", "", "", ""
+            )).get(0).getId(), Is.is(exp.getId()));
         });
     }
 
     @Test
     public void isCredentional() {
         this.alltestfunc((db, exp) -> {
-            Assert.assertThat(db.isCredentional(new Users("12",  LocalDateTime.now(),"sacha", "alexmur07", "password", "","", "")), Is.is(true));
-            Assert.assertThat(db.isCredentional(new Users("12", LocalDateTime.now(), "sacha", "alexmu07", "password","","", "")), Is.is(false));
-            Assert.assertThat(db.isCredentional(new Users("12",  LocalDateTime.now(), "", "alexmur07", "ssword","","", "")), Is.is(false));
+            Assert.assertThat(db.isCredentional(new Users("12", LocalDateTime.now(), "sacha", "alexmur07", "password", "", "", "")), Is.is(true));
+            Assert.assertThat(db.isCredentional(new Users("12", LocalDateTime.now(), "sacha", "alexmu07", "password", "", "", "")), Is.is(false));
+            Assert.assertThat(db.isCredentional(new Users("12", LocalDateTime.now(), "", "alexmur07", "ssword", "", "", "")), Is.is(false));
         });
     }
 }

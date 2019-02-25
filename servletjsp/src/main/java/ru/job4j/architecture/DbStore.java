@@ -13,6 +13,7 @@ import java.util.*;
 
 public class DbStore implements Store<Users> {
     //не стал делать поле статичным, т.к. иначе не зню как прикрутить тесты
+
     private BasicDataSource source;
     private static final DbStore INSTANCE = new DbStore();
     private final Map<Class<?>, TriplexConEx<Integer, PreparedStatement, Object>> dispat = new HashMap<>();
@@ -29,7 +30,7 @@ public class DbStore implements Store<Users> {
 
     private void initRoot() {
         if (this.findByLogin(new Users("0", LocalDateTime.now(), "root", "root", "root", "Admin", "", "")).getLogin() == null) {
-            this.add(new Users("0", LocalDateTime.now(), "root", "root", "root", "Admin", "", ""));
+            this.add(new Users("0", LocalDateTime.now(), "root", "root", "root", "Admin", "root", "root"));
         }
     }
 
@@ -80,10 +81,10 @@ public class DbStore implements Store<Users> {
             db(settings.getProperty("add.tableUser"), new ArrayList<>(), pr -> pr.executeUpdate());
             db(settings.getProperty("add.tableCountry"), new ArrayList<>(), pr -> pr.executeUpdate());
             db(settings.getProperty("add.tableCity"), new ArrayList<>(), pr -> pr.executeUpdate());
-            db(settings.getProperty("add.tableaccesAttrib "), new ArrayList<>(), pr -> pr.executeUpdate());
-            db(settings.getProperty("add.tabletablAdresHelp"), new ArrayList<>(), pr -> pr.executeUpdate());
+            db(settings.getProperty("add.tableaccesAttrib"), new ArrayList<>(), pr -> pr.executeUpdate());
+            db(settings.getProperty("add.tableAdresHelp"), new ArrayList<>(), pr -> pr.executeUpdate());
             db(settings.getProperty("add.tableaccesAttribhelp"), new ArrayList<>(), pr -> pr.executeUpdate());
-            db(settings.getProperty("add.tableUserview "), new ArrayList<>(), pr -> pr.executeUpdate());
+            db(settings.getProperty("add.tableUserview"), new ArrayList<>(), pr -> pr.executeUpdate());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -182,8 +183,10 @@ public class DbStore implements Store<Users> {
     public Users add(Users user) {
         Integer country = isIndex("select * from country where country = ?", Arrays.asList(user.getCountry()));
         Integer city = isIndex("select * from city where city = ?", Arrays.asList(user.getCity()));
+        Integer accesAttrib = isIndex("select * from accesAttrib where accesAttrib = ?", Arrays.asList(user.getAccesAttrib()));
         country = isnotNullId("insert into country(country) values(?)", Arrays.asList(user.getCountry()), country);
         city = isnotNullId("insert into city(city) values(?)", Arrays.asList(user.getCity()), city);
+        accesAttrib = isnotNullId("insert into accesAttrib(accesAttrib) values (?)", Arrays.asList(user.getAccesAttrib()), accesAttrib);
         this.db(
                 "insert into users (name, login, pass) values (?, ?, ?)",
                 Arrays.asList(user.getName(), user.getLogin(), user.getPassword()),
@@ -199,6 +202,8 @@ public class DbStore implements Store<Users> {
                     return user;
                 }
         );
+        this.addToTable("insert into adreshelp(user_id, country_id, city_id) values(?, ?, ?)", Arrays.asList(Integer.valueOf(user.getId()), country, city));
+        this.addToTable("insert into accesAttribhelp(user_id, accesAttrib_id) values(?, ?)", Arrays.asList(Integer.valueOf(user.getId()), accesAttrib));
         return user;
     }
 
@@ -272,13 +277,13 @@ public class DbStore implements Store<Users> {
     @Override
     public Users findByLogin(Users users) {
         return this.db(
-                "select * from users where login = ?", Arrays.asList(users.getLogin()),
+                "select * from userview where login = ?", Arrays.asList(users.getLogin()),
                 ps -> {
                     Users res = null;
                     try (ResultSet rs = ps.executeQuery()) {
                         if (rs.next()) {
                             res = new Users(String.valueOf(rs.getInt("id")), rs.getTimestamp("create_date").toLocalDateTime(),
-                                    rs.getString("name"), rs.getString("login"), "",
+                                    rs.getString("name"), rs.getString("login"), "", rs.getString("accesAttrib"),
                                     rs.getString("country"), rs.getString("city"));
                         }
                     } catch (SQLException e) {
@@ -316,13 +321,13 @@ public class DbStore implements Store<Users> {
     @Override
     public Users findById(Users users) {
         return this.db(
-                "select * from users where id = ?", Arrays.asList(Integer.valueOf(users.getId())),
+                "select * from userview where id = ?", Arrays.asList(Integer.valueOf(users.getId())),
                 ps -> {
                     Users res = null;
                     try (ResultSet rs = ps.executeQuery()) {
                         if (rs.next()) {
                             res = new Users(String.valueOf(rs.getInt("id")), rs.getTimestamp("create_date").toLocalDateTime(),
-                                    rs.getString("name"), rs.getString("login"), "",
+                                    rs.getString("name"), rs.getString("login"), "", rs.getString("accesAttrib"),
                                     rs.getString("country"), rs.getString("city"));
                         }
                     } catch (SQLException e) {
@@ -339,13 +344,13 @@ public class DbStore implements Store<Users> {
         if (Integer.valueOf(users.getId()) > 0) {
             rsl.add(this.findById(users));
         } else {
-            this.db("select * from users where name like ? and login like ?",
-                    Arrays.asList("%" + users.getName() + "%", "%" + users.getLogin() + "%"),
+            this.db("select * from userview where name like ? and login like ? and accesAttrib like ? and country like ? and city like ?",
+                    Arrays.asList("%" + users.getName() + "%", "%" + users.getLogin() + "%", "%" + users.getAccesAttrib() + "%", "%" + users.getCountry() + "%", "%" + users.getCity() + "%"),
                     ps -> {
                         try (ResultSet rs = ps.executeQuery()) {
                             while (rs.next()) {
                                 rsl.add(new Users(String.valueOf(rs.getInt("id")), rs.getTimestamp("create_date").toLocalDateTime(),
-                                        rs.getString("name"), rs.getString("login"), "",
+                                        rs.getString("name"), rs.getString("login"), "", rs.getString("accesAttrib"),
                                         rs.getString("country"), rs.getString("city")));
 
                             }

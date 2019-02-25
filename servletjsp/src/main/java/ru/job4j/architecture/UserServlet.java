@@ -50,7 +50,7 @@ public class UserServlet extends HttpServlet {
 
         ObjectMapper mapper = new ObjectMapper();
         Users users = new Users(req.getParameter("id"), LocalDateTime.now(), req.getParameter("name"),
-                req.getParameter("login"), req.getParameter("password"),
+                req.getParameter("login"), req.getParameter("password"), req.getParameter("accesAttrib"),
                 req.getParameter("country"), req.getParameter("city"));
         System.out.println(users);
         try {
