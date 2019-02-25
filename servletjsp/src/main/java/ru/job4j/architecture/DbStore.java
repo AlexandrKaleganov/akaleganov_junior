@@ -209,6 +209,7 @@ public class DbStore implements Store<Users> {
 
     @Override
     public Users update(Users users) {
+
         this.db(
                 "UPDATE users SET NAME = ?, login = ? where users.id = ? ",
                 Arrays.asList(users.getName(), users.getLogin(), Integer.valueOf(users.getId())),
@@ -226,21 +227,13 @@ public class DbStore implements Store<Users> {
         this.updateInfo("delete from adreshelp where user_id = ?", Arrays.asList(Integer.valueOf(users.getId())));
         this.updateInfo("delete from accesAttribhelp where user_id = ?", Arrays.asList(Integer.valueOf(users.getId())));
         this.updateInfo("delete from users where users.id = ? ", Arrays.asList(Integer.valueOf(users.getId())));
-//
-//        this.db(
-//                "delete from users where users.id = ? ", Arrays.asList(Integer.valueOf(users.getId())),
-//                ps -> {
-//                    ps.executeUpdate();
-//                    return users;
-//                }
-//        );
         return rsl;
     }
 
     @Override
     public List<Users> findAll() {
         return this.db(
-                "select * from usersview", new ArrayList<>(),
+                "select * from userview", new ArrayList<>(),
                 ps -> {
                     ArrayList<Users> rsl = new ArrayList<>();
                     try (ResultSet rs = ps.executeQuery()) {
