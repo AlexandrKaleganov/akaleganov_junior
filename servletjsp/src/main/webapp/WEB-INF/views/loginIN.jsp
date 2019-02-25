@@ -57,16 +57,6 @@
 </div>
 
 </body>
-<%--<table border="1">--%>
-    <%--<caption>Введите логин и пароль:</caption>--%>
-    <%--<tr>--%>
-        <%--<form action="${pageContext.servletContext.contextPath}/signin" method="post">--%>
-            <%--<td><input type=text" name="login" value=""></td>--%>
-            <%--<td><input type="password" name="pass" value=""></td>--%>
-            <%--<td><input type="submit"  value="ВХОД"></td>--%>
-        <%--</form>--%>
-    <%--</tr>--%>
-<%--</table>--%>
 
 </body>
 </html>

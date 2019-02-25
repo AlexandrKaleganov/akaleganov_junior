@@ -43,10 +43,8 @@ public class UserServlet extends HttpServlet {
         StringBuilder bilder = new StringBuilder();
         while ((link = rid.readLine()) != null) {
             bilder.append(link);
-            System.out.println(bilder.toString());
+            System.out.println(bilder.toString() + "оппа ");
         }
-        String stroka = req.getReader().readLine();
-        System.out.println(String.format("stroka = %s", stroka));
 
         ObjectMapper mapper = new ObjectMapper();
         Users users = new Users(req.getParameter("id"), LocalDateTime.now(), req.getParameter("name"),

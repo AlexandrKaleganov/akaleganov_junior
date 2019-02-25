@@ -46,7 +46,7 @@
         </div>
         <div class="form-group">
             <label for="name">Имя:</label>
-            <input type="text" class="form-control" title="Enter surname." id="name">
+            <input type="text" class="form-control" title="Enter name." id="name">
         </div>
         <div class="form-group">
             <label for="login">Логин:</label>
@@ -66,36 +66,15 @@
         </div>
         <div class="form-group">
             <label for="country">Страна:</label>
-            <input type="text" class="form-control" title="Enter name." id="country">
+            <input type="text" class="form-control" title="Enter country" id="country">
         </div>
         <div class="form-group">
             <label for="city">Город:</label>
-            <input type="text" class="form-control" title="Enter description." id="city"></input>
+            <input type="text" class="form-control" title="Enter city" id="city"></input>
         </div>
         <button type="button" class="btn btn-default" onclick="return valid();">Submit</button>
     </form>
 </div>
-<%--<table border="1">--%>
-    <%--<form action="${pageContext.servletContext.contextPath}/" method="post">--%>
-        <%--<input type="hidden" name="action" value="add">--%>
-        <%--<tr>--%>
-            <%--<td> ID :</td>--%>
-            <%--<td><input type='text' readonly="readonly" name="id" value="0"></td>--%>
-        <%--</tr>--%>
-        <%--<tr>--%>
-            <%--<td> Name :</td>--%>
-            <%--<td><input type="text" name="name" value="${u.name}"></td>--%>
-        <%--</tr>--%>
-        <%--<tr>--%>
-            <%--<td> Login :</td>--%>
-            <%--<td><input type="text" name="login" value="${u.login}"></td>--%>
-        <%--</tr>--%>
-        <%--<tr>--%>
-            <%--<td>Password :</td>--%>
-            <%--<td><input type="password" , name="password" , value="${u.password}"></td>--%>
-        <%--</tr>--%>
-        <%--<input type="submit" value="Добавить">--%>
-    <%--</form>--%>
 </table>
 </body>
 </html>

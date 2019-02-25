@@ -32,7 +32,7 @@ public class ValidateServiceTest {
      */
     @Test
     public void findbyid() throws Exception {
-        Users user1 = new Users("roo", LocalDateTime.now(), "Vasia", "vasilisk", "pass", "roo", "roo", "roo");
+        Users user1 = new Users("0", LocalDateTime.now(), "Vasia", "vasilisk", "pass", "roo", "roo", "roo");
         this.fulltest((val, exp) -> {
             Assert.assertThat(val.findById(exp), Is.is(exp));
             Assert.assertThat(val.findById(user1), Is.is(new Users()));
@@ -105,7 +105,7 @@ public class ValidateServiceTest {
         this.fulltest((val, exp) -> {
             Assert.assertThat(val.filter(exp).get(0).getId(), Is.is(exp.getId()));
             Assert.assertThat(val.filter(new Users("0", LocalDateTime.parse(exp.getCreateDate().toLocalDate().toString() + " 00:00",
-                    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")), "roo", "alex", "roo", "roo", "roo", "roo"
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")), "", "alex", "roo", "roo", "roo", "roo"
             )).get(0).getId(), Is.is(exp.getId()));
         });
     }
