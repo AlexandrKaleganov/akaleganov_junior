@@ -13,7 +13,6 @@
     <title>Loger_Error</title>
 </head>
 <body>
-<br/>
 <nav class="navbar navbar-inverse">
     <div class="container-fluid">
         <div class="navbar-header">
