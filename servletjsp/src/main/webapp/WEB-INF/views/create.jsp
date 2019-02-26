@@ -55,12 +55,6 @@
         </ul>
     </div>
 </nav>
-<br/>
-<form action="${pageContext.servletContext.contextPath}/" method="post">
-    <input type="hidden" name="exit" value="">
-    <input type="submit" value="ВЫХОД">
-</form>
-<br/>
 <div>
     <form class="form-inline" action="${pageContext.servletContext.contextPath}/" method="post">
         <div class="form-group">
