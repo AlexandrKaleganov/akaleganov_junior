@@ -31,8 +31,10 @@
         <div class="navbar-header">
             <a class="navbar-brand" href="#">Трекер заявок</a>
         </div>
-        <ul class="nav navbar-nav">
+        <ul id="do" class="nav navbar-nav">
             <li class="active"><a href="${pageContext.servletContext.contextPath}/">Home</a></li>
+            <li class="active"><a href="${pageContext.servletContext.contextPath}/list">Список пользователей</a></li>
+            <%--<li><a href="#">Page 2</a></li>--%>
         </ul>
         <ul class="nav navbar-nav navbar-right">
             <li><a href="${pageContext.servletContext.contextPath}/" onclick="exit()"><span class="glyphicon glyphicon-user"></span> Выход</a>
