@@ -15,7 +15,7 @@ public class ValidateServiceTest {
 
     private void fulltest(BiConEx<Validate<Users>, Users> test) throws Exception {
         Validate<Users> valid = ValidateService.getInstance();
-        Users users = new Users("12", LocalDateTime.now(), "sasha", "alexmur07", "root", "roo", "roo", "roo");
+        Users users = new Users("12", "sasha", "alexmur07", "root", "roo", "roo");
         try {
             Users exp = valid.add(users);
             test.accept(valid, exp);
@@ -32,7 +32,7 @@ public class ValidateServiceTest {
      */
     @Test
     public void findbyid() throws Exception {
-        Users user1 = new Users("0", LocalDateTime.now(), "Vasia", "vasilisk", "pass", "roo", "roo", "roo");
+        Users user1 = new Users("0", "Vasia", "vasilisk", "pass", "roo",  "roo");
         this.fulltest((val, exp) -> {
             Assert.assertThat(val.findById(exp), Is.is(exp));
             Assert.assertThat(val.findById(user1), Is.is(new Users()));
@@ -41,7 +41,7 @@ public class ValidateServiceTest {
 
     @Test(expected = DatabaseException.class)
     public void testformattoLogin() throws Exception {
-        Users user1 = new Users("12", LocalDateTime.now(), "aAAAa", "vasilis1_", "pass", "roo", "roo", "roo");
+        Users user1 = new Users("12",  "aAAAa", "vasilis1_", "pass", "roo",  "roo");
         this.fulltest((val, exp) -> {
             val.add(user1);
         });
@@ -54,7 +54,7 @@ public class ValidateServiceTest {
      */
     @Test(expected = DatabaseException.class)
     public void testformattoName() throws Exception {
-        Users user1 = new Users("12", LocalDateTime.now(), "aAAAa1", "vasilisk", "roo", "roo", "roo", "roo");
+        Users user1 = new Users("12", "aAAAa1", "vasilisk", "roo", "roo", "roo");
         this.fulltest((val, exp) -> {
             val.add(user1);
         });
@@ -69,7 +69,7 @@ public class ValidateServiceTest {
      */
     @Test
     public void delete() throws Exception {
-        Users user1 = new Users("12", LocalDateTime.now(), "Vasia", "vasilisk", "roo", "roo", "roo", "roo");
+        Users user1 = new Users("12", "Vasia", "vasilisk", "roo", "roo",  "roo");
         this.fulltest((val, exp) -> {
             Assert.assertThat(val.delete(exp), Is.is(exp));
             Assert.assertThat(val.delete(exp), Is.is(new Users()));
@@ -84,7 +84,7 @@ public class ValidateServiceTest {
     @Test
     public void update() throws Exception {
         this.fulltest((val, exp) -> {
-            Users expected = val.update(new Users(exp.getId(), LocalDateTime.now(), "vass", "expected", "roo", "roo", "roo", "roo"));
+            Users expected = val.update(new Users(exp.getId(), "vass", "expected", "roo", "roo",  "roo"));
             Assert.assertThat(val.findById(exp), Is.is(expected));
         });
     }
@@ -99,15 +99,4 @@ public class ValidateServiceTest {
             Assert.assertThat(val.findAll().size(), Is.is(0));
         });
     }
-
-    @Test
-    public void filterTest() throws Exception {
-        this.fulltest((val, exp) -> {
-            Assert.assertThat(val.filter(exp).get(0).getId(), Is.is(exp.getId()));
-            Assert.assertThat(val.filter(new Users("0", LocalDateTime.parse(exp.getCreateDate().toLocalDate().toString() + " 00:00",
-                    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")), "", "alex", "roo", "roo", "roo", "roo"
-            )).get(0).getId(), Is.is(exp.getId()));
-        });
-    }
-
 }

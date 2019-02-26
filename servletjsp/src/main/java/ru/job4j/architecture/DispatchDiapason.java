@@ -54,8 +54,6 @@ public class DispatchDiapason {
         this.dispatch.put("deleteAll", (users) ->
                 Optional.of(this.validate.deleteALL())
         );
-        this.dispatch.put("filter", (users) ->
-                Optional.of(this.validate.filter(users)));
         this.dispatch.put("isCredentional", (users) ->
                 Optional.of(this.validate.isCredentional(users)));
         return this;

@@ -18,7 +18,7 @@ public class UserSigninServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             if (DispatchDiapason.getInstance().access("isCredentional",
-                    new Users("0", LocalDateTime.now(), "nam", req.getParameter("login"), req.getParameter("pass"), req.getParameter("accesAttrib"),
+                    new Users("0",  "nam", req.getParameter("mail"), req.getParameter("pass"),
                             req.getParameter("country"), req.getParameter("city")),
                     true)) {
                 req.getSession().setAttribute("login", req.getParameter("login"));

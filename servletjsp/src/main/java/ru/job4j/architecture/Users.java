@@ -7,11 +7,9 @@ import java.util.Optional;
 
 public class Users {
     private String id;
-    private LocalDateTime createDate;
     private String name;
-    private String login;
+    private String mail;
     private String password;
-    private String accesAttrib;
     private String country;
     private String city;
     //конструктор
@@ -20,12 +18,12 @@ public class Users {
         this.password = password;
     }
 
-    public String getAccesAttrib() {
-        return accesAttrib;
+    public String getMail() {
+        return mail;
     }
 
-    public void setAccesAttrib(String accesAttrib) {
-        this.accesAttrib = accesAttrib;
+    public void setMail(String mail) {
+        this.mail = mail;
     }
 
     public String getCountry() {
@@ -44,26 +42,11 @@ public class Users {
         this.city = city;
     }
 
-    public Users(String id, LocalDateTime createDate, String name, String login, String password, String accesAttrib, String country, String city) {
+    public Users(String id, String name, String mail, String password, String country, String city) {
         this.id = iscorrectedID(id);
-        this.createDate = createDate;
         this.name = name;
-        this.login = login;
+        this.mail = mail;
         this.password = password;
-        this.accesAttrib = accesAttrib;
-        this.country = country;
-        this.city = city;
-    }
-
-    public Users(String id, Optional<String> date, String name, String login, String password, String accesAttrib, String country, String city) {
-        this.id = iscorrectedID(id);
-        if (this.isformatDate(date.orElse("dat"))) {
-            this.createDate = LocalDateTime.parse(date.get() + " 00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-        }
-        this.name = name;
-        this.login = login;
-        this.password = password;
-        this.accesAttrib = accesAttrib;
         this.country = country;
         this.city = city;
     }
@@ -71,41 +54,6 @@ public class Users {
     public Users() {
         this.id = "0";
     }
-//    public Users(String id, String name, String login) {
-//        this.id = iscorrectedID(id);
-//        this.name = name;
-//        this.login = login;
-//    }
-//
-//    public Users(String id, String name, String login, String password) {
-//        this.id = iscorrectedID(id);
-//        this.name = name;
-//        this.login = login;
-//        this.password = password;
-//        this.createDate = LocalDateTime.now();
-//    }
-//
-//    public Users(String id, String name, String login, LocalDateTime date) {
-//        this.id = iscorrectedID(id);
-//        this.createDate = date;
-//        this.name = name;
-//        this.login = login;
-//    }
-//
-//    public Users(String name, String login) {
-//        this.name = name;
-//        this.login = login;
-//    }
-//
-//    public Users(String id, String name, String login, Optional<String> date) {
-//        this.id = iscorrectedID(id);
-//        if (this.isformatDate(date.orElse("dat"))) {
-//            this.createDate = LocalDateTime.parse(date.get() + " 00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-//        }
-//        this.name = name;
-//        this.login = login;
-//        this.password = "root";
-//    }
 
     private boolean isformatDate(String date) {
         boolean rsl = false;
@@ -128,14 +76,6 @@ public class Users {
         this.id = iscorrectedID(id);
     }
 
-    public LocalDateTime getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(LocalDateTime createDate) {
-        this.createDate = createDate;
-    }
-
     public String getName() {
         return name;
     }
@@ -144,13 +84,6 @@ public class Users {
         this.name = name;
     }
 
-    public String getLogin() {
-        return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
-    }
 
     public String getPassword() {
         return password;
@@ -158,8 +91,8 @@ public class Users {
 
     @Override
     public String toString() {
-        return "Users{" + "id=" + this.id + " createDate=" + createDate
-                + ", name=" + name + " , login=" + login + " , accesAttrib=" + accesAttrib + ", country=" + country + ", city=" + city + "}";
+        return "Users{" + "id=" + this.id
+                + ", name=" + name + " , mail=" + mail + ", country=" + country + ", city=" + city + "}";
     }
 
 
@@ -176,11 +109,11 @@ public class Users {
             return false;
         }
         Users users = (Users) o;
-        return Objects.equals(name, users.name) && Objects.equals(login, users.login);
+        return Objects.equals(name, users.name) && Objects.equals(mail, users.mail);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, login);
+        return Objects.hash(name, mail);
     }
 }

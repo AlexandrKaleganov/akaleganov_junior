@@ -33,7 +33,7 @@ public class ValidateService implements Validate<Users> {
         this.isIdFORMAT(users);
         this.isNameLoginFORMAT(users, 2);
         this.validation(users, (u) -> !u.getPassword().matches("[a-zA-Z, 0-9]{4,20}"), "Error Password");
-        this.validation(users, u -> !(this.logic.findByLogin(u).getLogin() == null), "Пользователь с таким логином уже существует");
+        this.validation(users, u -> !(this.logic.findByMail(u).getMail() == null), "Пользователь с таким логином уже существует");
         return this.logic.add(users);
     }
 
@@ -49,7 +49,7 @@ public class ValidateService implements Validate<Users> {
     public Users update(Users users) throws DatabaseException {
         this.isIdFORMAT(users);
         this.isNameLoginFORMAT(users, 0);
-        this.validation(users, u -> !(this.logic.findByLogin(u).getLogin() == null), "Пользователь с таким логином уже существует");
+        this.validation(users, u -> !(this.logic.findByMail(u).getMail() == null), "Пользователь с таким логином уже существует");
         return this.logic.update(users);
     }
 
@@ -121,13 +121,9 @@ public class ValidateService implements Validate<Users> {
      */
     private void isNameLoginFORMAT(Users users, int start) throws DatabaseException {
         this.validation(users, (u) -> !u.getName().matches("[a-zA-Z]{" + start + ",20}|[а-яА-Я]{" + start + ",20}"), "USERNAME");
-        this.validation(users, (u) -> !u.getLogin().matches("[a-zA-Z, 0-9]{" + start + ",20}"), "LOGIN");
+        this.validation(users, (u) -> !u.getMail().matches("[a-zA-Z, 0-9]{" + start + ",20}"), "LOGIN");
     }
 
-    @Override
-    public List<Users> filter(Users users) {
-        return this.logic.filter(users);
-    }
 
     @Override
     public Boolean isCredentional(Users users) {

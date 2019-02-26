@@ -25,11 +25,11 @@ public class UserListServletTest {
         req = mock(HttpServletRequest.class);
         res = mock(HttpServletResponse.class);
         when(this.req.getRequestDispatcher("/WEB-INF/views/list.jsp")).thenReturn(this.disp);
-        when(this.req.getParameter("id")).thenReturn(DbStore.getInstance().findByLogin(new Users("",
-                LocalDateTime.now(), "name", "root", "root", "", "", "")).getId());
+        when(this.req.getParameter("id")).thenReturn(DbStore.getInstance().findByMail(new Users("",
+                "name", "root", "root", "", "")).getId());
         when(this.req.getParameter("name")).thenReturn("root");
-        when(this.req.getParameter("login")).thenReturn("root");
-        when(this.req.getParameter("CREATE_DATE")).thenReturn(null);
+        when(this.req.getParameter("mail")).thenReturn("roott");
+        when(this.req.getParameter("password")).thenReturn("root");
         when(this.req.getParameter("country")).thenReturn("country");
         when(this.req.getParameter("city")).thenReturn("city");
 
@@ -52,13 +52,5 @@ public class UserListServletTest {
         } catch (IOException | ServletException e) {
             e.printStackTrace();
         }
-    }
-
-    @Test
-    public void testFilterUser() {
-        this.fulltestServlet((db, servlet) -> {
-            this.testdoPOST(servlet, "filter");
-            System.out.println(req.getAttribute("list"));
-        });
     }
 }

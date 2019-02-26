@@ -24,6 +24,5 @@ public interface Validate<E> {
     E findById(E users) throws DatabaseException;
 
     List<E> deleteALL();
-    List<E> filter(E users);
     Boolean isCredentional(Users users);
 }

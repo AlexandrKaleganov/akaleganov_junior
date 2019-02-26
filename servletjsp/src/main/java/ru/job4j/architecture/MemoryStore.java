@@ -24,14 +24,13 @@ public class MemoryStore implements Store<Users> {
     }
 
     private void initRoot() {
-        if (this.findByLogin(new Users("0", LocalDateTime.now(), "root", "root", "root", "", "root", "root")).getLogin() == null) {
-            this.add(new Users("0", LocalDateTime.now(), "root", "root", "root", "root", "root", "root"));
+        if (this.findByMail(new Users("0", "root", "root", "root", "root", "root")).getMail() == null) {
+            this.add(new Users("0", "root", "root", "root", "root", "root"));
         }
     }
 
     @Override
     public Users add(Users users) {
-        users.setCreateDate(LocalDateTime.now());
         this.database.add(users);
         this.database.get(this.database.size() - 1).setId("" + (this.database.size() - 1));
         return this.database.get(this.database.size() - 1);
@@ -42,8 +41,8 @@ public class MemoryStore implements Store<Users> {
         if (users.getName().length() > 0) {
             this.database.get(Integer.valueOf(users.getId())).setName(users.getName());
         }
-        if (users.getLogin().length() > 0) {
-            this.database.get(Integer.valueOf(users.getId())).setLogin(users.getLogin());
+        if (users.getMail().length() > 0) {
+            this.database.get(Integer.valueOf(users.getId())).setMail(users.getMail());
         }
         return this.findById(users);
     }
@@ -90,11 +89,11 @@ public class MemoryStore implements Store<Users> {
      * @return
      */
     @Override
-    public Users findByLogin(Users users) {
+    public Users findByMail(Users users) {
         return this.db(users, users, (users1) -> {
             Users rs = null;
             for (Users us : this.database) {
-                if (us.getLogin().contains(users1.getLogin())) {
+                if (us.getMail().contains(users1.getMail())) {
                     rs = us;
                     break;
                 }
@@ -103,26 +102,12 @@ public class MemoryStore implements Store<Users> {
         }).orElse(new Users());
     }
 
-    @Override
-    public List<Users> filter(Users users) {
-        List<Users> rsl = new ArrayList<>();
-        if (Integer.valueOf(users.getId()) > 0) {
-            rsl.add(this.findById(users));
-        } else {
-            for (int i = 0; i < this.database.size(); i++) {
-                if (!this.isADD(this.database.get(i), users)) {
-                    rsl.add(this.database.get(i));
-                }
-            }
-        }
-        return rsl;
-    }
 
     @Override
     public boolean isCredentional(Users users) {
         Boolean rsl = false;
         for (Users test : this.database) {
-            if (test.getLogin().equals(users.getLogin())) {
+            if (test.getMail().equals(users.getMail())) {
                 if (test.getPassword().equals(users.getPassword())) {
                     rsl = true;
                 }
@@ -140,7 +125,7 @@ public class MemoryStore implements Store<Users> {
      * @return
      */
     private boolean isADD(Users datausers, Users users) {
-        return this.isValid(datausers.getName(), users.getName()) && this.isValid(datausers.getLogin(), users.getLogin()) && this.isDataValid(datausers, users);
+        return this.isValid(datausers.getName(), users.getName()) && this.isValid(datausers.getMail(), users.getMail());
     }
 
     /**
@@ -160,22 +145,6 @@ public class MemoryStore implements Store<Users> {
         return rsl;
     }
 
-    /**
-     * метод проверяет совпадение дат
-     *
-     * @param data
-     * @param users
-     * @return
-     */
-    private boolean isDataValid(Users data, Users users) {
-        boolean rsl = true;
-        if (users.getCreateDate() == null) {
-            rsl = false;
-        } else if (data.getCreateDate().toLocalDate().compareTo(users.getCreateDate().toLocalDate()) == 0) {
-            rsl = false;
-        }
-        return rsl;
-    }
 
     private <R, K> Optional<R> db(R users, K i, FunEx<K, R> funEx) {
         Optional<R> rsl = Optional.empty();
