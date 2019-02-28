@@ -29,16 +29,16 @@
 <nav class="navbar navbar-inverse">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" href="#">Трекер заявок</a>
+            <a class="navbar-brand" href="#">Трекер: список пользователей</a>
         </div>
         <ul id="do" class="nav navbar-nav">
             <li class="active"><a href="${pageContext.servletContext.contextPath}/">Home</a></li>
+            <li class="active"><a href="${pageContext.servletContext.contextPath}/create">Добавить пользователя</a></li>
             <li class="active"><a href="${pageContext.servletContext.contextPath}/list">Список пользователей</a></li>
-            <%--<li><a href="#">Page 2</a></li>--%>
         </ul>
         <ul class="nav navbar-nav navbar-right">
             <li><a href="${pageContext.servletContext.contextPath}/" onclick="exit()"><span class="glyphicon glyphicon-user"></span> Выход</a>
-             </li>
+            </li>
         </ul>
     </div>
 </nav>
@@ -50,28 +50,7 @@
     <tr>
         <td><c:out value="${message}"></c:out>
         </td>
-
     </tr>
-</table>
-<br/>
-
-<table>
-    <caption>ПРИВЕТ</caption>
-    <tr>
-        <td>
-            <form action="${pageContext.servletContext.contextPath}/create" method="get">
-                <input type="submit" value="ДОБАВИТЬ ПОЛЬЗОВАТЕЛЯ">
-            </form>
-        </td>
-        <td>
-            <form action="${pageContext.servletContext.contextPath}/list" method="post">
-                <input type="hidden" name="action" value="findall">
-                <input type="submit" value="СПИСОК ПОЛЬЗОВАТЕЛЕЙ">
-            </form>
-        </td>
-    </tr>
-</table>
-</tbody>
 </table>
 </body>
 </html>

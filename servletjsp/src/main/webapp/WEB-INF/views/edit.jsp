@@ -22,19 +22,12 @@
 <nav class="navbar navbar-inverse">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" href="#">Трекер заявок</a>
+            <a class="navbar-brand" href="#">Трекер: список пользователей</a>
         </div>
-        <ul class="nav navbar-nav">
+        <ul id="do" class="nav navbar-nav">
             <li class="active"><a href="${pageContext.servletContext.contextPath}/">Home</a></li>
-            <%--<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Page 1 <span--%>
-            <%--class="caret"></span></a>--%>
-            <%--<ul class="dropdown-menu">--%>
-            <%--<li><a href="#">Page 1-1</a></li>--%>
-            <%--<li><a href="#">Page 1-2</a></li>--%>
-            <%--<li><a href="#">Page 1-3</a></li>--%>
-            <%--</ul>--%>
-            <%--</li>--%>
-            <%--<li><a href="#">Page 2</a></li>--%>
+            <li class="active"><a href="${pageContext.servletContext.contextPath}/create">Добавить пользователя</a></li>
+            <li class="active"><a href="${pageContext.servletContext.contextPath}/list">Список пользователей</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
             <li><a href="${pageContext.servletContext.contextPath}/" onclick="exit()"><span class="glyphicon glyphicon-user"></span> Выход</a>
@@ -58,7 +51,7 @@
         </tr>
         <tr>
             <td> Login :</td>
-            <td><input type="text" name="login" value="${u.login}"></td>
+            <td><input type="text" name="login" value="${u.mail}"></td>
         </tr>
         <input type="hidden" name="action" value="update">
         <input type="submit" value="ИЗМЕНИТЬ">

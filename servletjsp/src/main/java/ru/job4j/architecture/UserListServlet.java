@@ -22,24 +22,24 @@ public class UserListServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("/WEB-INF/views/list.jsp").forward(req, resp);
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html;charset=utf-8");
         req.setCharacterEncoding("utf-8");
         try {
-            req.setAttribute("list", DispatchDiapason.getInstance().access(req.getParameter("action"),
+            req.setAttribute("list", DispatchDiapason.getInstance().access("findall",
                     new Users(req.getParameter("id"),
                             req.getParameter("name"), req.getParameter("mail"), req.getParameter("pass"),
                             req.getParameter("country"), req.getParameter("city")
-                            ), new ArrayList<Users>()));
+                    ), new ArrayList<Users>()));
             req.getRequestDispatcher("/WEB-INF/views/list.jsp").forward(req, resp);
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
             req.setAttribute("err", new Err(e.getMessage(), LocalDateTime.now()));
             req.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(req, resp);
         }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
     }
 }

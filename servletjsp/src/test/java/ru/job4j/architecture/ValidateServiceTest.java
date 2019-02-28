@@ -99,4 +99,8 @@ public class ValidateServiceTest {
             Assert.assertThat(val.findAll().size(), Is.is(0));
         });
     }
+    @Test
+    public void isCreditinal() {
+
+    }
 }

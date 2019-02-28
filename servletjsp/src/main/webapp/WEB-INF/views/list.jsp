@@ -25,76 +25,62 @@
         <div class="navbar-header">
             <a class="navbar-brand" href="#">Трекер заявок</a>
         </div>
-        <ul class="nav navbar-nav">
+        <ul id="do" class="nav navbar-nav">
             <li class="active"><a href="${pageContext.servletContext.contextPath}/">Home</a></li>
-            <%--<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Page 1 <span--%>
-            <%--class="caret"></span></a>--%>
-            <%--<ul class="dropdown-menu">--%>
-            <%--<li><a href="#">Page 1-1</a></li>--%>
-            <%--<li><a href="#">Page 1-2</a></li>--%>
-            <%--<li><a href="#">Page 1-3</a></li>--%>
-            <%--</ul>--%>
-            <%--</li>--%>
-            <%--<li><a href="#">Page 2</a></li>--%>
+            <li class="active"><a href="${pageContext.servletContext.contextPath}/create">Добавить пользователя</a></li>
+            <li class="active"><a href="${pageContext.servletContext.contextPath}/list">Список пользователей</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-            <li><a href="${pageContext.servletContext.contextPath}/" onclick="exit()"><span class="glyphicon glyphicon-user"></span> Выход</a>
+            <li><a href="${pageContext.servletContext.contextPath}/" onclick="exit()"><span
+                    class="glyphicon glyphicon-user"></span> Выход</a>
             </li>
         </ul>
     </div>
 </nav>
 <br/>
-<table border="1">
-    <caption>DataBase FILTER</caption>
-    <tr>
-        <th>ID</th>
-        <th>NAME</th>
-        <th>LOGIN</th>
-        <th>CREATE_DATE</th>
-        <th>FILTER</th>
-    </tr>
-    <tr>
-        <form action="${pageContext.servletContext.contextPath}/list" METHOD="post">
-            <td><input type="text" name="id" value=""></td>
-            <td><input type="text" name="name" value=""></td>
-            <td><input type="text" name="login" value=""></td>
-            <td><input type="date" name="CREATE_DATE" value=""></td>
-            <td><input type="hidden" name="action" value="filter"><input type="submit" value="FILTER"></td>
-        </form>
-    </tr>
-</table>
-<table border="1">
-    <caption>DataBase</caption>
-    <tr>
-        <th>ID</th>
-        <th>NAME</th>
-        <th>LOGIN</th>
-        <th>CREATE_DATE</th>
-        <th>EDIT</th>
-        <th>DELETE</th>
-    </tr>
-    <c:forEach items="${list}" var="u">
+
+<div class="container">
+    <h2>Список пользователей</h2>
+    <p>Список пользователей форму бутстрап</p>
+    <table class="table table-striped">
+        <thead>
         <tr>
-            <td><c:out value="${u.id}"/></td>
-            <td><c:out value="${u.name}"/></td>
-            <td><c:out value="${u.login}"/></td>
-            <td><c:out value="${u.createDate}"/></td>
-            <td>
-                <form action="${pageContext.servletContext.contextPath}/edit" method="post">
-                    <input type="hidden" name="id" value="${u.id}">
-                    <input type="hidden" name="action" value="findbyid">
-                    <input type="submit" value="EDIT">
-                </form>
-            </td>
-            <td>
-                <form action="${pageContext.servletContext.contextPath}/" method="post">
-                    <input type="hidden" name="action" value="delete">
-                    <input type="hidden" name="id" value="${u.id}">
-                    <input type="submit" value="DELETE">
-                </form>
-            </td>
+            <th>id</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Страна</th>
+            <th>Город</th>
+            <th>Edit</th>
+            <th>Delete</th>
         </tr>
-    </c:forEach>
-</table>
+        </thead>
+        <tbody>
+        </tr>
+        <c:forEach items="${list}" var="u">
+            <tr>
+                <td><c:out value="${u.id}"/></td>
+                <td><c:out value="${u.name}"/></td>
+                <td><c:out value="${u.mail}"/></td>
+                <td><c:out value="${u.country}"/></td>
+                <td><c:out value="${u.city}"/></td>
+                <td>
+                    <form action="${pageContext.servletContext.contextPath}/edit" method="post">
+                        <input type="hidden" name="id" value="${u.id}">
+                        <input type="hidden" name="action" value="findbyid">
+                        <input type="submit" value="EDIT">
+                    </form>
+                </td>
+                <td>
+                    <form action="${pageContext.servletContext.contextPath}/" method="post">
+                        <input type="hidden" name="action" value="delete">
+                        <input type="hidden" name="id" value="${u.id}">
+                        <input type="submit" value="DELETE">
+                    </form>
+                </td>
+            </tr>
+        </c:forEach>
+        </tbody>
+    </table>
+</div>
 </body>
 </html>

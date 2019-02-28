@@ -25,7 +25,7 @@
             return rsl;
         }
         function valid() {
-             return !(isValid($("#name"), "") + isValid($("#login"), "")+ isValid($("#password"), "") + isValid($("#dostup"), "")
+             return !(isValid($("#name"), "") + isValid($("#mail"), "")+ isValid($("#password"), "")
                  + isValid($("#country"), "") + isValid($("#city"), ""));
         }
 
@@ -35,19 +35,12 @@
 <nav class="navbar navbar-inverse">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" href="#">Трекер заявок</a>
+            <a class="navbar-brand" href="#">Трекер: список пользователей</a>
         </div>
-        <ul class="nav navbar-nav">
+        <ul id="do" class="nav navbar-nav">
             <li class="active"><a href="${pageContext.servletContext.contextPath}/">Home</a></li>
-            <%--<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Page 1 <span--%>
-            <%--class="caret"></span></a>--%>
-            <%--<ul class="dropdown-menu">--%>
-            <%--<li><a href="#">Page 1-1</a></li>--%>
-            <%--<li><a href="#">Page 1-2</a></li>--%>
-            <%--<li><a href="#">Page 1-3</a></li>--%>
-            <%--</ul>--%>
-            <%--</li>--%>
-            <%--<li><a href="#">Page 2</a></li>--%>
+            <li class="active"><a href="${pageContext.servletContext.contextPath}/create">Добавить пользователя</a></li>
+            <li class="active"><a href="${pageContext.servletContext.contextPath}/list">Список пользователей</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
             <li><a href="${pageContext.servletContext.contextPath}/" onclick="exit()"><span class="glyphicon glyphicon-user"></span> Выход</a>
@@ -66,29 +59,35 @@
             <input type="text" class="form-control" title="Enter name." id="name">
         </div>
         <div class="form-group">
-            <label for="login">Логин:</label>
-            <input type="text" class="form-control" title="Enter login." id="login">
+            <label for="mail">Маил:</label>
+            <input type="text" class="form-control" title="Enter login." id="mail">
         </div>
         <div class="form-group">
             <label for="password">Проль:</label>
             <input type="password" class="form-control" title="Enter pass." id="password">
         </div>
         <div class="form-group">
-            <label for="dostup">Права:</label>
-            <select class="form-control" title="Enter attribut dostupa." id="dostup">
+            <label for="country">Страна:</label>
+            <select class="form-control" title="Enter attribut dostupa." id="country">
                 <option value=""></option>
-                <option value="Admin">Admin</option>
-                <option value="User">User</option>
+                <option value="Россия">Россия</option>
             </select>
         </div>
         <div class="form-group">
-            <label for="country">Страна:</label>
-            <input type="text" class="form-control" title="Enter country" id="country">
-        </div>
-        <div class="form-group">
             <label for="city">Город:</label>
-            <input type="text" class="form-control" title="Enter city" id="city"></input>
+            <select class="form-control" title="Enter attribut dostupa." id="city">
+                <option value=""></option>
+                <option value="Москва">Москва</option>
+            </select>
         </div>
+        <%--<div class="form-group">--%>
+            <%--<label for="country">Страна:</label>--%>
+            <%--<input type="text" class="form-control" title="Enter country" id="country">--%>
+        <%--</div>--%>
+        <%--<div class="form-group">--%>
+            <%--<label for="city">Город:</label>--%>
+            <%--<input type="text" class="form-control" title="Enter city" id="city"></input>--%>
+        <%--</div>--%>
         <button type="button" class="btn btn-default" onclick="return valid();">Submit</button>
     </form>
 </div>

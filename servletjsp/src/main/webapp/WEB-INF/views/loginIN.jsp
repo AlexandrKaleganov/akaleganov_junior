@@ -18,9 +18,9 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script>
         function isnotNull() {
-            var login = $("#login");
-            var pass = $("#password");
-            if (login.val() != "" && pass.val() != "") {
+            console.log($("#mail").val());
+            console.log($("#pass").val());
+            if ($("#mail").val() != "" && $("#pass").val() != "") {
                 return true;
             } else {
                 alert("Введите логин или пароль");
@@ -40,12 +40,12 @@
     <h2>Введите логин и пароль</h2>
     <form action="${pageContext.servletContext.contextPath}/signin" method="post">
         <div class="form-group">
-            <label for="login">Login:</label>
-            <input type="login" class="form-control" id="login" placeholder="Enter name" name="login">
+            <label for="mail">Login:</label>
+            <input type="login" class="form-control" id="mail" placeholder="Enter name" name="mail">
         </div>
         <div class="form-group">
-            <label for="password">Password:</label>
-            <input type="password" class="form-control" id="password" placeholder="Enter password" name="pass">
+            <label for="pass">Password:</label>
+            <input type="password" class="form-control" id="pass" placeholder="Enter password" name="pass">
         </div>
         <div class="form-group form-check">
             <label class="form-check-label">
