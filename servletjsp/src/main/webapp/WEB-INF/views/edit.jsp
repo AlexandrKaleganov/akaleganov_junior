@@ -17,6 +17,20 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script>
+        function exit() {
+            $.ajax({
+                type: "POST",
+                url: "./",
+                data: {exit: "exit"}
+            })
+        };
+        $(document).ready(function () {
+            <c:if test="${message!=null}">
+            alert("${message}");
+            </c:if>
+        });
+    </script>
 </head>
 <body>
 <nav class="navbar navbar-inverse">
@@ -30,7 +44,8 @@
             <li class="active"><a href="${pageContext.servletContext.contextPath}/list">Список пользователей</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-            <li><a href="${pageContext.servletContext.contextPath}/" onclick="exit()"><span class="glyphicon glyphicon-user"></span> Выход</a>
+            <li><a href="${pageContext.servletContext.contextPath}/" onclick="exit()"><span
+                    class="glyphicon glyphicon-user"></span> Выход</a>
             </li>
         </ul>
     </div>

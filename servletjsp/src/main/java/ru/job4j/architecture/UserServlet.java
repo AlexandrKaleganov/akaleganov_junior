@@ -37,6 +37,13 @@ public class UserServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         resp.setContentType("text/html;charset=UTF-8");
         req.setCharacterEncoding("UTF-8");
+        BufferedReader ri = req.getReader();
+        String line;
+        StringBuilder res = new StringBuilder();
+        ObjectMapper mapper = new ObjectMapper();
+        while ((line=ri.readLine())!=null) {
+            res.append(line);
+        }
         Users users = new Users(req.getParameter("id"), req.getParameter("name"),
                 req.getParameter("mail"), req.getParameter("password"),
                 req.getParameter("country"), req.getParameter("city"));

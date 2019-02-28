@@ -16,6 +16,19 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <title>create_user</title>
     <script>
+        function exit() {
+            $.ajax({
+                type: "POST",
+                url: "./",
+                data: {exit: "exit"}
+            })
+        };
+        $(document).ready(function () {
+            <c:if test="${message!=null}">
+            alert("${message}");
+            </c:if>
+        });
+
         function isValid(r, l) {
             var rsl = false;
             if (r.val() == l) {
@@ -24,16 +37,15 @@
             }
             console.log(r);
             return rsl;
-        }
-        function valid() {
-            var res = !(isValid($("#name"), "") + isValid($("#mail"), "")+ isValid($("#password"), "")
-                + isValid($("#country"), "") + isValid($("#city"), ""));
-             return res;
-        }
+        };
 
-        function doPostADD() {
-            $.ajax()
-        }
+        function valid() {
+            return !(isValid($("#name"), "") + isValid($("#mail"), "") + isValid($("#password"), "")
+                + isValid($("#country"), "") + isValid($("#city"), ""));
+        };
+
+
+
     </script>
 </head>
 <body>
@@ -48,7 +60,8 @@
             <li class="active"><a href="${pageContext.servletContext.contextPath}/list">Список пользователей</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-            <li><a href="${pageContext.servletContext.contextPath}/" onclick="exit()"><span class="glyphicon glyphicon-user"></span> Выход</a>
+            <li><a href="${pageContext.servletContext.contextPath}/" onclick="exit()"><span
+                    class="glyphicon glyphicon-user"></span> Выход</a>
             </li>
         </ul>
     </div>
@@ -73,7 +86,7 @@
         </div>
         <div class="form-group">
             <label for="country">Страна:</label>
-            <select  class="form-control" title="Enter attribut dostupa." name="country" id="country">
+            <select class="form-control" title="Enter attribut dostupa." name="country" id="country">
                 <option value=""></option>
                 <option value="Россия">Россия</option>
             </select>
@@ -86,14 +99,15 @@
             </select>
         </div>
         <%--<div class="form-group">--%>
-            <%--<label for="country">Страна:</label>--%>
-            <%--<input type="text" class="form-control" title="Enter country" id="country">--%>
+        <%--<label for="country">Страна:</label>--%>
+        <%--<input type="text" class="form-control" title="Enter country" id="country">--%>
         <%--</div>--%>
         <%--<div class="form-group">--%>
-            <%--<label for="city">Город:</label>--%>
-            <%--<input type="text" class="form-control" title="Enter city" id="city"></input>--%>
+        <%--<label for="city">Город:</label>--%>
+        <%--<input type="text" class="form-control" title="Enter city" id="city"></input>--%>
         <%--</div>--%>
-        <button type="submit" name="action" value="add" class="btn btn-default" onclick="return valid();">Submit</button>
+        <button type="submit" name="action" value="add" class="btn btn-default" onclick="return valid();">Submit
+        </button>
     </form>
 
 </div>
