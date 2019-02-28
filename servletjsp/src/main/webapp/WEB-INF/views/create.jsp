@@ -43,7 +43,6 @@
             return !(isValid($("#name"), "") + isValid($("#mail"), "") + isValid($("#password"), "")
                 + isValid($("#country"), "") + isValid($("#city"), ""));
         };
-
     </script>
 </head>
 <body>
