@@ -14,8 +14,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
-import java.io.IOException;
+import java.io.*;
 import java.time.LocalDateTime;
 
 
@@ -57,7 +56,14 @@ public class UserServlet extends HttpServlet {
             req.getRequestDispatcher("/WEB-INF/views/index.jsp").forward(req, resp);
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
-            req.setAttribute("err", new Err(e.getMessage(), LocalDateTime.now()));
+            Reader ri = new StringReader(e.getMessage());
+            BufferedReader riddd = new BufferedReader(ri);
+            String tempp;
+            String rees = "";
+            while ((tempp = riddd.readLine()) != null) {
+                rees += tempp;
+            }
+            req.setAttribute("err", new Err(rees, LocalDateTime.now()));
             req.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(req, resp);
         }
     }

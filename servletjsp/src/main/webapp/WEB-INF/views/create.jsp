@@ -25,8 +25,10 @@
             return rsl;
         }
         function valid() {
-             return !(isValid($("#name"), "") + isValid($("#mail"), "")+ isValid($("#password"), "")
-                 + isValid($("#country"), "") + isValid($("#city"), ""));
+            var res = !(isValid($("#name"), "") + isValid($("#mail"), "")+ isValid($("#password"), "")
+                + isValid($("#country"), "") + isValid($("#city"), ""));
+            console.log(res);
+             return res;
         }
 
     </script>
@@ -52,30 +54,30 @@
     <form class="form-inline" action="${pageContext.servletContext.contextPath}/" method="post">
         <div class="form-group">
             <label for="id"></label>
-            <input type="hidden" class="form-control" value="37" title="Error ID. Enter ID." id="id">
+            <input type="hidden" class="form-control" neme="id" value="37" title="Error ID. Enter ID." id="id">
         </div>
         <div class="form-group">
             <label for="name">Имя:</label>
-            <input type="text" class="form-control" title="Enter name." id="name">
+            <input type="text" class="form-control" name="name" title="Enter name." id="name">
         </div>
         <div class="form-group">
             <label for="mail">Маил:</label>
-            <input type="text" class="form-control" title="Enter login." id="mail">
+            <input type="text" class="form-control" name="mail" title="Enter login." id="mail">
         </div>
         <div class="form-group">
             <label for="password">Проль:</label>
-            <input type="password" class="form-control" title="Enter pass." id="password">
+            <input type="password" class="form-control" name="password" title="Enter pass." id="password">
         </div>
         <div class="form-group">
             <label for="country">Страна:</label>
-            <select class="form-control" title="Enter attribut dostupa." id="country">
+            <select class="form-control" title="Enter attribut dostupa." name="country" id="country">
                 <option value=""></option>
                 <option value="Россия">Россия</option>
             </select>
         </div>
         <div class="form-group">
             <label for="city">Город:</label>
-            <select class="form-control" title="Enter attribut dostupa." id="city">
+            <select class="form-control" name="city" title="Enter attribut dostupa." id="city">
                 <option value=""></option>
                 <option value="Москва">Москва</option>
             </select>
@@ -88,7 +90,7 @@
             <%--<label for="city">Город:</label>--%>
             <%--<input type="text" class="form-control" title="Enter city" id="city"></input>--%>
         <%--</div>--%>
-        <button type="button" class="btn btn-default" onclick="return valid();">Submit</button>
+        <button type="submit" name="action" value="add" class="btn btn-default" onclick="return valid();">Submit</button>
     </form>
 </div>
 </table>
