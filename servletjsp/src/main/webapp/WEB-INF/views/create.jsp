@@ -44,8 +44,6 @@
                 + isValid($("#country"), "") + isValid($("#city"), ""));
         };
 
-
-
     </script>
 </head>
 <body>
