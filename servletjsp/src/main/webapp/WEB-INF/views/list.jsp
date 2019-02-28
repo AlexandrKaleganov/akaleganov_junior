@@ -23,7 +23,7 @@
 <nav class="navbar navbar-inverse">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" href="#">Трекер заявок</a>
+            <a class="navbar-brand" href="#">Трекер: список пользователей</a>
         </div>
         <ul id="do" class="nav navbar-nav">
             <li class="active"><a href="${pageContext.servletContext.contextPath}/">Home</a></li>
@@ -37,7 +37,6 @@
         </ul>
     </div>
 </nav>
-<br/>
 
 <div class="container">
     <h2>Список пользователей</h2>
