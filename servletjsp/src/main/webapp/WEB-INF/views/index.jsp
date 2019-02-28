@@ -20,9 +20,14 @@
             $.ajax({
                 type: "POST",
                 url: "./",
-                data:{exit:"exit"}
+                data: {exit: "exit"}
             })
-        }
+        };
+        $(document).ready(function () {
+            <c:if test="${message!=null}">
+            alert("${message}");
+            </c:if>
+        });
     </script>
 </head>
 <body>
@@ -37,11 +42,13 @@
             <li class="active"><a href="${pageContext.servletContext.contextPath}/list">Список пользователей</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-            <li><a href="${pageContext.servletContext.contextPath}/" onclick="exit()"><span class="glyphicon glyphicon-user"></span> Выход</a>
+            <li><a href="${pageContext.servletContext.contextPath}/" onclick="exit()"><span
+                    class="glyphicon glyphicon-user"></span> Выход</a>
             </li>
         </ul>
     </div>
 </nav>
+
 <table style="border: 1px solid black;" cellpadding="1" cellspacing="1" border="2">
     <tbody>
     <tr>

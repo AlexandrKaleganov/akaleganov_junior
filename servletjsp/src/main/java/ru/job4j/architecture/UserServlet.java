@@ -35,17 +35,8 @@ public class UserServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        resp.setContentType("text/html;charset=utf-8");
-        req.setCharacterEncoding("utf-8");
-        BufferedReader rid = req.getReader();
-        String link;
-        StringBuilder bilder = new StringBuilder();
-        while ((link = rid.readLine()) != null) {
-            bilder.append(link);
-            System.out.println(bilder.toString() + "оппа ");
-        }
-
-        ObjectMapper mapper = new ObjectMapper();
+        resp.setContentType("text/html;charset=UTF-8");
+        req.setCharacterEncoding("UTF-8");
         Users users = new Users(req.getParameter("id"), req.getParameter("name"),
                 req.getParameter("mail"), req.getParameter("password"),
                 req.getParameter("country"), req.getParameter("city"));
@@ -56,14 +47,7 @@ public class UserServlet extends HttpServlet {
             req.getRequestDispatcher("/WEB-INF/views/index.jsp").forward(req, resp);
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
-            Reader ri = new StringReader(e.getMessage());
-            BufferedReader riddd = new BufferedReader(ri);
-            String tempp;
-            String rees = "";
-            while ((tempp = riddd.readLine()) != null) {
-                rees += tempp;
-            }
-            req.setAttribute("err", new Err(rees, LocalDateTime.now()));
+            req.setAttribute("err", new Err(e.getMessage(), LocalDateTime.now()));
             req.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(req, resp);
         }
     }
