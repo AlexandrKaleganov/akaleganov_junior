@@ -25,11 +25,6 @@
                 data: {exit: "exit"}
             })
         };
-        $(document).ready(function () {
-            <c:if test="${message!=null}">
-            alert("${message}");
-            </c:if>
-        });
     </script>
 </head>
 <body>
@@ -50,27 +45,39 @@
         </ul>
     </div>
 </nav>
-<br/>
-<table border="1">
-
-    <caption>Изменение данных пользователя, если поле будет стёрто, то данные поля не будут обновлены</caption>
-    <form action="${pageContext.servletContext.contextPath}/" method="post">
-        <tr>
-            <td> ID :</td>
-            <td><input readonly="readonly" name="id" value="${u.id}"></td>
-        </tr>
-        <br>
-        <tr>
-            <td> Name :</td>
-            <td><input type="text" name="name" value="${u.name}"></td>
-        </tr>
-        <tr>
-            <td> Login :</td>
-            <td><input type="text" name="login" value="${u.mail}"></td>
-        </tr>
-        <input type="hidden" name="action" value="update">
-        <input type="submit" value="ИЗМЕНИТЬ">
-    </form>
-</table>
+    <div>
+        <form class="form-inline"  action="${pageContext.servletContext.contextPath}/" method="post">
+            <div class="form-group">
+                <label for="id"></label>
+                <input type="hidden" class="form-control" neme="id" value="${u.id}" title="Error ID. Enter ID." id="id">
+            </div>
+            <div class="form-group">
+                <label for="name">Имя:</label>
+                <input type="text" class="form-control" name="name" value="${u.name}" title="Enter name." id="name">
+            </div>
+            <div class="form-group">
+                <label for="mail">Маил:</label>
+                <input type="text" class="form-control" name="mail" value="${u.mail}" title="Enter login." id="mail">
+            </div>
+            <div class="form-group">
+                <label for="password">Проль:</label>
+                <input type="password" class="form-control" name="password" value="${u.password}" title="Enter pass." id="password">
+            </div>
+            <div class="form-group">
+                <label for="country">Страна:</label>
+                <select class="form-control" title="Enter attribut dostupa."  name="country" id="country">
+                    <option value="${u.country}">${u.country}</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="city">Город:</label>
+                <select class="form-control" name="city" title="Enter attribut dostupa." id="city">
+                    <option value="${u.city}">${u.city}</option>
+                </select>
+            </div>
+            <button type="submit" name="action" value="update" class="btn btn-default" onclick="return valid();">Submit
+            </button>
+        </form>
+    </div>
 </body>
 </html>
