@@ -203,15 +203,12 @@ public class DbStore implements Store<Users> {
 
     @Override
     public Users update(Users users) {
-
-        this.db(
-                "UPDATE users SET NAME = ?, mail = ? where users.id = ? ",
-                Arrays.asList(users.getName(), users.getMail(), Integer.valueOf(users.getId())),
-                ps -> {
-                    ps.executeUpdate();
-                    return users;
-                }
-        );
+        this.updateInfo("UPDATE users SET NAME = ?, mail = ?, pass =? where users.id = ? ",
+                Arrays.asList(users.getName(), users.getMail(), users.getPassword(), Integer.valueOf(users.getId())));
+        Integer indexCountry = isIndex("select * from country where country = ?", Arrays.asList(users.getCountry()));
+        Integer indexCity = isIndex("select * from city where city = ?", Arrays.asList(users.getCity()));
+        this.updateInfo("UPDATE adreshelp SET country_id = ?, city_id = ? where user_id = ? ",
+                Arrays.asList(indexCountry, indexCity, Integer.valueOf(users.getId())));
         return this.findById(users);
     }
 
@@ -231,9 +228,11 @@ public class DbStore implements Store<Users> {
                     ArrayList<Users> rsl = new ArrayList<>();
                     try (ResultSet rs = ps.executeQuery()) {
                         while (rs.next()) {
-                            rsl.add(new Users(String.valueOf(rs.getInt("id")),
-                                    rs.getString("name"), rs.getString("mail"), rs.getString("pass"),
-                                    rs.getString("country"), rs.getString("city")));
+                            if (!rs.getString("mail").equals("root")) {
+                                rsl.add(new Users(String.valueOf(rs.getInt("id")),
+                                        rs.getString("name"), rs.getString("mail"), rs.getString("pass"),
+                                        rs.getString("country"), rs.getString("city")));
+                            }
                         }
                     } catch (SQLException e) {
                         LOGGER.error(e.getMessage(), e);

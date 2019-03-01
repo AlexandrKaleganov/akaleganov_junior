@@ -40,14 +40,15 @@ public class UserServlet extends HttpServlet {
         Users users = new Users(req.getParameter("id"), req.getParameter("name"),
                 req.getParameter("mail"), req.getParameter("password"),
                 req.getParameter("country"), req.getParameter("city"));
-        System.out.println(users);
         try {
             req.setAttribute("message", this.dispatsh.access(req.getParameter("action"),
                     users));
             req.getRequestDispatcher("/WEB-INF/views/index.jsp").forward(req, resp);
         } catch (Exception e) {
+            StringWriter error = new StringWriter();
+            e.printStackTrace(new PrintWriter(error));
             LOGGER.error(e.getMessage(), e);
-            req.setAttribute("err", new Err(e.getMessage(), LocalDateTime.now()));
+            req.setAttribute("err", new Err(error.toString(), LocalDateTime.now()));
             req.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(req, resp);
         }
     }

@@ -26,6 +26,7 @@ public class AuthFilter implements Filter {
      */
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
+        req.setCharacterEncoding("UTF-8");
         HttpServletRequest request = (HttpServletRequest) req;    //два запроса переделываем под HttpServlet
         HttpServletResponse response = (HttpServletResponse) res;
         if (request.getRequestURI().contains("/signin")) {     //если лезим на страницу авторизации - то

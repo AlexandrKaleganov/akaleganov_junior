@@ -24,11 +24,6 @@
                 data: {exit: "exit"}
             })
         };
-        $(document).ready(function () {
-            <c:if test="${message!=null}">
-            alert("${message}");
-            </c:if>
-        });
     </script>
     </head>
 <body>
@@ -49,25 +44,11 @@
         </ul>
     </div>
 </nav>
-<br/>
-<table style="border: 1px solid black;" cellpadding="1" cellspacing="1" border="2">
-    <tbody>
-    <caption>
-        Error Message
-    </caption>
-
-    <tr>
-        <td>
-            <c:out value="${err.dateTime}"></c:out>
-        </td>
-        <td><c:out value="${err.error}"></c:out>
-        </td>
-    </tr>
-
-</table>
-<br/>
-<form action="${pageContext.servletContext.contextPath}/" method="get">
-    <input type="submit" value="ВЕРНУТЬСЯ НА ГЛАВНУЮ СТРАНИЦУ">
-</form>
+<c:if test="${err!=null}">
+    <div class="alert alert-danger  alert-dismissible">
+        <strong>System error:</strong> <c:out value="${err.error}"></c:out>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">&times;</button>
+    </div>
+</c:if>
 </body>
 </html>

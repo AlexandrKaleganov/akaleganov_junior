@@ -1,13 +1,20 @@
 package ru.job4j.architecture;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.core.Is;
 import org.junit.Assert;
 import org.junit.Test;
 import ru.job4j.architecture.err.BiConEx;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class DbStoreTest {
@@ -94,5 +101,23 @@ public class DbStoreTest {
             Assert.assertThat(db.isCredentional(new Users("12", "sacha", "alexmu07", "password", "", "")), Is.is(false));
             Assert.assertThat(db.isCredentional(new Users("12", "", "alexmur07", "ssword", "", "")), Is.is(false));
         });
+    }
+
+    /**
+     * JSON  города и страны
+     */
+    @Test
+    public void testTestCity() throws IOException {
+        URL url = new URL("https://raw.githubusercontent.com/David-Haim/CountriesToCitiesJSON/master/countriesToCities.json");
+        StringBuilder bilder = new StringBuilder();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+        String temp;
+        while ((temp = reader.readLine()) != null) {
+            bilder.append(temp);
+        }
+        ObjectMapper mapper = new ObjectMapper();
+        HashMap<String, ArrayList<String>> mapa = mapper.readValue(bilder.toString(), HashMap.class);
+        mapa.remove("");
+        System.out.println(mapa.get("Russia"));
     }
 }

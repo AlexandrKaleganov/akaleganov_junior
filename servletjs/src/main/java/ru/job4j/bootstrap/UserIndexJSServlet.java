@@ -1,7 +1,6 @@
 package ru.job4j.bootstrap;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jdk.swing.interop.SwingInterOpUtils;
 import ru.job4j.bootstrap.model.User;
 
 import javax.servlet.ServletException;

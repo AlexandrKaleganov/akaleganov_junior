@@ -23,11 +23,6 @@
                 data: {exit: "exit"}
             })
         };
-        $(document).ready(function () {
-            <c:if test="${message!=null}">
-            alert("${message}");
-            </c:if>
-        });
     </script>
 </head>
 <body>
@@ -48,16 +43,11 @@
         </ul>
     </div>
 </nav>
-
-<table style="border: 1px solid black;" cellpadding="1" cellspacing="1" border="2">
-    <tbody>
-    <tr>
-        <th>System Message</th>
-    </tr>
-    <tr>
-        <td><c:out value="${message}"></c:out>
-        </td>
-    </tr>
-</table>
+<c:if test="${message!=null}">
+<div class="alert alert-success  alert-dismissible">
+    <strong>System message:</strong> <c:out value="${message}"/>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">&times;</button>
+</div>
+</c:if>
 </body>
 </html>

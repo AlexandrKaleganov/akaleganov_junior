@@ -25,6 +25,7 @@
         };
         $(document).ready(function () {
             <c:if test="${message!=null}">
+
             alert("${message}");
             </c:if>
         });
@@ -35,7 +36,6 @@
                 rsl = true;
                 alert(r.attr("title"));
             }
-            console.log(r);
             return rsl;
         };
 
@@ -95,14 +95,6 @@
                 <option value="Москва">Москва</option>
             </select>
         </div>
-        <%--<div class="form-group">--%>
-        <%--<label for="country">Страна:</label>--%>
-        <%--<input type="text" class="form-control" title="Enter country" id="country">--%>
-        <%--</div>--%>
-        <%--<div class="form-group">--%>
-        <%--<label for="city">Город:</label>--%>
-        <%--<input type="text" class="form-control" title="Enter city" id="city"></input>--%>
-        <%--</div>--%>
         <button type="submit" name="action" value="add" class="btn btn-default" onclick="return valid();">Submit
         </button>
     </form>
