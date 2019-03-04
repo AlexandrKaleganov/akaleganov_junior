@@ -20,6 +20,7 @@
         <module>sqlruparser</module>
         <module>servletjsp</module>
         <module>servletjs</module>
+        <module>servletlistiner</module>
     </modules>
 
     <dependencies>
@@ -206,7 +207,7 @@
             <properties>
                 <db.url>jdbc:postgresql://127.0.0.1:5432/usersdata</db.url>
                 <db.username>postgres</db.username>
-                <db.password/>
+                <db.password>444444</db.password>
                 <db.driver>org.postgresql.Driver</db.driver>
             </properties>
         </profile>
