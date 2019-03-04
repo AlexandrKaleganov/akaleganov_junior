@@ -24,13 +24,13 @@ public class DbStore implements Store<Users> {
         this.init();
         this.dispat.put(Integer.class, (index, ps, value) -> ps.setInt(index, (Integer) value));
         this.dispat.put(String.class, (index, ps, value) -> ps.setString(index, (String) value));
-        this.addTable();
+//        this.addTable();
         this.initRoot();
     }
 
     private void initRoot() {
-        if (this.findByMail(new Users("0", "root", "root", "root", "Россия", "Новосибирск")).getMail() == null) {
-            this.add(new Users("0", "root", "root", "root", "Россия", "Новосибирск"));
+        if (this.findByMail(new Users("0", "root", "root", "root", "Russia", "Novosibirsk")).getMail() == null) {
+            this.add(new Users("0", "root", "root", "root", "Russia", "Novosibirsk"));
         }
     }
 
@@ -60,7 +60,7 @@ public class DbStore implements Store<Users> {
         this.source = source;
         this.dispat.put(Integer.class, (index, ps, value) -> ps.setInt(index, (Integer) value));
         this.dispat.put(String.class, (index, ps, value) -> ps.setString(index, (String) value));
-        this.addTable();
+//        this.addTable();
         this.initRoot();
     }
 
@@ -68,24 +68,24 @@ public class DbStore implements Store<Users> {
         return INSTANCE;
     }
 
-    /**
-     * добавление таблицы
-     */
-    public void addTable() {
-        try {
-            Properties settings = new Properties();
-            try (InputStream in = DbStore.class.getClassLoader().getResourceAsStream("gradle.properties")) {
-                settings.load(in);
-            }
-            db(settings.getProperty("add.tableUser"), new ArrayList<>(), pr -> pr.executeUpdate());
-            db(settings.getProperty("add.tableCountry"), new ArrayList<>(), pr -> pr.executeUpdate());
-            db(settings.getProperty("add.tableCity"), new ArrayList<>(), pr -> pr.executeUpdate());
-            db(settings.getProperty("add.tableAdresHelp"), new ArrayList<>(), pr -> pr.executeUpdate());
-            db(settings.getProperty("add.tableUserview"), new ArrayList<>(), pr -> pr.executeUpdate());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    /**
+//     * добавление таблицы
+//     */
+//    public void addTable() {
+//        try {
+//            Properties settings = new Properties();
+//            try (InputStream in = DbStore.class.getClassLoader().getResourceAsStream("gradle.properties")) {
+//                settings.load(in);
+//            }
+//            db(settings.getProperty("add.tableUser"), new ArrayList<>(), pr -> pr.executeUpdate());
+//            db(settings.getProperty("add.tableCountry"), new ArrayList<>(), pr -> pr.executeUpdate());
+//            db(settings.getProperty("add.tableCity"), new ArrayList<>(), pr -> pr.executeUpdate());
+//            db(settings.getProperty("add.tableAdresHelp"), new ArrayList<>(), pr -> pr.executeUpdate());
+//            db(settings.getProperty("add.tableUserview"), new ArrayList<>(), pr -> pr.executeUpdate());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     /**
      * в цикле перебираем лист с параметкрами
@@ -181,7 +181,7 @@ public class DbStore implements Store<Users> {
         Integer country = isIndex("select * from country where country = ?", Arrays.asList(user.getCountry()));
         Integer city = isIndex("select * from city where city = ?", Arrays.asList(user.getCity()));
         country = isnotNullId("insert into country(country) values(?)", Arrays.asList(user.getCountry()), country);
-        city = isnotNullId("insert into city(city) values(?)", Arrays.asList(user.getCity()), city);
+        city = isnotNullId("insert into city(city, country_id) values(?, ?)", Arrays.asList(user.getCity(), country), city);
         this.db(
                 "insert into users (name, mail, pass) values (?, ?, ?)",
                 Arrays.asList(user.getName(), user.getMail(), user.getPassword()),
@@ -207,6 +207,7 @@ public class DbStore implements Store<Users> {
                 Arrays.asList(users.getName(), users.getMail(), users.getPassword(), Integer.valueOf(users.getId())));
         Integer indexCountry = isIndex("select * from country where country = ?", Arrays.asList(users.getCountry()));
         Integer indexCity = isIndex("select * from city where city = ?", Arrays.asList(users.getCity()));
+        System.out.println(indexCity + "  " +  indexCountry);
         this.updateInfo("UPDATE adreshelp SET country_id = ?, city_id = ? where user_id = ? ",
                 Arrays.asList(indexCountry, indexCity, Integer.valueOf(users.getId())));
         return this.findById(users);

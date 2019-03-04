@@ -16,7 +16,7 @@ import java.net.URL;
 import java.sql.*;
 import java.util.*;
 
-public class DbinitAdres {
+public class DbinitAdres extends DbStore {
     private final Map<Class<?>, TriplexConEx<Integer, PreparedStatement, Object>> dispat = new HashMap<>();
     private HashMap<String, ArrayList<String>> map;
     private static final Logger LOGGER = Logger.getLogger(DbinitAdres.class);
@@ -53,14 +53,19 @@ public class DbinitAdres {
         }
         ObjectMapper mapper = new ObjectMapper();
         this.map = mapper.readValue(bilder.toString(), HashMap.class);
-        map.remove("");
     }
 
     public void addtoDataTableInfo() {
         try {
             map.forEach((key, listValue) -> {
-                Integer idCountry = this.updateInfo("insert into country(country) values(?)", Arrays.asList(key));
-                listValue.forEach(city -> this.updateInfo("insert into city(city, country_id) values(?, ?)", Arrays.asList(city, idCountry)));
+                if (!key.equals("") && this.isIndex("select * from country where country = ?", Arrays.asList(key)) == 0) {
+                    Integer idCountry = this.updateInfo("insert into country(country) values(?)", Arrays.asList(key));
+                    listValue.forEach(city -> {
+                        if (!city.equals("")) {
+                            this.updateInfo("insert into city(city, country_id) values(?, ?)", Arrays.asList(city, idCountry));
+                        }
+                    });
+                }
             });
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
@@ -85,6 +90,20 @@ public class DbinitAdres {
             try (ResultSet resultSet = ps.getGeneratedKeys()) {
                 while (resultSet.next()) {
                     k = resultSet.getInt(1);
+                }
+            } catch (SQLException e) {
+                LOGGER.error(e.getMessage(), e);
+            }
+            return k;
+        }).get();
+    }
+
+    private Integer isIndex(String command, List<Object> att) {
+        return this.db(command, att, ps -> {
+            Integer k = 0;
+            try (ResultSet resultSet = ps.executeQuery()) {
+                while (resultSet.next()) {
+                    k = resultSet.getInt("id");
                 }
             } catch (SQLException e) {
                 LOGGER.error(e.getMessage(), e);
@@ -119,11 +138,14 @@ public class DbinitAdres {
             metod.accept(i, list.get(i));
         }
     }
-public void deleteAllInfo() throws SQLException {
+
+    public void deleteAllInfo() throws SQLException {
+        this.updateInfo("delete from adreshelp", new ArrayList<>());
         this.updateInfo("delete from city", new ArrayList<>());
         this.updateInfo("delete from country", new ArrayList<>());
         conn.commit();
-}
+    }
+
     public static void main(String[] args) throws SQLException {
         DbinitAdres adres = new DbinitAdres();
         try {
@@ -132,8 +154,8 @@ public void deleteAllInfo() throws SQLException {
             e.printStackTrace();
         }
         //проверяем что мапа заполнилась
-        System.out.println(adres.map.get("Russia"));
-        adres.addtoDataTableInfo();
+//        adres.addtoDataTableInfo();
+        adres.deleteAllInfo();
     }
 
 }

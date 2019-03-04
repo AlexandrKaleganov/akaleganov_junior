@@ -22,7 +22,7 @@ public class DispatchDiapasonTest {
 
 
     private void fulltest(BiConEx<DispatchDiapason, Users> fanc) {
-        var users = new Users("1", "user", "user123", "passs", "root",  "root");
+        var users = new Users("1", "user", "user123", "passs", "Russia", "Novosibirsk");
         var disp = new DispatchDiapason().init();
         try {
             var exp = disp.access("add", users);
@@ -65,7 +65,7 @@ public class DispatchDiapasonTest {
     @Test
     public void update() {
         this.fulltest((disp, exp) -> {
-            disp.access("update", new Users(exp.getId(), "вася", "vasia2", "pass", "", ""));
+            disp.access("update", new Users(exp.getId(), "вася", "vasia2", "pass", "Russia", "Novosibirsk"));
             Assert.assertThat(disp.access("findbyid", exp).getName(), is("вася"));
         });
     }

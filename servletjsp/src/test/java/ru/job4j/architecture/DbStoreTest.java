@@ -31,7 +31,7 @@ public class DbStoreTest {
      * @param fank
      */
     private void alltestfunc(BiConEx<DbStore, Users> fank) {
-        Users users = new Users("12", "sacha", "alexmur07", "password", "Россия", "Чаны");
+        Users users = new Users("12", "sacha", "alexmur07", "password", "Russia", "Novosibirsk");
         DbStore dbStore = DbStore.getInstance();
         Users expected = dbStore.add(users);
         try {
@@ -71,7 +71,7 @@ public class DbStoreTest {
     @Test
     public void updateTest() {
         this.alltestfunc((bd, exp) -> {
-            bd.update(new Users(exp.getId(), "lex", "lex07", "psw", "Россия", "Чаны"));
+            bd.update(new Users(exp.getId(), "lex", "lex07", "psw", "Russia", "Novosibirsk"));
             Assert.assertThat(bd.findById(exp).getName(), Is.is("lex"));
         });
     }
@@ -97,9 +97,9 @@ public class DbStoreTest {
     @Test
     public void isCredentional() {
         this.alltestfunc((db, exp) -> {
-            Assert.assertThat(db.isCredentional(new Users("12", "sacha", "alexmur07", "password", "", "")), Is.is(true));
-            Assert.assertThat(db.isCredentional(new Users("12", "sacha", "alexmu07", "password", "", "")), Is.is(false));
-            Assert.assertThat(db.isCredentional(new Users("12", "", "alexmur07", "ssword", "", "")), Is.is(false));
+            Assert.assertThat(db.isCredentional(new Users("12", "sacha", "alexmur07", "password", "Russia", "Novosibirsk")), Is.is(true));
+            Assert.assertThat(db.isCredentional(new Users("12", "sacha", "alexmu07", "password", "Russia", "Novosibirsk")), Is.is(false));
+            Assert.assertThat(db.isCredentional(new Users("12", "", "alexmur07", "ssword", "Russia", "Novosibirsk")), Is.is(false));
         });
     }
 
@@ -118,6 +118,6 @@ public class DbStoreTest {
         ObjectMapper mapper = new ObjectMapper();
         HashMap<String, ArrayList<String>> mapa = mapper.readValue(bilder.toString(), HashMap.class);
         mapa.remove("");
-        System.out.println(mapa.get("Russia"));
+        
     }
 }
