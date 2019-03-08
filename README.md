@@ -31,3 +31,7 @@ https://raw.githubusercontent.com/David-Haim/CountriesToCitiesJSON/master/countr
 и инициализируются методы по ключам в зависимости от ключа выполняется то или иное действие 
 Также стал использовать liquibase  для изменения схем баз данных, 
 **_servletjsp.db.script_**
+![Alt text](https://github.com/AlexandrKaleganov/akaleganov_junior/blob/master/img/1.png "Optional Title")
+![Alt text](https://github.com/AlexandrKaleganov/akaleganov_junior/blob/master/img/2.png "Optional Title")
+![Alt text](https://github.com/AlexandrKaleganov/akaleganov_junior/blob/master/img/3.png "Optional Title")
+![Alt text](https://github.com/AlexandrKaleganov/akaleganov_junior/blob/master/img/4.png "Optional Title")
