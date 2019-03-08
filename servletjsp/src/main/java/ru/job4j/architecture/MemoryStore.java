@@ -102,6 +102,16 @@ public class MemoryStore implements Store<Users> {
         }).orElse(new Users());
     }
 
+    @Override
+    public List<String> findAllcountry() {
+        return null;
+    }
+
+    @Override
+    public List<String> findAllcity(Users country) {
+        return null;
+    }
+
 
     @Override
     public boolean isCredentional(Users users) {

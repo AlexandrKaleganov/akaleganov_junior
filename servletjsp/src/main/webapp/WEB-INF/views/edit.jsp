@@ -25,6 +25,35 @@
                 data: {exit: "exit"}
             })
         };
+        $(document).ready(function () {
+            $.ajax({
+                type: "POST",
+                url: "./adres",
+                data:{action: "findAllcountry"},
+                success: function (data) {
+                    console.log(data);
+                    for (var i = 0; i < data.length; i++) {
+                        $("#country option:last").after("<option>" + data[i] + "</option>");
+                    }
+                },
+            });
+            cityList();
+        });
+        function cityList() {
+            console.log($("#country").val());
+            $.ajax({
+                type:"POST",
+                url:"./adres",
+                data:{action:"findAllcity", country:$("#country").val()},
+                success:function (data) {
+                    for (var i = 0; i < data.length; i++) {
+                        $("#city option:last").after("<option value='" + data[i] + "'>" + data[i] + "</option>");
+                    }
+
+                }
+            })
+            return true;
+        }
     </script>
 </head>
 <body>
@@ -65,7 +94,7 @@
             </div>
             <div class="form-group">
                 <label for="country">Страна:</label>
-                <select class="form-control" title="Enter attribut dostupa."  name="country" id="country">
+                <select class="form-control" title="Enter attribut dostupa."  name="country" id="country" onclick="cityList()">
                     <option value="${u.country}">${u.country}</option>
                 </select>
             </div>

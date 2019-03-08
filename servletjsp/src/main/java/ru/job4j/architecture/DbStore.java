@@ -24,13 +24,12 @@ public class DbStore implements Store<Users> {
         this.init();
         this.dispat.put(Integer.class, (index, ps, value) -> ps.setInt(index, (Integer) value));
         this.dispat.put(String.class, (index, ps, value) -> ps.setString(index, (String) value));
-//        this.addTable();
         this.initRoot();
     }
 
     private void initRoot() {
-        if (this.findByMail(new Users("0", "root", "root", "root", "Russia", "Novosibirsk")).getMail() == null) {
-            this.add(new Users("0", "root", "root", "root", "Russia", "Novosibirsk"));
+        if (this.findByMail(new Users("0", "root", "root", "root", "", "")).getMail() == null) {
+            this.add(new Users("0", "root", "root", "root", "", ""));
         }
     }
 
@@ -60,32 +59,12 @@ public class DbStore implements Store<Users> {
         this.source = source;
         this.dispat.put(Integer.class, (index, ps, value) -> ps.setInt(index, (Integer) value));
         this.dispat.put(String.class, (index, ps, value) -> ps.setString(index, (String) value));
-//        this.addTable();
         this.initRoot();
     }
 
     public static DbStore getInstance() {
         return INSTANCE;
     }
-
-//    /**
-//     * добавление таблицы
-//     */
-//    public void addTable() {
-//        try {
-//            Properties settings = new Properties();
-//            try (InputStream in = DbStore.class.getClassLoader().getResourceAsStream("gradle.properties")) {
-//                settings.load(in);
-//            }
-//            db(settings.getProperty("add.tableUser"), new ArrayList<>(), pr -> pr.executeUpdate());
-//            db(settings.getProperty("add.tableCountry"), new ArrayList<>(), pr -> pr.executeUpdate());
-//            db(settings.getProperty("add.tableCity"), new ArrayList<>(), pr -> pr.executeUpdate());
-//            db(settings.getProperty("add.tableAdresHelp"), new ArrayList<>(), pr -> pr.executeUpdate());
-//            db(settings.getProperty("add.tableUserview"), new ArrayList<>(), pr -> pr.executeUpdate());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     /**
      * в цикле перебираем лист с параметкрами
@@ -102,7 +81,7 @@ public class DbStore implements Store<Users> {
     }
 
     /**
-     * избавляемся от трай кетч мне почему то не понравилось какая реализация ыла в видео,
+     * избавляемся от трай кетч мне почему то не понравилось какая реализация была в видео,
      * исключение мы всёравно отловим по этому здесь я сделал по своему
      *
      * @param sql
@@ -207,7 +186,6 @@ public class DbStore implements Store<Users> {
                 Arrays.asList(users.getName(), users.getMail(), users.getPassword(), Integer.valueOf(users.getId())));
         Integer indexCountry = isIndex("select * from country where country = ?", Arrays.asList(users.getCountry()));
         Integer indexCity = isIndex("select * from city where city = ?", Arrays.asList(users.getCity()));
-        System.out.println(indexCity + "  " +  indexCountry);
         this.updateInfo("UPDATE adreshelp SET country_id = ?, city_id = ? where user_id = ? ",
                 Arrays.asList(indexCountry, indexCity, Integer.valueOf(users.getId())));
         return this.findById(users);
@@ -325,4 +303,41 @@ public class DbStore implements Store<Users> {
         ).orElse(new Users());
     }
 
+    /**
+     * получение списка всех стран из базы
+     * @return
+     */
+    public List<String> findAllcountry() {
+        return this.db("select * from country", new ArrayList<>(), ps -> {
+            ArrayList<String> rsl = new ArrayList<>();
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    rsl.add(rs.getString(2));
+                }
+
+            } catch (SQLException e) {
+                LOGGER.error(e.getMessage(), e);
+            }
+            return rsl;
+        }).get();
+    }
+    /**
+     * получение списка всех городов в сооответствии со страной из базы
+     * @return
+     */
+    public List<String> findAllcity(Users country) {
+        Integer id = this.isIndex("select * from country where country = ?", Arrays.asList(country.getCountry()));
+        return this.db("select * from city where country_id = ?", Arrays.asList(id), ps -> {
+            ArrayList<String> rsl = new ArrayList<>();
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    rsl.add(rs.getString(2));
+                }
+
+            } catch (SQLException e) {
+                LOGGER.error(e.getMessage(), e);
+            }
+            return rsl;
+        }).get();
+    }
 }

@@ -29,7 +29,33 @@
             alert("${message}");
             </c:if>
         });
+        $(document).ready(function () {
+            $.ajax({
+                type: "POST",
+                url: "./adres",
+                data:{action: "findAllcountry"},
+                success: function (data) {
+                    console.log(data);
+                    for (var i = 0; i < data.length; i++) {
+                        $("#country option:last").after("<option>" + data[i] + "</option>");
+                    }
+                },
+            });
+        });
+        function cityList() {
+            console.log($("#country").val());
+            $.ajax({
+                type:"POST",
+                url:"./adres",
+                data:{action:"findAllcity", country:$("#country").val()},
+                success:function (data) {
+                    for (var i = 0; i < data.length; i++) {
+                        $("#city option:last").after("<option value='" + data[i] + "'>" + data[i] + "</option>");
+                    }
 
+                }
+            })
+        }
         function isValid(r, l) {
             var rsl = false;
             if (r.val() == l) {
@@ -83,16 +109,14 @@
         </div>
         <div class="form-group">
             <label for="country">Страна:</label>
-            <select class="form-control" title="Enter attribut dostupa." name="country" id="country">
+            <select class="form-control" title="Enter attribut dostupa." name="country" id="country" onclick="cityList()">
                 <option value=""></option>
-                <option value="Россия">Россия</option>
             </select>
         </div>
         <div class="form-group">
             <label for="city">Город:</label>
             <select class="form-control" name="city" title="Enter attribut dostupa." id="city">
                 <option value=""></option>
-                <option value="Москва">Москва</option>
             </select>
         </div>
         <button type="submit" name="action" value="add" class="btn btn-default" onclick="return valid();">Submit

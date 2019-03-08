@@ -24,5 +24,10 @@ public interface Validate<E> {
     E findById(E users) throws DatabaseException;
 
     List<E> deleteALL();
+
+    List<String> findAllcountry();
+
+    List<String> findAllcity(E adres);
+
     Boolean isCredentional(Users users);
 }

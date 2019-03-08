@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -21,6 +22,22 @@ import java.util.Optional;
  */
 public class UserListServlet extends HttpServlet {
     private static final org.apache.log4j.Logger LOGGER = Logger.getLogger(UserServlet.class);
+
+    @Override
+    public void init() throws ServletException {
+        DbinitAdres adres = new DbinitAdres();
+        adres.addtoDataTableInfo();
+    }
+
+    @Override
+    public void destroy() {
+        DbinitAdres adres = new DbinitAdres();
+        try {
+            adres.deleteAllInfo();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

@@ -55,7 +55,11 @@ public class DispatchDiapason {
                 Optional.of(this.validate.deleteALL())
         );
         this.dispatch.put("isCredentional", (users) ->
-                Optional.of(this.validate.isCredentional(users)));
+                Optional.of(this.validate.isCredentional((Users) users)));
+        this.dispatch.put("findAllcountry", (users) ->
+                Optional.of(this.validate.findAllcountry()));
+        this.dispatch.put("findAllcity", (users) ->
+                Optional.of(this.validate.findAllcity(users)));
         return this;
     }
 
@@ -75,4 +79,5 @@ public class DispatchDiapason {
         rsl = this.dispatch.get(key).apply(users);
         return rsl.get();
     }
+
 }

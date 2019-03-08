@@ -120,4 +120,17 @@ public class DbStoreTest {
         mapa.remove("");
         
     }
+
+    @Test
+    public void findAllcountry() {
+        this.alltestfunc((db, user) ->
+            Assert.assertThat(db.findAllcountry().get(0), Is.is("Russia")));
+
+    }
+
+    @Test
+    public void findAllcity() {
+        this.alltestfunc((db, user) ->
+                Assert.assertThat(db.findAllcity(user).get(0), Is.is("Novosibirsk")));
+    }
 }

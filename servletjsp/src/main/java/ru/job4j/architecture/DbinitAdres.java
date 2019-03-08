@@ -1,7 +1,6 @@
 package ru.job4j.architecture;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.log4j.Logger;
 import ru.job4j.architecture.err.BiConEx;
 import ru.job4j.architecture.err.FunEx;
@@ -11,16 +10,19 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.*;
 import java.util.*;
 
-public class DbinitAdres extends DbStore {
+public class DbinitAdres {
     private final Map<Class<?>, TriplexConEx<Integer, PreparedStatement, Object>> dispat = new HashMap<>();
     private HashMap<String, ArrayList<String>> map;
     private static final Logger LOGGER = Logger.getLogger(DbinitAdres.class);
     private Connection conn;
+
+    public HashMap<String, ArrayList<String>> getMap() {
+        return map;
+    }
 
     public DbinitAdres() {
         this.init();
@@ -28,7 +30,7 @@ public class DbinitAdres extends DbStore {
         this.dispat.put(String.class, (index, ps, value) -> ps.setString(index, (String) value));
     }
 
-    private void init() {
+    private synchronized void init() {
         try {
             Properties settings = new Properties();
             try (InputStream in = DbStore.class.getClassLoader().getResourceAsStream("gradle.properties")) {
@@ -43,7 +45,7 @@ public class DbinitAdres extends DbStore {
         }
     }
 
-    public void loadtoMAp() throws IOException {
+    private void loadtoMAp() throws IOException {
         URL url = new URL("https://raw.githubusercontent.com/David-Haim/CountriesToCitiesJSON/master/countriesToCities.json");
         BufferedReader rider = new BufferedReader(new InputStreamReader(url.openStream()));
         String temp;
@@ -57,11 +59,16 @@ public class DbinitAdres extends DbStore {
 
     public void addtoDataTableInfo() {
         try {
+            loadtoMAp();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
             map.forEach((key, listValue) -> {
-                if (!key.equals("") && this.isIndex("select * from country where country = ?", Arrays.asList(key)) == 0) {
+                if (!key.equals("") && (!key.equals(" ")) && this.isIndex("select * from country where country = ?", Arrays.asList(key)) == 0) {
                     Integer idCountry = this.updateInfo("insert into country(country) values(?)", Arrays.asList(key));
                     listValue.forEach(city -> {
-                        if (!city.equals("")) {
+                        if (!city.equals("") && (!city.equals(" "))) {
                             this.updateInfo("insert into city(city, country_id) values(?, ?)", Arrays.asList(city, idCountry));
                         }
                     });
@@ -146,16 +153,8 @@ public class DbinitAdres extends DbStore {
         conn.commit();
     }
 
-    public static void main(String[] args) throws SQLException {
-        DbinitAdres adres = new DbinitAdres();
-        try {
-            adres.loadtoMAp();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        //проверяем что мапа заполнилась
-//        adres.addtoDataTableInfo();
-        adres.deleteAllInfo();
+    public static void main(String[] args) {
+        DbinitAdres init = new DbinitAdres();
+        init.addtoDataTableInfo();
     }
-
 }

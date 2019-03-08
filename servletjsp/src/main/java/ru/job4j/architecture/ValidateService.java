@@ -2,6 +2,7 @@ package ru.job4j.architecture;
 
 import ru.job4j.architecture.err.DatabaseException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -130,5 +131,10 @@ public class ValidateService implements Validate<Users> {
         return this.logic.isCredentional(users);
     }
 
-
+    public ArrayList<String> findAllcountry() {
+        return (ArrayList<String>) this.logic.findAllcountry();
+    }
+    public ArrayList<String> findAllcity(Users country) {
+        return (ArrayList<String>) this.logic.findAllcity(country);
+    }
 }
