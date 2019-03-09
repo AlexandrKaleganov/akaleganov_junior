@@ -1,6 +1,7 @@
 package ru.job4j.architecture;
 
 
+import org.apache.log4j.Logger;
 import org.hamcrest.core.Is;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,6 +26,7 @@ public class UserServletTest {
     private RequestDispatcher disp;
     private HttpServletResponse res;
     private HttpServletRequest req;
+    private static final org.apache.log4j.Logger LOGGER = Logger.getLogger(UserServletTest.class);
 
     @Before
     public void setup() throws IOException {
@@ -47,6 +49,8 @@ public class UserServletTest {
         try {
             UserServlet servlet = new UserServlet();
             test.accept(DbStore.getInstance(), servlet);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
         } finally {
             DbStore.getInstance().deleteALL();
         }

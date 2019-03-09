@@ -7,7 +7,6 @@ package ru.job4j.architecture;
  */
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -15,6 +14,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 
 
@@ -23,6 +23,21 @@ public class UserServlet extends HttpServlet {
     private static final org.apache.log4j.Logger LOGGER = Logger.getLogger(UserServlet.class);
 
 
+    @Override
+    public void init() throws ServletException {
+        DbinitAdres adres = new DbinitAdres();
+        adres.addtoDataTableInfo();
+    }
+
+    @Override
+    public void destroy() {
+        DbinitAdres adres = new DbinitAdres();
+        try {
+            adres.deleteAllInfo();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     /**
      * закомментил за ненадобностью, т.к. за интерфейс теперь отвечает jsp
      */
