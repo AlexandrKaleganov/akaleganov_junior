@@ -56,6 +56,7 @@ public class DbStoreTest {
             source.setDriverClassName(settings.getProperty("db.driver"));
             source.setUrl(settings.getProperty("db.host"));
             source.setUsername(settings.getProperty("db.login"));
+//            source.setPassword("");
             source.setMinIdle(5);
             source.setMaxIdle(10);
             source.setMaxOpenPreparedStatements(100);
