@@ -24,7 +24,6 @@ public class DbStore implements Store<Users> {
         this.init();
         this.dispat.put(Integer.class, (index, ps, value) -> ps.setInt(index, (Integer) value));
         this.dispat.put(String.class, (index, ps, value) -> ps.setString(index, (String) value));
-        this.addTable();
         this.initRoot();
     }
 
