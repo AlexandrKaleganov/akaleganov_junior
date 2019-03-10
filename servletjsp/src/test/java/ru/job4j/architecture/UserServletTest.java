@@ -60,13 +60,9 @@ public class UserServletTest {
     private BasicDataSource init() {
         BasicDataSource source = new BasicDataSource();
         try {
-            Properties settings = new Properties();
-            try (InputStream in = UserServletTest.class.getClassLoader().getResourceAsStream("gradle.properties")) {
-                settings.load(in);
-            }
-            source.setDriverClassName(settings.getProperty("db.driver"));
-            source.setUrl(settings.getProperty("db.host"));
-            source.setUsername(settings.getProperty("db.login"));
+            source.setDriverClassName("org.postgresql.Driver");
+            source.setUrl("jdbc:postgresql://127.0.0.1:5432/usersdata");
+            source.setUsername("postgres");
             source.setMinIdle(5);
             source.setMaxIdle(10);
             source.setMaxOpenPreparedStatements(100);
