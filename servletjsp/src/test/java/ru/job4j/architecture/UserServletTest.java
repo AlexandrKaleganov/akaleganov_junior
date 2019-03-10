@@ -47,13 +47,15 @@ public class UserServletTest {
     }
 
     private void fulltestServlet(BiConsumer<DbStore, UserServlet> test) {
+        DbStore dbStor = new DbStore(this.init());
+
         try {
             UserServlet servlet = new UserServlet();
-            test.accept(new DbStore(this.init()), servlet);
+            test.accept(dbStor, servlet);
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
         } finally {
-            DbStore.getInstance().deleteALL();
+            dbStor.deleteALL();
         }
     }
     private BasicDataSource init() {
