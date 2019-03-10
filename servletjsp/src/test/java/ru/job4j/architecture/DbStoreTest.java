@@ -1,6 +1,7 @@
 package ru.job4j.architecture;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.hamcrest.core.Is;
 import org.junit.Assert;
 import org.junit.Test;
@@ -8,6 +9,7 @@ import ru.job4j.architecture.err.BiConEx;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.sql.SQLException;
@@ -15,6 +17,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Properties;
 
 
 public class DbStoreTest {
@@ -32,7 +35,7 @@ public class DbStoreTest {
      */
     private void alltestfunc(BiConEx<DbStore, Users> fank) {
         Users users = new Users("12", "sacha", "alexmur07", "password", "Russia", "Novosibirsk");
-        DbStore dbStore = DbStore.getInstance();
+        DbStore dbStore = new DbStore(this.init());
         Users expected = dbStore.add(users);
         try {
             fank.accept(dbStore, expected);
@@ -41,6 +44,25 @@ public class DbStoreTest {
         } finally {
             dbStore.deleteALL();
         }
+    }
+
+    private BasicDataSource init() {
+        BasicDataSource source = new BasicDataSource();
+        try {
+            Properties settings = new Properties();
+            try (InputStream in = DbStore.class.getClassLoader().getResourceAsStream("gradle.properties")) {
+                settings.load(in);
+            }
+            source.setDriverClassName(settings.getProperty("db.driver"));
+            source.setUrl(settings.getProperty("db.host"));
+            source.setUsername(settings.getProperty("db.login"));
+            source.setMinIdle(5);
+            source.setMaxIdle(10);
+            source.setMaxOpenPreparedStatements(100);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return source;
     }
 
     /**
@@ -118,14 +140,13 @@ public class DbStoreTest {
         ObjectMapper mapper = new ObjectMapper();
         HashMap<String, ArrayList<String>> mapa = mapper.readValue(bilder.toString(), HashMap.class);
         mapa.remove("");
-        
+
     }
 
     @Test
     public void findAllcountry() {
         this.alltestfunc((db, user) ->
-            Assert.assertThat(db.findAllcountry().get(0), Is.is("Russia")));
-
+                Assert.assertThat(db.findAllcountry().get(1), Is.is("Russia")));
     }
 
     @Test

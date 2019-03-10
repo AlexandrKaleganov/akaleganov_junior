@@ -1,6 +1,7 @@
 package ru.job4j.architecture;
 
 
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.log4j.Logger;
 import org.hamcrest.core.Is;
 import org.junit.Before;
@@ -15,9 +16,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.io.InputStream;
+import java.util.Properties;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -48,14 +49,31 @@ public class UserServletTest {
     private void fulltestServlet(BiConsumer<DbStore, UserServlet> test) {
         try {
             UserServlet servlet = new UserServlet();
-            test.accept(DbStore.getInstance(), servlet);
+            test.accept(new DbStore(this.init()), servlet);
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
         } finally {
             DbStore.getInstance().deleteALL();
         }
     }
-
+    private BasicDataSource init() {
+        BasicDataSource source = new BasicDataSource();
+        try {
+            Properties settings = new Properties();
+            try (InputStream in = DbStore.class.getClassLoader().getResourceAsStream("gradle.properties")) {
+                settings.load(in);
+            }
+            source.setDriverClassName(settings.getProperty("db.driver"));
+            source.setUrl(settings.getProperty("db.host"));
+            source.setUsername(settings.getProperty("db.login"));
+            source.setMinIdle(5);
+            source.setMaxIdle(10);
+            source.setMaxOpenPreparedStatements(100);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return source;
+    }
     private void testdoPOST(UserServlet servlet, String command) {
         when(this.req.getParameter("action")).thenReturn(command);
         try {
