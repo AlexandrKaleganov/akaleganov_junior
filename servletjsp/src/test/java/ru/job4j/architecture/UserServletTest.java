@@ -17,10 +17,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.LocalDateTime;
 import java.util.Properties;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -109,7 +107,7 @@ public class UserServletTest {
     @Test
     public void testDeleteUser() {
         this.fulltestServlet((db, servlet) -> {
-            when(this.req.getParameter("id")).thenReturn(DbStore.getInstance().findByMail(new Users("roo",
+            when(this.req.getParameter("id")).thenReturn(db.findByMail(new Users("roo",
                     "name", "root", "root",  "Russia", "Novosibirsk")).getId());
             this.testdoPOST(servlet, "delete");
             assertThat(db.findAll().size(), is(0));
