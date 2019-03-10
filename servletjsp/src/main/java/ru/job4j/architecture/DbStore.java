@@ -8,7 +8,6 @@ import org.apache.log4j.Logger;
 
 import java.io.InputStream;
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.*;
 
 public class DbStore implements Store<Users> {
@@ -43,10 +42,10 @@ public class DbStore implements Store<Users> {
                 settings.load(in);
             }
             db(settings.getProperty("add.tableUser"), new ArrayList<>(), pr -> pr.executeUpdate());
-//            db(settings.getProperty("add.tableCountry"), new ArrayList<>(), pr -> pr.executeUpdate());
-//            db(settings.getProperty("add.tableCity"), new ArrayList<>(), pr -> pr.executeUpdate());
-//            db(settings.getProperty("add.tableAdresHelp"), new ArrayList<>(), pr -> pr.executeUpdate());
-//            db(settings.getProperty("add.tableUserview"), new ArrayList<>(), pr -> pr.executeUpdate());
+            db(settings.getProperty("add.tableCountry"), new ArrayList<>(), pr -> pr.executeUpdate());
+            db(settings.getProperty("add.tableCity"), new ArrayList<>(), pr -> pr.executeUpdate());
+            db(settings.getProperty("add.tableAdresHelp"), new ArrayList<>(), pr -> pr.executeUpdate());
+            db(settings.getProperty("add.tableUserview"), new ArrayList<>(), pr -> pr.executeUpdate());
         } catch (Exception e) {
             e.printStackTrace();
         }
