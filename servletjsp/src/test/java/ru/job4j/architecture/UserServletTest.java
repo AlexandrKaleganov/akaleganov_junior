@@ -17,8 +17,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDateTime;
 import java.util.Properties;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -47,22 +49,21 @@ public class UserServletTest {
     }
 
     private void fulltestServlet(BiConsumer<DbStore, UserServlet> test) {
-        DbStore dbStor = new DbStore(this.init());
-
+        DbStore dbStore = new DbStore(this.init());
         try {
             UserServlet servlet = new UserServlet();
-            test.accept(dbStor, servlet);
+            test.accept(dbStore, servlet);
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
         } finally {
-            dbStor.deleteALL();
+            dbStore.deleteALL();
         }
     }
     private BasicDataSource init() {
         BasicDataSource source = new BasicDataSource();
         try {
             Properties settings = new Properties();
-            try (InputStream in = DbStore.class.getClassLoader().getResourceAsStream("gradle.properties")) {
+            try (InputStream in = UserServletTest.class.getClassLoader().getResourceAsStream("gradle.properties")) {
                 settings.load(in);
             }
             source.setDriverClassName(settings.getProperty("db.driver"));
