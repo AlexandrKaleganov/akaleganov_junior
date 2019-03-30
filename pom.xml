@@ -21,6 +21,7 @@
         <module>servletjsp</module>
         <module>servletjs</module>
         <module>servletlistiner</module>
+        <module>uploadservlet</module>
     </modules>
 
     <dependencies>
