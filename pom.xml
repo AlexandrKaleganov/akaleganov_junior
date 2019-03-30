@@ -19,7 +19,7 @@
         <module>sql</module>
         <module>sqlruparser</module>
         <module>servletjsp</module>
-        <module>servletjs</module>
+        <module>javascript</module>
         <module>servletlistiner</module>
     </modules>
 
