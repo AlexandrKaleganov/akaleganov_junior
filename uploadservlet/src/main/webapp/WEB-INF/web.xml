@@ -7,7 +7,7 @@
     <display-name>ServletListenerExample</display-name>
     <servlet>
         <servlet-name>UploadServlet</servlet-name>
-        <servlet-class>ru.job.servlet.UploadServlet</servlet-class>
+        <servlet-class>ru.job4j.servlet.UploadServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>UploadServlet</servlet-name>
