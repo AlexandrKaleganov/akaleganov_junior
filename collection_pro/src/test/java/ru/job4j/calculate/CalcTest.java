@@ -12,7 +12,6 @@ public class CalcTest {
     @Test
     public void canBeEqualTo24() {
         int[] strBox = {4, 1, 8, 7};
-        Deque<Integer> indexes = new LinkedList<>();
-        new Calc().make(strBox, indexes, 4);
+        new Calc().canBeEqualTo24(strBox);
     }
 }

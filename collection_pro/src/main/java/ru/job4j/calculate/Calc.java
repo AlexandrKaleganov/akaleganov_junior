@@ -4,19 +4,18 @@ import java.util.*;
 
 public class Calc {
 
-//    private Queue<String> string = new LinkedList<>();
-private ArrayList<Queue<String>> rendom_list = new ArrayList<>();
+    //    private Queue<String> string = new LinkedList<>();
+    private ArrayList<Queue<String>> rendom_list = new ArrayList<>();
+
     public boolean canBeEqualTo24(int[] nums) {
-//        int expected = 24;
-//        char[] sim = new char[]{'+', '-', '*', '/'};
-//        for (int i = 0; i < nums.length; i++) {
-//        }
-//        System.out.println(nums[0] + sim[0] + nums[1] + sim[0] + nums[2] + sim[0] + nums[1]);
+        this.make(nums, new LinkedList<>(), nums.length);
+        System.out.println(rendom_list);
         return true;
     }
 
     /**
      * метод который будет генерировать всевозможные варианты наборов
+     *
      * @param arr
      * @param indexes
      * @param expectedSize
@@ -25,9 +24,11 @@ private ArrayList<Queue<String>> rendom_list = new ArrayList<>();
         if (indexes.size() == expectedSize) {
             Queue<String> temp = new LinkedList<>();
             for (Integer i : indexes) {
-                System.out.print(arr[i] + " ");
+                ((LinkedList<String>) temp).add(String.valueOf(arr[i]));
             }
-            System.out.println();
+            if (temp.size() > 1) {
+                this.rendom_list.add(temp);
+            }
             return;
         }
         for (int i = 0; i < arr.length; i++) {
