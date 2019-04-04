@@ -11,7 +11,7 @@ public class CalcTest {
 
     @Test
     public void canBeEqualTo24() {
-        int[] strBox = {4, 1, 8, 7};
+        Integer[] strBox = {4, 1, 8, 7};
         new Calc().canBeEqualTo24(strBox);
     }
 }
