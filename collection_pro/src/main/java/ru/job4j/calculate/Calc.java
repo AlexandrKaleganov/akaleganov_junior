@@ -1,4 +1,7 @@
 package ru.job4j.calculate;
+/**
+ * попробуем сделать универсальный класс для подбора выражений
+ */
 
 import java.util.*;
 import java.util.concurrent.BrokenBarrierException;
@@ -7,15 +10,17 @@ import java.util.concurrent.CyclicBarrier;
 class Calc {
     private final Integer arg = 24;
     //    private Queue<String> string = new LinkedList<>();
-    private ArrayList<ArrayList<String>> random_list = new ArrayList<>();
+    private Queue<ArrayList<String>> data = new LinkedList<>();
+
+    //    private ArrayList<ArrayList<String>> random_list = new ArrayList<>();
     private ArrayList<ArrayList<String>> random_znak = new ArrayList<>();
     private final StringBuilder temp = new StringBuilder();
-    CyclicBarrier barrier = new CyclicBarrier(2);
 
     public boolean canBeEqualTo24(Integer[] nums) {
-        this.make(nums, new LinkedList<>(), nums.length, this.random_list, false);
-        System.out.println(random_list);
+        //инициализация моей базы всевозможных вариантов символов
         this.make(new String[]{"+", "-", "/", "*"}, new LinkedList<>(), nums.length - 1, this.random_znak, true);
+//        this.make(nums, new LinkedList<>(), nums.length, this.random_list, false);
+//        System.out.println(random_list);
         System.out.println(this.random_znak);
 
         return true;
