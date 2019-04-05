@@ -143,7 +143,6 @@ class Calc {
 
         Consumer(BlockingDeque<LinkedList<String>> data) {
             this.data = data;
-
         }
 
         @Override
