@@ -17,18 +17,36 @@ package ru.job4j.calculate;
 
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.function.Function;
 
 class Calc {
-    private Double arg;
-
+    private final HashMap<String, Function<StringBuilder, Double>> FUNCTION_MAP;
+    private final Double FIN;
+    private final CyclicBarrier barrier = new CyclicBarrier(2);
     private final BlockingDeque<LinkedList<String>> data = new LinkedBlockingDeque<>();
 
     private LinkedList<LinkedList<String>> random_znak = new LinkedList<>();
     private final StringBuilder resStroka = new StringBuilder();
     private volatile boolean stop = false;
 
-    public boolean canBeEqualTo24(Integer[] nums, Double arg) throws InterruptedException {
-        this.arg = arg;
+    Calc(Double FIN) {
+        this.FIN = FIN;
+        this.FUNCTION_MAP = new HashMap<>();
+        this.FUNCTION_MAP.put("+", bilder->
+           Double.valueOf(bilder.toString().substring(0,1)) + Double.valueOf(bilder.toString().substring(2))
+        );
+        this.FUNCTION_MAP.put("-", bilder->
+                Double.valueOf(bilder.toString().substring(0,1)) - Double.valueOf(bilder.toString().substring(2))
+        );
+        this.FUNCTION_MAP.put("*", bilder->
+                Double.valueOf(bilder.toString().substring(0,1)) * Double.valueOf(bilder.toString().substring(2))
+        );
+        this.FUNCTION_MAP.put("/", bilder->
+                Double.valueOf(bilder.toString().substring(0,1)) / Double.valueOf(bilder.toString().substring(2))
+        );
+    }
+
+    public boolean canBeEqualTo24(Integer[] nums) throws InterruptedException {
         //инициализация моей базы всевозможных вариантов символов
         this.make(new String[]{"+", "-", "/", "*"}, new LinkedList<>(), nums.length - 1, this.random_znak, true);
         Thread producter = new Thread(new Product(nums, data));
@@ -38,7 +56,7 @@ class Calc {
         producter.join();
         consumer.join();
         if (this.resStroka.length() > 0 ) {
-            System.out.println(resStroka);
+//            System.out.println(resStroka);
         } else {
             System.out.println("решение не найдено");
         }
@@ -54,13 +72,9 @@ class Calc {
      * @param expectedSize
      */
     private void make(Object[] arr, Deque<Integer> indexes, int expectedSize, Queue<LinkedList<String>> data, Boolean selector) {
-        try {
-            while (this.data.size() == 1) {
-                if (stop) {
+        try {    if (stop) {
                     throw new InterruptedException();
                 }
-                wait();
-            }
             if (indexes.size() == expectedSize) {
                 LinkedList<String> temp = new LinkedList<String>();
 
@@ -69,6 +83,9 @@ class Calc {
                 }
                 if (temp.size() > 1) {
                     data.offer(temp);
+                    if (!selector) {
+                            barrier.await();
+                    }
                 }
                 return;
             }
@@ -79,8 +96,8 @@ class Calc {
                     indexes.removeLast();
                 }
             }
-        } catch (InterruptedException e) {
-            return;
+            } catch (InterruptedException | BrokenBarrierException e) {
+            e.printStackTrace();
         }
     }
 
@@ -89,7 +106,7 @@ class Calc {
      * то мы остановим потоки и посмотрим что у нас получилось в  StringBuilder resStroka
      * @param num
      */
-    private void calc(LinkedList<String> num) {
+    private void calc(LinkedList<String> num) throws InterruptedException {
         for (int i = 0; i < this.random_znak.size(); i++) {
             Queue<String> tem_znak = new LinkedList<>();
             tem_znak.addAll(random_znak.get(i));
@@ -100,17 +117,24 @@ class Calc {
             while (!tem_num.isEmpty() || tem_znak.isEmpty()) {
                 if (temp.length() == 0) {
                     temp.append(tem_num.poll() + tem_znak.poll() + tem_num.poll());
+                    this.resStroka.append(temp.toString());
                     expected = strRef(temp);
                 } else {
                     temp.append(tem_znak.poll() + tem_num.poll());
+                    this.resStroka.append(temp.toString().substring(1));
                     expected = strRef(temp);
                 }
             }
-            if (expected == this.arg) {
+            if (this.FIN == expected) {
                 this.stop = true;
                 break;
             } else {
                 this.resStroka.setLength(0);
+            }
+            try {
+                this.barrier.await();
+            } catch (InterruptedException | BrokenBarrierException e) {
+                throw new InterruptedException();
             }
         }
     }
@@ -121,13 +145,12 @@ class Calc {
      * @return
      */
     private Double strRef(StringBuilder temp) {
-        Double expected = Double.valueOf(temp.toString());
-        resStroka.append(temp.toString());
+        System.out.println(temp.toString().substring(1,2));
+        Double expected = this.FUNCTION_MAP.get(temp.toString().substring(1,2)).apply(temp);
         temp.setLength(0);
         temp.append(expected.toString());
         return expected;
     }
-
     /**
      * поток будет добавлять 1 в очередь и будет переходить в режим ожидания
      */
