@@ -12,9 +12,9 @@ import java.util.concurrent.*;
 class Calc {
     private final Integer arg = 24;
 
-    private final BlockingDeque<ArrayList<String>> data = new LinkedBlockingDeque<>();
+    private final BlockingDeque<LinkedList<String>> data = new LinkedBlockingDeque<>();
 
-    private LinkedList<ArrayList<String>> random_znak = new LinkedList<>();
+    private LinkedList<LinkedList<String>> random_znak = new LinkedList<>();
     private final StringBuilder temp = new StringBuilder();
     private volatile boolean stop = false;
 
@@ -34,13 +34,13 @@ class Calc {
      * @param indexes
      * @param expectedSize
      */
-    void make(Object[] arr, Deque<Integer> indexes, int expectedSize, Queue<ArrayList<String>> data, Boolean selector) {
+    void make(Object[] arr, Deque<Integer> indexes, int expectedSize, Queue<LinkedList<String>> data, Boolean selector) {
         try {
             while (this.data.size() == 1) {
                 wait();
             }
             if (indexes.size() == expectedSize) {
-                ArrayList<String> temp = new ArrayList<String>();
+                LinkedList<String> temp = new LinkedList<String>();
 
                 for (Integer i : indexes) {
                     temp.add(String.valueOf(arr[i]));
@@ -79,10 +79,10 @@ class Calc {
      * поток будет добавлять 1 в очередь и будет переходить в режим ожидания
      */
     private class Product implements Runnable {
-        private final BlockingDeque<ArrayList<String>>  data;
+        private final BlockingDeque<LinkedList<String>>  data;
         private final Integer[] nums;
 
-        Product(Integer[] nums, BlockingDeque<ArrayList<String>> data) {
+        Product(Integer[] nums, BlockingDeque<LinkedList<String>> data) {
             this.data = data;
             this.nums = nums;
         }
