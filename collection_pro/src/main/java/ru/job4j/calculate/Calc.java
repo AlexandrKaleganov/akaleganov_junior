@@ -62,15 +62,16 @@ class Calc {
         }
     }
 
-    private void calc(ArrayList<String> num) {
-        boolean exit = false;
-        String temp;
-        Boolean rsl;
-        int j = 0;
+    private void calc(LinkedList<String> num) {
+
         for (int i = 0; i < this.random_znak.size(); i++) {
+            Queue<String> tem_znak = new LinkedList<>();
+            tem_znak.addAll(random_znak.get(i));
+            Queue<String> tem_num = new LinkedList<>();
+            tem_num.addAll(num);
             while (num.size() < j && !exit) {
                 temp = num.get(j) +
-            j++;
+                        j++;
             }
         }
     }
@@ -79,7 +80,7 @@ class Calc {
      * поток будет добавлять 1 в очередь и будет переходить в режим ожидания
      */
     private class Product implements Runnable {
-        private final BlockingDeque<LinkedList<String>>  data;
+        private final BlockingDeque<LinkedList<String>> data;
         private final Integer[] nums;
 
         Product(Integer[] nums, BlockingDeque<LinkedList<String>> data) {
@@ -97,46 +98,22 @@ class Calc {
      * поток будет добавлять 1 элемент но будет ждать у барьера пока не добавитсяпервый элемент
      */
     private class Consumer implements Runnable {
-        private BlockingDeque<ArrayList<String>> data;
-        Consumer(BlockingDeque<ArrayList<String>> data) {
+        private BlockingDeque<LinkedList<String>> data;
+
+        Consumer(BlockingDeque<LinkedList<String>> data) {
             this.data = data;
 
         }
 
         @Override
         public void run() {
-            while (!Thread.currentThread().isInterrupted()){
-
+            while (!Thread.currentThread().isInterrupted()) {
+                try {
+                    calc(this.data.take());
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
             }
         }
     }
-//
-//    /**
-//     * хз что будет делать
-//     */
-//    private class Th3 implements Runnable {
-//        private final CyclicBarrier barrier;
-//        private ArrayList<ArrayList<String>> lists;
-//        private final StringBuilder bilder;
-//
-//        Th3(CyclicBarrier cyclicBarrier, ArrayList<ArrayList<String>> lists, StringBuilder bilder) {
-//            this.barrier = cyclicBarrier;
-//            this.lists = lists;
-//            this.bilder = bilder;
-//        }
-//
-//        @Override
-//        public void run() {
-//            try {
-//                for (int i = 0; i < lists.size(); i++) {
-//                    for (int i1 = 0; i1 < lists.get(i).size(); i1++) {
-//                        barrier.await();
-//                        calc(lists.get(i).get(i1));
-//                    }
-//                }
-//            } catch (InterruptedException | BrokenBarrierException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
 }
