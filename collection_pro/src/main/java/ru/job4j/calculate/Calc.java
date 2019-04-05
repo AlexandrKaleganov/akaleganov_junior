@@ -1,26 +1,26 @@
 package ru.job4j.calculate;
 /**
  * попробуем сделать универсальный класс для подбора выражений
+ * реализация будет построена на очереди, одна из них будет блокирующая очередь
+ * что -то типо ProductConsumer
  */
 
+import java.lang.reflect.Array;
 import java.util.*;
-import java.util.concurrent.BrokenBarrierException;
-import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.*;
 
 class Calc {
     private final Integer arg = 24;
-    //    private Queue<String> string = new LinkedList<>();
-    private Queue<ArrayList<String>> data = new LinkedList<>();
 
-    //    private ArrayList<ArrayList<String>> random_list = new ArrayList<>();
-    private ArrayList<ArrayList<String>> random_znak = new ArrayList<>();
+    private final BlockingDeque<ArrayList<String>> data = new LinkedBlockingDeque<>();
+
+    private LinkedList<ArrayList<String>> random_znak = new LinkedList<>();
     private final StringBuilder temp = new StringBuilder();
+    private volatile boolean stop = false;
 
     public boolean canBeEqualTo24(Integer[] nums) {
         //инициализация моей базы всевозможных вариантов символов
         this.make(new String[]{"+", "-", "/", "*"}, new LinkedList<>(), nums.length - 1, this.random_znak, true);
-//        this.make(nums, new LinkedList<>(), nums.length, this.random_list, false);
-//        System.out.println(random_list);
         System.out.println(this.random_znak);
 
         return true;
@@ -34,112 +34,109 @@ class Calc {
      * @param indexes
      * @param expectedSize
      */
-    void make(Object[] arr, Deque<Integer> indexes, int expectedSize, ArrayList<ArrayList<String>> data, Boolean selector) {
-        if (indexes.size() == expectedSize) {
-            ArrayList<String> temp = new ArrayList<String>();
+    void make(Object[] arr, Deque<Integer> indexes, int expectedSize, Queue<ArrayList<String>> data, Boolean selector) {
+        try {
+            while (this.data.size() == 1) {
+                wait();
+            }
+            if (indexes.size() == expectedSize) {
+                ArrayList<String> temp = new ArrayList<String>();
 
-            for (Integer i : indexes) {
-                temp.add(String.valueOf(arr[i]));
+                for (Integer i : indexes) {
+                    temp.add(String.valueOf(arr[i]));
+                }
+                if (temp.size() > 1) {
+                    data.offer(temp);
+                }
+                return;
             }
-            if (temp.size() > 1) {
-                data.add(temp);
+            for (int i = 0; i < arr.length; i++) {
+                if (!indexes.contains(i) || selector) {
+                    indexes.addLast(i);
+                    make(arr, indexes, expectedSize, data, selector);
+                    indexes.removeLast();
+                }
             }
+        } catch (InterruptedException e) {
             return;
-        }
-        for (int i = 0; i < arr.length; i++) {
-            if (!indexes.contains(i) || selector) {
-                indexes.addLast(i);
-                make(arr, indexes, expectedSize, data, selector);
-                indexes.removeLast();
-            }
         }
     }
 
-    private void calc(String e) {
-        this.temp.append(e);
+    private void calc(ArrayList<String> num) {
+        boolean exit = false;
+        String temp;
+        Boolean rsl;
+        int j = 0;
+        for (int i = 0; i < this.random_znak.size(); i++) {
+            while (num.size() < j && !exit) {
+                temp = num.get(j) +
+            j++;
+            }
+        }
     }
 
     /**
-     * поток будет добавлять 1 элемент и будет переходить в режим ожидания
+     * поток будет добавлять 1 в очередь и будет переходить в режим ожидания
      */
-    private class Th1 implements Runnable {
-        private final ArrayList<ArrayList<String>> lists;
-        private final CyclicBarrier barrier;
+    private class Product implements Runnable {
+        private final BlockingDeque<ArrayList<String>>  data;
+        private final Integer[] nums;
 
-        Th1(ArrayList<ArrayList<String>> lists, CyclicBarrier cyclicBarrier) {
-            this.barrier = cyclicBarrier;
-            this.lists = lists;
+        Product(Integer[] nums, BlockingDeque<ArrayList<String>> data) {
+            this.data = data;
+            this.nums = nums;
         }
 
         @Override
         public void run() {
-            try {
-                for (int i = 0; i < lists.size(); i++) {
-                    for (int i1 = 0; i1 < lists.get(i).size(); i1++) {
-                        calc(lists.get(i).get(i1));
-                        barrier.await();
-                    }
-                }
-            } catch (InterruptedException | BrokenBarrierException e) {
-                e.printStackTrace();
-            }
+            make(nums, new LinkedList<>(), nums.length, this.data, false);
         }
     }
 
     /**
      * поток будет добавлять 1 элемент но будет ждать у барьера пока не добавитсяпервый элемент
      */
-    private class Th2 implements Runnable {
-        private final CyclicBarrier barrier;
-        private ArrayList<ArrayList<String>> lists;
-
-        Th2(CyclicBarrier cyclicBarrier, ArrayList<ArrayList<String>> lists) {
-            this.barrier = cyclicBarrier;
-            this.lists = lists;
+    private class Consumer implements Runnable {
+        private BlockingDeque<ArrayList<String>> data;
+        Consumer(BlockingDeque<ArrayList<String>> data) {
+            this.data = data;
 
         }
 
         @Override
         public void run() {
-            try {
-                for (int i = 0; i < lists.size(); i++) {
-                    for (int i1 = 0; i1 < lists.get(i).size(); i1++) {
-                        barrier.await();
-                        calc(lists.get(i).get(i1));
-                    }
-                }
-            } catch (InterruptedException | BrokenBarrierException e) {
-                e.printStackTrace();
+            while (!Thread.currentThread().isInterrupted()){
+
             }
         }
     }
-
-    /**
-     * хз что будет делать
-     */
-    private class Th3 implements Runnable {
-        private final CyclicBarrier barrier;
-        private ArrayList<ArrayList<String>> lists;
-        private final StringBuilder bilder;
-
-        Th3(CyclicBarrier cyclicBarrier, ArrayList<ArrayList<String>> lists, StringBuilder bilder) {
-            this.barrier = cyclicBarrier;
-            this.lists = lists;
-            this.bilder = bilder;
-        }
-
-        @Override
-        public void run() {
-            try {
-                for (int i = 0; i < lists.size(); i++) {
-                    for (int i1 = 0; i1 < lists.get(i).size(); i1++) {
-                        barrier.await();
-                        calc(lists.get(i).get(i1));
-                    }
-                }
-            } catch (InterruptedException | BrokenBarrierException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+//
+//    /**
+//     * хз что будет делать
+//     */
+//    private class Th3 implements Runnable {
+//        private final CyclicBarrier barrier;
+//        private ArrayList<ArrayList<String>> lists;
+//        private final StringBuilder bilder;
+//
+//        Th3(CyclicBarrier cyclicBarrier, ArrayList<ArrayList<String>> lists, StringBuilder bilder) {
+//            this.barrier = cyclicBarrier;
+//            this.lists = lists;
+//            this.bilder = bilder;
+//        }
+//
+//        @Override
+//        public void run() {
+//            try {
+//                for (int i = 0; i < lists.size(); i++) {
+//                    for (int i1 = 0; i1 < lists.get(i).size(); i1++) {
+//                        barrier.await();
+//                        calc(lists.get(i).get(i1));
+//                    }
+//                }
+//            } catch (InterruptedException | BrokenBarrierException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 }
