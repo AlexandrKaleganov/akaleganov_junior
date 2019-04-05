@@ -10,8 +10,11 @@ import static org.junit.Assert.*;
 public class CalcTest {
 
     @Test
-    public void canBeEqualTo24() {
+    public void canBeEqualTo24() throws InterruptedException{
         Integer[] strBox = {4, 1, 8, 7};
-        new Calc().canBeEqualTo24(strBox, 24.0);
+//        new Calc().canBeEqualTo24(strBox, 24.0);
+        String tem = "4+1";
+        System.out.println(tem.toCharArray().toString());
+
     }
 }

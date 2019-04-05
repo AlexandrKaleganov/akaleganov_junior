@@ -27,12 +27,21 @@ class Calc {
     private final StringBuilder resStroka = new StringBuilder();
     private volatile boolean stop = false;
 
-    public boolean canBeEqualTo24(Integer[] nums, Double arg) {
+    public boolean canBeEqualTo24(Integer[] nums, Double arg) throws InterruptedException {
         this.arg = arg;
         //инициализация моей базы всевозможных вариантов символов
         this.make(new String[]{"+", "-", "/", "*"}, new LinkedList<>(), nums.length - 1, this.random_znak, true);
-        System.out.println(this.random_znak);
-
+        Thread producter = new Thread(new Product(nums, data));
+        Thread consumer = new Thread(new Consumer(data));
+        producter.start();
+        consumer.start();
+        producter.join();
+        consumer.join();
+        if (this.resStroka.length() > 0 ) {
+            System.out.println(resStroka);
+        } else {
+            System.out.println("решение не найдено");
+        }
         return true;
     }
 
@@ -100,6 +109,8 @@ class Calc {
             if (expected == this.arg) {
                 this.stop = true;
                 break;
+            } else {
+                this.resStroka.setLength(0);
             }
         }
     }
