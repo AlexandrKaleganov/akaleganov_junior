@@ -13,8 +13,8 @@ public class CalcTest {
 
     @Test
     public void canBeEqualTo24() throws InterruptedException, BrokenBarrierException {
-        Integer[] strBox = {4, 1, 8, 7};
-        new Calc(24.0).canBeEqualTo24(strBox);
+        Integer[] strBox = {10, 10, 10, 10, 10};
+        new Calc(50.0).canBeEqualTo24(strBox);
 //        HashMap<String>
     }
 }

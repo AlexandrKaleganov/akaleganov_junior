@@ -50,14 +50,14 @@ class Calc {
         //инициализация моей базы всевозможных вариантов символов
         this.make(new String[]{"+", "-", "/", "*"}, new LinkedList<>(), nums.length - 1, this.random_znak, true);
         System.out.println(this.random_znak);
-        Thread producter = new Thread(new Product(nums, data));
-        Thread consumer = new Thread(new Consumer(data));
+        Thread producter =  new Product(nums, data);
+        Thread consumer = new Consumer(data);
         producter.start();
         consumer.start();
         producter.join();
         consumer.join();
         if (this.resStroka.length() > 0) {
-//            System.out.println(resStroka);
+            System.out.println(resStroka);
         } else {
             System.out.println("решение не найдено");
         }
@@ -126,7 +126,6 @@ class Calc {
             }
             System.out.println(expected);
             if (this.FIN.equals(expected)) {
-                System.out.println("ниииихуууу яяяяя себе");
                 this.stop = true;
                 break;
             } else {
@@ -157,14 +156,14 @@ class Calc {
     /**
      * поток будет добавлять 1 в очередь и будет переходить в режим ожидания
      */
-    private class Product implements Runnable {
+    private class Product extends Thread{
         private final BlockingDeque<LinkedList<String>> data;
         private final Integer[] nums;
 
         Product(Integer[] nums, BlockingDeque<LinkedList<String>> data) {
             this.data = data;
             this.nums = nums;
-            Thread.currentThread().setName("Producter");
+            this.setName("Producter");
         }
 
         @Override
@@ -183,12 +182,12 @@ class Calc {
     /**
      * поток будет добавлять 1 элемент но будет ждать у барьера пока не добавитсяпервый элемент
      */
-    private class Consumer implements Runnable {
+    private class Consumer extends Thread {
         private BlockingDeque<LinkedList<String>> data;
 
         Consumer(BlockingDeque<LinkedList<String>> data) {
             this.data = data;
-            Thread.currentThread().setName("Consumer");
+            this.setName("Consumer");
         }
 
         @Override
@@ -203,6 +202,7 @@ class Calc {
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
+            System.out.println(Thread.currentThread().getName() + "  завершил свою работу");
         }
     }
 }
