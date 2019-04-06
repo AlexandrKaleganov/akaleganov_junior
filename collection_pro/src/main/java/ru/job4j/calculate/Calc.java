@@ -1,5 +1,8 @@
 package ru.job4j.calculate;
 /**
+ * @autor Alexandr Kaleganov
+ * @version 1
+ * @since 06.04.2019
  * попробуем сделать универсальный класс для подбора выражений
  * реализация будет построена на очереди, одна из них будет блокирующая очередь
  * что -то типо ProductConsumer, в начале когда в метод поступит массив - мы глянем на его размер
@@ -20,13 +23,18 @@ import java.util.concurrent.*;
 import java.util.function.Function;
 
 class Calc {
-
+    //мапа с функиональными методами, в контрукторе проинициализируем её чтобы знать что делать
     private final HashMap<String, Function<List<String>, Double>> funcMap;
+    //искомый результат
     private final Double expected;
+    //для контроля очерёдности работы потокв
     private final CyclicBarrier barrier = new CyclicBarrier(2);
     private final BlockingDeque<LinkedList<String>> data = new LinkedBlockingDeque<>();
+    //все возможные варианты знаков
     private final LinkedList<LinkedList<String>> randomZnak = new LinkedList<>();
+    //переменная будет хранить результат
     private final StringBuilder resStroka = new StringBuilder();
+    //для остановки потоков
     private volatile boolean stop = false;
 
     Calc(Double expected) {
@@ -51,8 +59,6 @@ class Calc {
         this.make(new String[]{"-", "/", "+", "*"}, new LinkedList<>(), nums.length - 1, this.randomZnak, true);
         Thread producter = new Product(nums, data);
         Thread consumer = new Consumer(data);
-        producter.start();
-        consumer.start();
         producter.join();
         consumer.join();
         if (this.resStroka.length() > 0) {
@@ -165,6 +171,7 @@ class Calc {
             this.data = data;
             this.nums = nums;
             this.setName("Producter");
+            this.start();
         }
 
         @Override
@@ -172,7 +179,6 @@ class Calc {
             try {
                 make(nums, new LinkedList<>(), nums.length, this.data, false);
             } catch (InterruptedException | BrokenBarrierException e) {
-                System.out.println(Thread.currentThread().getName() + "  завершил свою работу");
             }
             System.out.println(Thread.currentThread().getName() + "  завершил свою работу");
             stop = true;
@@ -188,6 +194,7 @@ class Calc {
         Consumer(BlockingDeque<LinkedList<String>> data) {
             this.data = data;
             this.setName("Consumer");
+            this.start();
         }
 
         @Override
