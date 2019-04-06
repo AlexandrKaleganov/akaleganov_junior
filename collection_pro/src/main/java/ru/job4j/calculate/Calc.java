@@ -3,7 +3,7 @@ package ru.job4j.calculate;
  * попробуем сделать универсальный класс для подбора выражений
  * реализация будет построена на очереди, одна из них будет блокирующая очередь
  * что -то типо ProductConsumer, в начале когда в метод поступит массив - мы глянем на его размер
- * и заполним всевозможными вариантами random_znak размер каждой вложенной очереди будет
+ * и заполним всевозможными вариантами randomZnak размер каждой вложенной очереди будет
  * на 1 еньше и они будут повторяться чтобы +++ //*  будут все возможные вырианты
  * далее у нас стартует два потока  Producter  и  Consumer
  * Producter будет генерировать вариант из нашего массива и добавлять в блокирующую очередь,
@@ -20,37 +20,36 @@ import java.util.concurrent.*;
 import java.util.function.Function;
 
 class Calc {
-    private final HashMap<String, Function<List<String>, Double>> FUNCTION_MAP;
-    private final Double FIN;
+
+    private final HashMap<String, Function<List<String>, Double>> funcMap;
+    private final Double expected;
     private final CyclicBarrier barrier = new CyclicBarrier(2);
     private final BlockingDeque<LinkedList<String>> data = new LinkedBlockingDeque<>();
-
-    private LinkedList<LinkedList<String>> random_znak = new LinkedList<>();
+    private final LinkedList<LinkedList<String>> randomZnak = new LinkedList<>();
     private final StringBuilder resStroka = new StringBuilder();
     private volatile boolean stop = false;
 
-    Calc(Double FIN) {
-        this.FIN = FIN;
-        this.FUNCTION_MAP = new HashMap<>();
-        this.FUNCTION_MAP.put("+", list ->
+    Calc(Double expected) {
+        this.expected = expected;
+        this.funcMap = new HashMap<>();
+        this.funcMap.put("+", list ->
                 Double.valueOf(list.get(0)) + Double.valueOf(list.get(2))
         );
-        this.FUNCTION_MAP.put("-", list ->
+        this.funcMap.put("-", list ->
                 Double.valueOf(list.get(0)) - Double.valueOf(list.get(2))
         );
-        this.FUNCTION_MAP.put("*", list ->
+        this.funcMap.put("*", list ->
                 Double.valueOf(list.get(0)) * Double.valueOf(list.get(2))
         );
-        this.FUNCTION_MAP.put("/", list ->
+        this.funcMap.put("/", list ->
                 Double.valueOf(list.get(0)) / Double.valueOf(list.get(2))
         );
     }
 
     public boolean canBeEqualTo24(Integer[] nums) throws InterruptedException, BrokenBarrierException {
         //инициализация моей базы всевозможных вариантов символов
-        this.make(new String[]{"+", "-", "/", "*"}, new LinkedList<>(), nums.length - 1, this.random_znak, true);
-        System.out.println(this.random_znak);
-        Thread producter =  new Product(nums, data);
+        this.make(new String[]{"-", "/", "+", "*"}, new LinkedList<>(), nums.length - 1, this.randomZnak, true);
+        Thread producter = new Product(nums, data);
         Thread consumer = new Consumer(data);
         producter.start();
         consumer.start();
@@ -58,10 +57,11 @@ class Calc {
         consumer.join();
         if (this.resStroka.length() > 0) {
             System.out.println(resStroka);
+            return true;
         } else {
-            System.out.println("решение не найдено");
+            System.out.println(String.format("из данного набора чисел невозможно составить выражение, равное %s", this.expected));
+            return false;
         }
-        return true;
     }
 
     /**
@@ -70,62 +70,63 @@ class Calc {
      *
      * @param arr
      * @param indexes
-     * @param expectedSize
+     * @param tempResaltSize
      */
-    private void make(Object[] arr, Deque<Integer> indexes, int expectedSize, Queue<LinkedList<String>> data, Boolean selector) throws InterruptedException, BrokenBarrierException {
-            if (stop) {
-                throw new InterruptedException();
+    private void make(Object[] arr, Deque<Integer> indexes, int tempResaltSize, Queue<LinkedList<String>> data, Boolean selector) throws InterruptedException, BrokenBarrierException {
+        if (stop) {
+            throw new InterruptedException();
+        }
+        if (indexes.size() == tempResaltSize) {
+            LinkedList<String> temp = new LinkedList<String>();
+            for (Integer i : indexes) {
+                temp.add(String.valueOf(arr[i]));
             }
-            if (indexes.size() == expectedSize) {
-                LinkedList<String> temp = new LinkedList<String>();
-                for (Integer i : indexes) {
-                    temp.add(String.valueOf(arr[i]));
-                }
-                if (temp.size() > 1) {
-                    data.offer(temp);
-                    if (!selector) {
-                        barrier.await();
-                    }
-                }
-                return;
-            }
-            for (int i = 0; i < arr.length; i++) {
-                if (!indexes.contains(i) || selector) {
-                    indexes.addLast(i);
-                    make(arr, indexes, expectedSize, data, selector);
-                    indexes.removeLast();
+            if (temp.size() > 1) {
+                data.offer(temp);
+                if (!selector) {
+                    barrier.await();
                 }
             }
+            return;
+        }
+        for (int i = 0; i < arr.length; i++) {
+            if (!indexes.contains(i) || selector) {
+                indexes.addLast(i);
+                make(arr, indexes, tempResaltSize, data, selector);
+                indexes.removeLast();
+            }
+        }
 
     }
 
     /**
-     * если Double expected  будет равен нашему искомому аргументу,
+     * если Double tempResalt  будет равен нашему искомому аргументу,
      * то мы остановим потоки и посмотрим что у нас получилось в  StringBuilder resStroka
      *
      * @param num
      */
     private void calc(LinkedList<String> num) throws InterruptedException {
-        for (int i = 0; i < this.random_znak.size(); i++) {
-            Queue<String> tem_znak = new LinkedList<>();
-            tem_znak.addAll(random_znak.get(i));
-            LinkedList<String> tem_num = new LinkedList<>();
-            tem_num.addAll(num);
+        for (int i = 0; i < this.randomZnak.size(); i++) {
+            Queue<String> tempZnak = new LinkedList<>();
+            tempZnak.addAll(randomZnak.get(i));
+            LinkedList<String> tempNum = new LinkedList<>();
+            tempNum.addAll(num);
             ArrayList<String> arifmetic = new ArrayList<>();
-            Double expected = null;
-            while (!tem_num.isEmpty() || !tem_znak.isEmpty()) {
+            Double tempResalt = null;
+            while (!tempNum.isEmpty() || !tempZnak.isEmpty()) {
                 if (arifmetic.size() == 0) {
-                    arifmetic.addAll(Arrays.asList(tem_num.poll(), tem_znak.poll(), tem_num.poll()));
-                    this.resStroka.append(arifmetic.get(0) + arifmetic.get(1) + arifmetic.get(2));
-                    expected = strRef(arifmetic);
+                    arifmetic.addAll(Arrays.asList(tempNum.poll(), tempZnak.poll(), tempNum.poll()));
+                    this.resStroka.append("(" + arifmetic.get(0) + arifmetic.get(1) + arifmetic.get(2) + ")");
+                    tempResalt = strRef(arifmetic);
                 } else {
-                    arifmetic.addAll(Arrays.asList(tem_znak.poll(), tem_num.poll()));
-                    this.resStroka.append(arifmetic.get(arifmetic.size() - 2) + arifmetic.get(arifmetic.size() - 1));
-                    expected = strRef(arifmetic);
+                    arifmetic.addAll(Arrays.asList(tempZnak.poll(), tempNum.poll()));
+                    this.resStroka.insert(0, "(");
+                    this.resStroka.append(arifmetic.get(arifmetic.size() - 2) + arifmetic.get(arifmetic.size() - 1) + ")");
+                    tempResalt = strRef(arifmetic);
                 }
             }
-            System.out.println(expected);
-            if (this.FIN.equals(expected)) {
+            if (this.expected.equals(tempResalt)) {
+                resStroka.append(" = " + this.expected);
                 this.stop = true;
                 break;
             } else {
@@ -147,16 +148,16 @@ class Calc {
      * @return
      */
     private Double strRef(List<String> arifmetic) {
-        Double expected = this.FUNCTION_MAP.get(arifmetic.get(1)).apply(arifmetic);
+        Double tempResalt = this.funcMap.get(arifmetic.get(1)).apply(arifmetic);
         arifmetic.clear();
-        arifmetic.add(expected.toString());
-        return expected;
+        arifmetic.add(tempResalt.toString());
+        return tempResalt;
     }
 
     /**
      * поток будет добавлять 1 в очередь и будет переходить в режим ожидания
      */
-    private class Product extends Thread{
+    private class Product extends Thread {
         private final BlockingDeque<LinkedList<String>> data;
         private final Integer[] nums;
 
@@ -168,14 +169,13 @@ class Calc {
 
         @Override
         public void run() {
-
             try {
                 make(nums, new LinkedList<>(), nums.length, this.data, false);
             } catch (InterruptedException | BrokenBarrierException e) {
                 System.out.println(Thread.currentThread().getName() + "  завершил свою работу");
             }
+            System.out.println(Thread.currentThread().getName() + "  завершил свою работу");
             stop = true;
-
         }
     }
 
@@ -192,12 +192,14 @@ class Calc {
 
         @Override
         public void run() {
-            while (!Thread.currentThread().isInterrupted()) try {
-                if (stop) {
-                    throw new InterruptedException();
-                }
-                if (!this.data.isEmpty()) {
-                    calc(this.data.take());
+            try {
+                while (!Thread.currentThread().isInterrupted()) {
+                    if (stop) {
+                        throw new InterruptedException();
+                    }
+                    if (!this.data.isEmpty()) {
+                        calc(this.data.take());
+                    }
                 }
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
