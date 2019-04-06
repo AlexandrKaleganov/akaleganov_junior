@@ -13,7 +13,7 @@ public class CalcTest {
     @Test
     public void canBeEqualTo24() throws InterruptedException{
         Integer[] strBox = {4, 1, 8, 7};
-//        new Calc(24.0).canBeEqualTo24(strBox);
-        HashMap<String>
+        new Calc(24.0).canBeEqualTo24(strBox);
+//        HashMap<String>
     }
 }
