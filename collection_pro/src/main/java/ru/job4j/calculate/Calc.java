@@ -37,6 +37,9 @@ class Calc {
     //для остановки потоков
     private volatile boolean stop = false;
 
+
+
+
     Calc(Double expected) {
         this.expected = expected;
         this.funcMap = new HashMap<>();
