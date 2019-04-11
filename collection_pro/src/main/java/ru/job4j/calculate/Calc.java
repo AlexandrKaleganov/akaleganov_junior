@@ -28,7 +28,6 @@ class Calc {
     //искомый результат
     private final Double expected;
     //для контроля очерёдности работы потокв
-    private final CyclicBarrier barrier = new CyclicBarrier(2);
     private final BlockingDeque<LinkedList<String>> data = new LinkedBlockingDeque<>();
     //все возможные варианты знаков
     private final LinkedList<LinkedList<String>> randomZnak = new LinkedList<>();
@@ -36,8 +35,6 @@ class Calc {
     private final StringBuilder resStroka = new StringBuilder();
     //для остановки потоков
     private volatile boolean stop = false;
-
-
 
 
     Calc(Double expected) {
@@ -60,8 +57,8 @@ class Calc {
     public boolean canBeEqualTo24(Integer[] nums) throws InterruptedException, BrokenBarrierException {
         //инициализация моей базы всевозможных вариантов символов
         this.make(new String[]{"-", "/", "+", "*"}, new LinkedList<>(), nums.length - 1, this.randomZnak, true);
-        Thread producter = new Product(nums, data);
         Thread consumer = new Consumer(data);
+        Thread producter = new Product(nums, data, consumer);
         producter.join();
         consumer.join();
         if (this.resStroka.length() > 0) {
@@ -92,9 +89,6 @@ class Calc {
             }
             if (temp.size() > 1) {
                 data.offer(temp);
-                if (!selector) {
-                    barrier.await();
-                }
             }
             return;
         }
@@ -143,11 +137,7 @@ class Calc {
                 arifmetic.clear();
             }
         }
-        try {
-            this.barrier.await();
-        } catch (InterruptedException | BrokenBarrierException e) {
-            throw new InterruptedException();
-        }
+
     }
 
     /**
@@ -169,12 +159,14 @@ class Calc {
     private class Product extends Thread {
         private final BlockingDeque<LinkedList<String>> data;
         private final Integer[] nums;
+        private final Thread consumer;
 
-        Product(Integer[] nums, BlockingDeque<LinkedList<String>> data) {
+        Product(Integer[] nums, BlockingDeque<LinkedList<String>> data, Thread consumer) {
             this.data = data;
             this.nums = nums;
             this.setName("Producter");
             this.start();
+            this.consumer = consumer;
         }
 
         @Override
@@ -182,9 +174,11 @@ class Calc {
             try {
                 make(nums, new LinkedList<>(), nums.length, this.data, false);
             } catch (InterruptedException | BrokenBarrierException e) {
+                System.out.println(Thread.currentThread().getName() + "  завершил свою работу  решение найдено");
+            } finally {
+                this.consumer.interrupt();
             }
             System.out.println(Thread.currentThread().getName() + "  завершил свою работу");
-            stop = true;
         }
     }
 
@@ -203,16 +197,14 @@ class Calc {
         @Override
         public void run() {
             try {
-                while (!Thread.currentThread().isInterrupted()) {
+                while (!Thread.currentThread().isInterrupted() || !this.data.isEmpty()) {
+                    calc(this.data.take());
                     if (stop) {
                         throw new InterruptedException();
                     }
-                    if (!this.data.isEmpty()) {
-                        calc(this.data.take());
-                    }
                 }
             } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
+                System.out.println(Thread.currentThread().getName() + "  завершил свою работу решение найдено");
             }
             System.out.println(Thread.currentThread().getName() + "  завершил свою работу");
         }
