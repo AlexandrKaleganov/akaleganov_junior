@@ -2,24 +2,12 @@ package ru.job4j.calculate;
 /**
  * @autor Alexandr Kaleganov
  * @version 1
- * @since 06.04.2019
- * попробуем сделать универсальный класс для подбора выражений
- * реализация будет построена на очереди, одна из них будет блокирующая очередь
- * что -то типо ProductConsumer, в начале когда в метод поступит массив - мы глянем на его размер
- * и заполним всевозможными вариантами randomZnak размер каждой вложенной очереди будет
- * на 1 еньше и они будут повторяться чтобы +++ //*  будут все возможные вырианты
- * далее у нас стартует два потока  Producter  и  Consumer
- * Producter будет генерировать вариант из нашего массива и добавлять в блокирующую очередь,
- * когда в ней появляется первый вариант то поток остановится и будет джать пока Consumer
- * не прогонит этот вариант по всем знакам варианта в случае удачного совпадения
- * волотайл переменная изменится и создаст интеррапт исключение в потоках,
- * что заставит их прерваться далее нам надо будет обрабатывать нашь StringBuilder resStroka - и если
- * её рамер равен 0 то выведем сообщение что решение отсутствует, если размер больше 0 то
- * обработаем пока не придумал как
+ * @since 11.04.2019
  */
 
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 class Calc {
@@ -27,17 +15,12 @@ class Calc {
     private final HashMap<String, Function<List<String>, Double>> funcMap;
     //искомый результат
     private final Double expected;
-    //для контроля очерёдности работы потокв
-    private final BlockingDeque<LinkedList<String>> data = new LinkedBlockingDeque<>();
-    //все возможные варианты знаков
-    private final LinkedList<LinkedList<String>> randomZnak = new LinkedList<>();
+    //блокирующаяя очередь туда потом Producter будет генерировать новые варианты чисел
+    private final LinkedBlockingDeque<LinkedList<String>> data = new LinkedBlockingDeque<>();
     //переменная будет хранить результат
     private final StringBuilder resStroka = new StringBuilder();
     //для остановки потоков
     private volatile boolean stop = false;
-
-
-
 
     Calc(Double expected) {
         this.expected = expected;
@@ -57,91 +40,84 @@ class Calc {
     }
 
     public boolean canBeEqualTo24(Integer[] nums) throws InterruptedException, BrokenBarrierException {
-        //инициализация моей базы всевозможных вариантов символов
-        this.make(new String[]{"-", "/", "+", "*"}, new LinkedList<>(), nums.length - 1, this.randomZnak, true);
-        Thread producter = new Product(nums, data);
-        Thread consumer = new Consumer(data);
+        Thread consumer = new Cons(this.data, nums.length - 1);
+        Thread producter = new Product(nums, this.data, consumer);
         producter.join();
         consumer.join();
-        if (this.resStroka.length() > 0) {
-            System.out.println(resStroka);
-            return true;
-        } else {
+        if (!this.stop) {
             System.out.println(String.format("из данного набора чисел невозможно составить выражение, равное %s", this.expected));
-            return false;
+        } else {
+            System.out.println(resStroka);
         }
+        return this.stop;
     }
 
     /**
-     * метод который будет генерировать всевозможные варианты наборов чисел, они не должны почторяться
+     * метод который будет генерировать всевозможные варианты наборов чисел, они не должны повторяться
      * знаки могут повторяться для переключения генератора используем булеан селектор
      *
      * @param arr
      * @param indexes
      * @param tempResaltSize
      */
-    private void make(Object[] arr, Deque<Integer> indexes, int tempResaltSize, Queue<LinkedList<String>> data, Boolean selector) throws InterruptedException, BrokenBarrierException {
+    private void make(Object[] arr, Deque<Integer> indexes, int tempResaltSize,
+                      LinkedBlockingDeque<LinkedList<String>> lists, Boolean selector,
+                      Optional<BiConsumer<LinkedList<String>, LinkedList<String>>> opti) throws InterruptedException {
         if (stop) {
             throw new InterruptedException();
         }
         if (indexes.size() == tempResaltSize) {
-            LinkedList<String> temp = new LinkedList<String>();
+            LinkedList<String> temp = new LinkedList<>();
             for (Integer i : indexes) {
                 temp.add(String.valueOf(arr[i]));
             }
-            if (temp.size() > 1) {
-                data.offer(temp);
+            if (temp.size() > 1 && !selector) {
+                lists.offer(temp);
+            } else if (temp.size() > 1 && selector) {
+                opti.get().accept(new LinkedList<>(lists.getLast()), temp);
             }
             return;
         }
         for (int i = 0; i < arr.length; i++) {
             if (!indexes.contains(i) || selector) {
                 indexes.addLast(i);
-                make(arr, indexes, tempResaltSize, data, selector);
+                make(arr, indexes, tempResaltSize, lists, selector, opti);
                 indexes.removeLast();
             }
         }
-
     }
 
     /**
+     * в метод из потока Consumer  будет прилетать вариант чисел
      * если Double tempResalt  будет равен нашему искомому аргументу,
      * то мы остановим потоки и посмотрим что у нас получилось в  StringBuilder resStroka
      *
-     * @param num
+     * @param nam, size
      */
-    private void calc(LinkedList<String> num) throws InterruptedException {
-        for (int i = 0; i < this.randomZnak.size(); i++) {
-            Queue<String> tempZnak = new LinkedList<>();
-            tempZnak.addAll(randomZnak.get(i));
-            LinkedList<String> tempNum = new LinkedList<>();
-            tempNum.addAll(num);
-            ArrayList<String> arifmetic = new ArrayList<>();
-            Double tempResalt = null;
-            while (!tempNum.isEmpty() || !tempZnak.isEmpty()) {
-                if (arifmetic.size() == 0) {
-                    arifmetic.addAll(Arrays.asList(tempNum.poll(), tempZnak.poll(), tempNum.poll()));
-                    this.resStroka.append("(" + arifmetic.get(0) + arifmetic.get(1) + arifmetic.get(2) + ")");
-                    tempResalt = strRef(arifmetic);
-                } else {
-                    arifmetic.addAll(Arrays.asList(tempZnak.poll(), tempNum.poll()));
-                    this.resStroka.insert(0, "(");
-                    this.resStroka.append(arifmetic.get(arifmetic.size() - 2) + arifmetic.get(arifmetic.size() - 1) + ")");
-                    tempResalt = strRef(arifmetic);
-                    System.out.println(tempResalt);
-                }
-            }
-            if (this.expected.equals(tempResalt)) {
-                resStroka.append(" = " + this.expected);
-                System.out.println(resStroka);
-                this.stop = true;
-                break;
-            } else {
-                this.resStroka.setLength(0);
-                arifmetic.clear();
-            }
-        }
-
+    private void calc(LinkedList<String> nam, Integer size) throws InterruptedException {
+        this.make(new String[]{"-", "/", "+", "*"}, new LinkedList<>(), size,
+                new LinkedBlockingDeque<>(new LinkedList<>(Collections.singleton(nam))), true, Optional.of((nuum, znak) -> {
+                    ArrayList<String> arifmetic = new ArrayList<>();
+                    Double tempResalt = null;
+                    while (!nuum.isEmpty() || !znak.isEmpty()) {
+                        if (arifmetic.size() == 0) {
+                            arifmetic.addAll(Arrays.asList(nuum.poll(), znak.poll(), nuum.poll()));
+                            this.resStroka.append("(").append(arifmetic.get(0)).append(arifmetic.get(1)).append(arifmetic.get(2)).append(")");
+                            tempResalt = strRef(arifmetic);
+                        } else {
+                            arifmetic.addAll(Arrays.asList(znak.poll(), nuum.poll()));
+                            this.resStroka.insert(0, "(");
+                            this.resStroka.append(arifmetic.get(arifmetic.size() - 2)).append(arifmetic.get(arifmetic.size() - 1)).append(")");
+                            tempResalt = strRef(arifmetic);
+                        }
+                    }
+                    if (this.expected.equals(tempResalt)) {
+                        resStroka.append(" = " + this.expected);
+                        this.stop = true;
+                    } else {
+                        this.resStroka.setLength(0);
+                    }
+                }));
     }
 
     /**
@@ -158,56 +134,55 @@ class Calc {
     }
 
     /**
-     * поток будет добавлять 1 в очередь и будет переходить в режим ожидания
+     * поток будет добавлять 1 в очередь
      */
     private class Product extends Thread {
-        private final BlockingDeque<LinkedList<String>> data;
+        private final LinkedBlockingDeque<LinkedList<String>> data;
         private final Integer[] nums;
+        private final Thread consumer;
 
-        Product(Integer[] nums, BlockingDeque<LinkedList<String>> data) {
+        Product(Integer[] nums, LinkedBlockingDeque<LinkedList<String>> data, Thread consumer) {
             this.data = data;
             this.nums = nums;
-            this.setName("Producter");
             this.start();
+            this.consumer = consumer;
         }
 
         @Override
         public void run() {
             try {
-                make(nums, new LinkedList<>(), nums.length, this.data, false);
-            } catch (InterruptedException | BrokenBarrierException e) {
-                System.out.println(Thread.currentThread().getName() + "  завершил свою работу  решение найдено");
-
+                make(nums, new LinkedList<>(), nums.length, this.data, false, Optional.empty());
+            } catch (InterruptedException ignored) {
+            } finally {
+                this.consumer.interrupt();
             }
-            System.out.println(Thread.currentThread().getName() + "  завершил свою работу");
         }
     }
 
     /**
-     * поток будет добавлять 1 элемент но будет ждать у барьера пока не добавитсяпервый элемент
+     * поток будет забирать 1 элемент из очереди и прогонять его по условию
      */
-    private class Consumer extends Thread {
-        private BlockingDeque<LinkedList<String>> data;
+    private class Cons extends Thread {
+        private LinkedBlockingDeque<LinkedList<String>> data;
+        private final Integer size;
 
-        Consumer(BlockingDeque<LinkedList<String>> data) {
+        Cons(LinkedBlockingDeque<LinkedList<String>> data, Integer size) {
             this.data = data;
-            this.setName("Consumer");
+            this.size = size;
             this.start();
         }
 
         @Override
         public void run() {
             try {
-                while (!Thread.currentThread().isInterrupted()) {
-                        calc(this.data.take());
+                while (!Thread.currentThread().isInterrupted() || !this.data.isEmpty()) {
+                    calc(this.data.take(), size);
                     if (stop) {
                         throw new InterruptedException();
                     }
                 }
-            } catch (InterruptedException e) {
-                System.out.println(Thread.currentThread().getName() + "  завершил свою работу решение найдено");
+            } catch (InterruptedException ignored) {
             }
-            System.out.println(Thread.currentThread().getName() + "  завершил свою работу");
         }
     }
 }
