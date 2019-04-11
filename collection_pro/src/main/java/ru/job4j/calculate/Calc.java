@@ -28,7 +28,6 @@ class Calc {
     //искомый результат
     private final Double expected;
     //для контроля очерёдности работы потокв
-    private final CyclicBarrier barrier = new CyclicBarrier(2);
     private final BlockingDeque<LinkedList<String>> data = new LinkedBlockingDeque<>();
     //все возможные варианты знаков
     private final LinkedList<LinkedList<String>> randomZnak = new LinkedList<>();
@@ -92,9 +91,6 @@ class Calc {
             }
             if (temp.size() > 1) {
                 data.offer(temp);
-                if (!selector) {
-                    barrier.await();
-                }
             }
             return;
         }
@@ -132,10 +128,12 @@ class Calc {
                     this.resStroka.insert(0, "(");
                     this.resStroka.append(arifmetic.get(arifmetic.size() - 2) + arifmetic.get(arifmetic.size() - 1) + ")");
                     tempResalt = strRef(arifmetic);
+                    System.out.println(tempResalt);
                 }
             }
             if (this.expected.equals(tempResalt)) {
                 resStroka.append(" = " + this.expected);
+                System.out.println(resStroka);
                 this.stop = true;
                 break;
             } else {
@@ -143,11 +141,7 @@ class Calc {
                 arifmetic.clear();
             }
         }
-        try {
-            this.barrier.await();
-        } catch (InterruptedException | BrokenBarrierException e) {
-            throw new InterruptedException();
-        }
+
     }
 
     /**
@@ -182,9 +176,10 @@ class Calc {
             try {
                 make(nums, new LinkedList<>(), nums.length, this.data, false);
             } catch (InterruptedException | BrokenBarrierException e) {
+                System.out.println(Thread.currentThread().getName() + "  завершил свою работу  решение найдено");
+
             }
             System.out.println(Thread.currentThread().getName() + "  завершил свою работу");
-            stop = true;
         }
     }
 
@@ -204,15 +199,13 @@ class Calc {
         public void run() {
             try {
                 while (!Thread.currentThread().isInterrupted()) {
+                        calc(this.data.take());
                     if (stop) {
                         throw new InterruptedException();
                     }
-                    if (!this.data.isEmpty()) {
-                        calc(this.data.take());
-                    }
                 }
             } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
+                System.out.println(Thread.currentThread().getName() + "  завершил свою работу решение найдено");
             }
             System.out.println(Thread.currentThread().getName() + "  завершил свою работу");
         }
