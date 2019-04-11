@@ -3,11 +3,11 @@ package ru.job4j.calculate;
  * @autor Alexandr Kaleganov
  * @version 1
  * @since 11.04.2019
- *
  */
 
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 class Calc {
@@ -15,10 +15,8 @@ class Calc {
     private final HashMap<String, Function<List<String>, Double>> funcMap;
     //искомый результат
     private final Double expected;
-    //для контроля очерёдности работы потокв
-    private final BlockingDeque<LinkedList<String>> data = new LinkedBlockingDeque<>();
-    //все возможные варианты знаков
-    private final LinkedList<LinkedList<String>> randomZnak = new LinkedList<>();
+    //блокирующаяя очередь туда потом Producter будет генерировать новые варианты чисел
+    private final LinkedBlockingDeque<LinkedList<String>> data = new LinkedBlockingDeque<>();
     //переменная будет хранить результат
     private final StringBuilder resStroka = new StringBuilder();
     //для остановки потоков
@@ -42,10 +40,8 @@ class Calc {
     }
 
     public boolean canBeEqualTo24(Integer[] nums) throws InterruptedException, BrokenBarrierException {
-        //инициализация моей базы всевозможных вариантов символов
-        this.make(new String[]{"-", "/", "+", "*"}, new LinkedList<>(), nums.length - 1, this.randomZnak, true);
-        Thread consumer = new Consumer(data);
-        Thread producter = new Product(nums, data, consumer);
+        Thread consumer = new Cons(this.data, nums.length - 1);
+        Thread producter = new Product(nums, this.data, consumer);
         producter.join();
         consumer.join();
         if (!this.stop) {
@@ -64,24 +60,28 @@ class Calc {
      * @param indexes
      * @param tempResaltSize
      */
-    private void make(Object[] arr, Deque<Integer> indexes, int tempResaltSize, Queue<LinkedList<String>> data, Boolean selector) throws InterruptedException, BrokenBarrierException {
+    private void make(Object[] arr, Deque<Integer> indexes, int tempResaltSize,
+                      LinkedBlockingDeque<LinkedList<String>> lists, Boolean selector,
+                      Optional<BiConsumer<LinkedList<String>, LinkedList<String>>> opti) throws InterruptedException {
         if (stop) {
             throw new InterruptedException();
         }
         if (indexes.size() == tempResaltSize) {
-            LinkedList<String> temp = new LinkedList<String>();
+            LinkedList<String> temp = new LinkedList<>();
             for (Integer i : indexes) {
                 temp.add(String.valueOf(arr[i]));
             }
-            if (temp.size() > 1) {
-                data.offer(temp);
+            if (temp.size() > 1 && !selector) {
+                lists.offer(temp);
+            } else if (temp.size() > 1 && selector) {
+                opti.get().accept(new LinkedList<>(lists.getLast()), temp);
             }
             return;
         }
         for (int i = 0; i < arr.length; i++) {
             if (!indexes.contains(i) || selector) {
                 indexes.addLast(i);
-                make(arr, indexes, tempResaltSize, data, selector);
+                make(arr, indexes, tempResaltSize, lists, selector, opti);
                 indexes.removeLast();
             }
         }
@@ -92,37 +92,32 @@ class Calc {
      * если Double tempResalt  будет равен нашему искомому аргументу,
      * то мы остановим потоки и посмотрим что у нас получилось в  StringBuilder resStroka
      *
-     * @param num
+     * @param nam, size
      */
-    private void calc(LinkedList<String> num) throws InterruptedException {
-        for (int i = 0; i < this.randomZnak.size(); i++) {
-            Queue<String> tempZnak = new LinkedList<>();
-            tempZnak.addAll(randomZnak.get(i));
-            LinkedList<String> tempNum = new LinkedList<>();
-            tempNum.addAll(num);
-            ArrayList<String> arifmetic = new ArrayList<>();
-            Double tempResalt = null;
-            while (!tempNum.isEmpty() || !tempZnak.isEmpty()) {
-                if (arifmetic.size() == 0) {
-                    arifmetic.addAll(Arrays.asList(tempNum.poll(), tempZnak.poll(), tempNum.poll()));
-                    this.resStroka.append("(" + arifmetic.get(0) + arifmetic.get(1) + arifmetic.get(2) + ")");
-                    tempResalt = strRef(arifmetic);
-                } else {
-                    arifmetic.addAll(Arrays.asList(tempZnak.poll(), tempNum.poll()));
-                    this.resStroka.insert(0, "(");
-                    this.resStroka.append(arifmetic.get(arifmetic.size() - 2) + arifmetic.get(arifmetic.size() - 1) + ")");
-                    tempResalt = strRef(arifmetic);
-                }
-            }
-            if (this.expected.equals(tempResalt)) {
-                resStroka.append(" = " + this.expected);
-                this.stop = true;
-                break;
-            } else {
-                this.resStroka.setLength(0);
-                arifmetic.clear();
-            }
-        }
+    private void calc(LinkedList<String> nam, Integer size) throws InterruptedException {
+        this.make(new String[]{"-", "/", "+", "*"}, new LinkedList<>(), size,
+                new LinkedBlockingDeque<>(new LinkedList<>(Collections.singleton(nam))), true, Optional.of((nuum, znak) -> {
+                    ArrayList<String> arifmetic = new ArrayList<>();
+                    Double tempResalt = null;
+                    while (!nuum.isEmpty() || !znak.isEmpty()) {
+                        if (arifmetic.size() == 0) {
+                            arifmetic.addAll(Arrays.asList(nuum.poll(), znak.poll(), nuum.poll()));
+                            this.resStroka.append("(").append(arifmetic.get(0)).append(arifmetic.get(1)).append(arifmetic.get(2)).append(")");
+                            tempResalt = strRef(arifmetic);
+                        } else {
+                            arifmetic.addAll(Arrays.asList(znak.poll(), nuum.poll()));
+                            this.resStroka.insert(0, "(");
+                            this.resStroka.append(arifmetic.get(arifmetic.size() - 2)).append(arifmetic.get(arifmetic.size() - 1)).append(")");
+                            tempResalt = strRef(arifmetic);
+                        }
+                    }
+                    if (this.expected.equals(tempResalt)) {
+                        resStroka.append(" = " + this.expected);
+                        this.stop = true;
+                    } else {
+                        this.resStroka.setLength(0);
+                    }
+                }));
     }
 
     /**
@@ -142,11 +137,11 @@ class Calc {
      * поток будет добавлять 1 в очередь
      */
     private class Product extends Thread {
-        private final BlockingDeque<LinkedList<String>> data;
+        private final LinkedBlockingDeque<LinkedList<String>> data;
         private final Integer[] nums;
         private final Thread consumer;
 
-        Product(Integer[] nums, BlockingDeque<LinkedList<String>> data, Thread consumer) {
+        Product(Integer[] nums, LinkedBlockingDeque<LinkedList<String>> data, Thread consumer) {
             this.data = data;
             this.nums = nums;
             this.start();
@@ -156,8 +151,8 @@ class Calc {
         @Override
         public void run() {
             try {
-                make(nums, new LinkedList<>(), nums.length, this.data, false);
-            } catch (InterruptedException | BrokenBarrierException ignored) {
+                make(nums, new LinkedList<>(), nums.length, this.data, false, Optional.empty());
+            } catch (InterruptedException ignored) {
             } finally {
                 this.consumer.interrupt();
             }
@@ -167,11 +162,13 @@ class Calc {
     /**
      * поток будет забирать 1 элемент из очереди и прогонять его по условию
      */
-    private class Consumer extends Thread {
-        private BlockingDeque<LinkedList<String>> data;
+    private class Cons extends Thread {
+        private LinkedBlockingDeque<LinkedList<String>> data;
+        private final Integer size;
 
-        Consumer(BlockingDeque<LinkedList<String>> data) {
+        Cons(LinkedBlockingDeque<LinkedList<String>> data, Integer size) {
             this.data = data;
+            this.size = size;
             this.start();
         }
 
@@ -179,7 +176,7 @@ class Calc {
         public void run() {
             try {
                 while (!Thread.currentThread().isInterrupted() || !this.data.isEmpty()) {
-                    calc(this.data.take());
+                    calc(this.data.take(), size);
                     if (stop) {
                         throw new InterruptedException();
                     }
